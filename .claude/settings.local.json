@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmd.exe /c start \"\" \"C:\\Users\\Ishay\\Desktop\\daf-avoda\\src\\app\\index.html\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where.exe python:*)",
+      "Bash(cmd.exe /c \"python --version\")",
+      "Bash(npx --version)",
+      "Bash(npm --version)",
+      "Read(//c/Users/Ishay/AppData/Roaming/**)",
+      "Read(//c/Users/Ishay/**)"
+    ]
+  }
+}

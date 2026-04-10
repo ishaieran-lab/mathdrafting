@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "daf-avoda dev server",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "3000"],
+      "cwd": "${workspaceFolder}/src/app",
+      "port": 3000
+    }
+  ]
+}

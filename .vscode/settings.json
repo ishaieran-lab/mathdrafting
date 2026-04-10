@@ -1,0 +1,37 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+
+  // RTL support
+  "editor.renderControlCharacters": true,
+
+  // File associations
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // Explorer
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.html": "${capture}.css, ${capture}.js",
+    "index.html": "style.css, app.js, *.js"
+  },
+
+  // Search exclusions
+  "search.exclude": {
+    "history/**": true,
+    "node_modules/**": true
+  },
+
+  // Live server
+  "liveServer.settings.root": "/src/app",
+  "liveServer.settings.port": 3000,
+  "liveServer.settings.donotShowInfoMsg": true
+}

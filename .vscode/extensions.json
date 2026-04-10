@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "ritwickdey.liveserver",
+    "dbaeumer.vscode-eslint",
+    "GuyRonnen.rtl-for-vs-code-agents",
+    "eamodio.gitlens",
+    "streetsidesoftware.code-spell-checker",
+    "streetsidesoftware.code-spell-checker-hebrew"
+  ]
+}
