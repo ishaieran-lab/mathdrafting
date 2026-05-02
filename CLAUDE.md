@@ -1,7 +1,8 @@
-# daf-avoda — Worksheet Builder
+# MathDrafting — Worksheet Builder
 
 ## Project Overview
 A web-based tool for creating mathematical worksheets (דפי עבודה) for educational use.
+**Domain**: MathDrafting.com
 Supports Hebrew (RTL), English, and German. Renders shapes, graphs, equations, and more.
 
 The end goal is a full SaaS product with user management, subscriptions, and payment processing.
