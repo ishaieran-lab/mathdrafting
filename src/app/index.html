@@ -1028,7 +1028,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <button class="btn hdr-action-btn" onclick="zoomOut()" data-tip="הקטן תצוגה" data-tip-key="tipZoomOut" style="padding:4px;">
       <img src="../assets/icons/toolbar/zoom-out.png" width="30" height="30" style="object-fit:contain;">
     </button>
-    <span id="zoom-label" onclick="zoomReset()" title="איפוס זום" style="font-size:12px;color:var(--text2);min-width:40px;text-align:center;cursor:pointer;font-family:monospace;padding:2px 4px;user-select:none;letter-spacing:0.3px;">100%</span>
+    <span id="zoom-label" onclick="zoomReset()" title="איפוס זום" data-title-key="tipZoomReset" style="font-size:12px;color:var(--text2);min-width:40px;text-align:center;cursor:pointer;font-family:monospace;padding:2px 4px;user-select:none;letter-spacing:0.3px;">100%</span>
     <button class="btn hdr-action-btn" onclick="zoomIn()" data-tip="הגדל תצוגה" data-tip-key="tipZoomIn" style="padding:4px;">
       <img src="../assets/icons/toolbar/zoom-in.png" width="30" height="30" style="object-fit:contain;">
     </button>
@@ -1039,17 +1039,17 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <div style="width:1px;height:18px;background:var(--border);margin:0 6px;opacity:0.45;flex-shrink:0;"></div>
     <!-- רקע הדף -->
     <div style="position:relative;">
-      <button class="btn hdr-action-btn" id="bg-toggle-btn" onclick="_bgToggle()" title="רקע הדף" style="gap:4px;font-size:11px;">
+      <button class="btn hdr-action-btn" id="bg-toggle-btn" onclick="_bgToggle()" title="רקע הדף" data-title-key="tipBgToggle" style="gap:4px;font-size:11px;">
         <img id="bg-icon" src="../assets/icons/menu/רקע-דארק.png" width="24" height="24" style="object-fit:contain;">
         רקע
       </button>
       <div id="bg-panel">
         <div class="bg-opts">
-          <button class="bg-opt active" id="bgo-none" onclick="_setBg('none')" title="דף חלק">
+          <button class="bg-opt active" id="bgo-none" onclick="_setBg('none')" title="דף חלק" data-title-key="tipBgBlank">
             <svg width="32" height="32" viewBox="0 0 32 32"><rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/></svg>
             <span data-lang-key="bgBlank">חלק</span>
           </button>
-          <button class="bg-opt" id="bgo-grid" onclick="_setBg('grid')" title="רשת">
+          <button class="bg-opt" id="bgo-grid" onclick="_setBg('grid')" title="רשת" data-title-key="tipBgGrid">
             <svg width="32" height="32" viewBox="0 0 32 32">
               <rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/>
               <line x1="11" y1="1.5" x2="11" y2="30.5" stroke="#b0b0cc" stroke-width="0.9"/>
@@ -1059,7 +1059,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
             </svg>
             <span data-lang-key="bgGrid">רשת</span>
           </button>
-          <button class="bg-opt" id="bgo-dots" onclick="_setBg('dots')" title="נקודות">
+          <button class="bg-opt" id="bgo-dots" onclick="_setBg('dots')" title="נקודות" data-title-key="tipBgDots">
             <svg width="32" height="32" viewBox="0 0 32 32">
               <rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/>
               <circle cx="9"  cy="9"  r="1.6" fill="#9090b8"/>
@@ -1074,7 +1074,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
             </svg>
             <span data-lang-key="bgDots">נקודות</span>
           </button>
-          <button class="bg-opt" id="bgo-lines" onclick="_setBg('lines')" title="קווים אופקיים">
+          <button class="bg-opt" id="bgo-lines" onclick="_setBg('lines')" title="קווים אופקיים" data-title-key="tipBgLines">
             <svg width="32" height="32" viewBox="0 0 32 32">
               <rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/>
               <line x1="4" y1="10" x2="28" y2="10" stroke="#b0b0cc" stroke-width="1"/>
@@ -1083,7 +1083,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
             </svg>
             <span data-lang-key="bgLines">קווים</span>
           </button>
-          <button class="bg-opt" id="bgo-diag" onclick="_setBg('diag')" title="אלכסונים">
+          <button class="bg-opt" id="bgo-diag" onclick="_setBg('diag')" title="אלכסונים" data-title-key="tipBgDiag">
             <svg width="32" height="32" viewBox="0 0 32 32">
               <rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/>
               <clipPath id="diag-clip"><rect x="1.5" y="1.5" width="29" height="29" rx="4"/></clipPath>
@@ -1117,7 +1117,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         <!-- כותרת + toggle -->
         <div id="nl-master">
           <span id="nl-master-title" data-lang-key="nlTitle">מספור שורות</span>
-          <button class="nl-toggle" id="nl-master-btn" onclick="_nlToggleOnOff()" title="הפעל/כבה"></button>
+          <button class="nl-toggle" id="nl-master-btn" onclick="_nlToggleOnOff()" title="הפעל/כבה" data-title-key="tipNlToggle"></button>
         </div>
         <div class="nl-sep"></div>
         <!-- סוג + מודגש -->
@@ -1126,7 +1126,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
           <button class="nl-type-btn nl-on" id="nl-t-num" onclick="_nlSetType('num')">1, 2, 3</button>
           <button class="nl-type-btn" id="nl-t-latin" onclick="_nlSetType('latin')">A, B, C</button>
           <button class="nl-type-btn" id="nl-t-heb" onclick="_nlSetType('heb')">א, ב, ג</button>
-          <button class="nl-type-btn" id="nl-bold-btn" onclick="_nlToggleBold()" title="מודגש" style="font-weight:700;min-width:28px;">B</button>
+          <button class="nl-type-btn" id="nl-bold-btn" onclick="_nlToggleBold()" title="מודגש" data-title-key="tipNlBold" style="font-weight:700;min-width:28px;">B</button>
         </div>
         <!-- צד -->
         <div class="nl-row">
@@ -1200,9 +1200,9 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="modal-logo">Math<span>Drafting</span>.com</div>
-    <h2 class="modal-title">אודות MathDrafting</h2>
-    <p class="modal-body">MathDrafting הוא בונה דפי עבודה מתמטיים מתקדם, המאפשר למורים וסטודנטים ליצור דפי עבודה מקצועיים בקלות ובמהירות.<br><br>תומך בעברית, אנגלית וגרמנית, עם כלים לציור, נוסחאות, גרפים ועוד.</p>
-    <div class="modal-version">גרסה 1.0 · 2025</div>
+    <h2 class="modal-title" data-lang-key="aboutTitle">אודות MathDrafting</h2>
+    <p class="modal-body" id="about-modal-body">MathDrafting הוא בונה דפי עבודה מתמטיים מתקדם, המאפשר למורים וסטודנטים ליצור דפי עבודה מקצועיים בקלות ובמהירות.<br><br>תומך בעברית ואנגלית, עם כלים לציור, נוסחאות, גרפים ועוד.</p>
+    <div class="modal-version" data-lang-key="aboutVersion">גרסה 1.0 · 2025</div>
   </div>
 </div>
 
@@ -1213,10 +1213,10 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="modal-logo">Math<span>Drafting</span>.com</div>
-    <h2 class="modal-title">צור קשר</h2>
-    <p class="modal-body">לשאלות, הצעות ושיתופי פעולה:</p>
+    <h2 class="modal-title" data-lang-key="contactTitle">צור קשר</h2>
+    <p class="modal-body" data-lang-key="contactBody">לשאלות, הצעות ושיתופי פעולה:</p>
     <a class="modal-email" href="mailto:contact@mathdrafting.com">contact@mathdrafting.com</a>
-    <p class="modal-body" style="margin-top:16px;font-size:13px;opacity:0.7">נשמח לשמוע ממך!</p>
+    <p class="modal-body" data-lang-key="contactFooter" style="margin-top:16px;font-size:13px;opacity:0.7">נשמח לשמוע ממך!</p>
   </div>
 </div>
 
@@ -1224,12 +1224,12 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   <div id="text-fmt-bar">
         <!-- קבוצה 1: גופן + גודל -->
         <div class="tfb-group">
-          <button id="tfb-font-btn" title="גופן" onmousedown="event.preventDefault();event.stopPropagation();_tfbFontToggle(this)">
+          <button id="tfb-font-btn" title="גופן" data-title-key="tipFont" onmousedown="event.preventDefault();event.stopPropagation();_tfbFontToggle(this)">
             <span id="tfb-font-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:84px;font-size:12px">Heebo</span>
             <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" style="opacity:0.5;flex-shrink:0"><path d="M2 3.5L5 6.5L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <div id="tfb-fs-wrap">
-            <input id="tfb-fs-label" type="text" value="18" title="גודל גופן" onmousedown="event.stopPropagation();this.select()" onkeydown="_tfbFsKey(event)" onblur="_tfbFsBlur(this)">
+            <input id="tfb-fs-label" type="text" value="18" title="גודל גופן" data-title-key="tipFontSize" onmousedown="event.stopPropagation();this.select()" onkeydown="_tfbFsKey(event)" onblur="_tfbFsBlur(this)">
             <button id="tfb-fs-arrow" onmousedown="event.preventDefault();event.stopPropagation();_tfbSizeToggle(this)">
               <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2 3.5L5 6.5L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -1238,19 +1238,19 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         <div class="tfb-sep"></div>
         <!-- קבוצה 2: עיצוב B / I / U -->
         <div class="tfb-group">
-          <button id="tfb-bold" title="מודגש" onmousedown="event.preventDefault();_tfbToggle('bold')">
+          <button id="tfb-bold" title="מודגש" data-title-key="tipBold" onmousedown="event.preventDefault();_tfbToggle('bold')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/>
             </svg>
           </button>
-          <button id="tfb-italic" title="נטוי" onmousedown="event.preventDefault();_tfbToggle('italic')">
+          <button id="tfb-italic" title="נטוי" data-title-key="tipItalic" onmousedown="event.preventDefault();_tfbToggle('italic')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="19" x2="10" y1="4" y2="4"/>
               <line x1="14" x2="5" y1="20" y2="20"/>
               <line x1="15" x2="9" y1="4" y2="20"/>
             </svg>
           </button>
-          <button id="tfb-under" title="קו תחתי" onmousedown="event.preventDefault();_tfbToggle('underline')">
+          <button id="tfb-under" title="קו תחתי" data-title-key="tipUnderline" onmousedown="event.preventDefault();_tfbToggle('underline')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 4v6a6 6 0 0 0 12 0V4"/>
               <line x1="4" x2="20" y1="20" y2="20"/>
@@ -1260,21 +1260,21 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         <div class="tfb-sep"></div>
         <!-- קבוצה 3: יישור -->
         <div class="tfb-group">
-          <button id="tfb-left" title="יישור שמאל" onmousedown="event.preventDefault();_tfbAlign('left')">
+          <button id="tfb-left" title="יישור שמאל" data-title-key="tipAlignLeft" onmousedown="event.preventDefault();_tfbAlign('left')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="21" x2="3" y1="6" y2="6"/>
               <line x1="15" x2="3" y1="12" y2="12"/>
               <line x1="17" x2="3" y1="18" y2="18"/>
             </svg>
           </button>
-          <button id="tfb-center" title="מרכז" onmousedown="event.preventDefault();_tfbAlign('center')">
+          <button id="tfb-center" title="מרכז" data-title-key="tipAlignCenter" onmousedown="event.preventDefault();_tfbAlign('center')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="21" x2="3" y1="6" y2="6"/>
               <line x1="17" x2="7" y1="12" y2="12"/>
               <line x1="19" x2="5" y1="18" y2="18"/>
             </svg>
           </button>
-          <button id="tfb-right" title="יישור ימין" onmousedown="event.preventDefault();_tfbAlign('right')">
+          <button id="tfb-right" title="יישור ימין" data-title-key="tipAlignRight" onmousedown="event.preventDefault();_tfbAlign('right')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="21" x2="3" y1="6" y2="6"/>
               <line x1="21" x2="9" y1="12" y2="12"/>
@@ -1285,7 +1285,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         <div class="tfb-sep"></div>
         <!-- קבוצה 4: כיוון LTR / RTL -->
         <div class="tfb-group">
-          <button id="tfb-dir-ltr" title="כיוון שמאל לימין (אנגלית)" onmousedown="event.preventDefault();_tfbDir('ltr')">
+          <button id="tfb-dir-ltr" title="כיוון שמאל לימין (אנגלית)" data-title-key="tipDirLTR" onmousedown="event.preventDefault();_tfbDir('ltr')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" x2="15" y1="6" y2="6"/>
               <line x1="3" x2="13" y1="12" y2="12"/>
@@ -1294,7 +1294,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
               <line x1="22" x2="16" y1="12" y2="12"/>
             </svg>
           </button>
-          <button id="tfb-dir-rtl" title="כיוון ימין לשמאל (עברית)" onmousedown="event.preventDefault();_tfbDir('rtl')">
+          <button id="tfb-dir-rtl" title="כיוון ימין לשמאל (עברית)" data-title-key="tipDirRTL" onmousedown="event.preventDefault();_tfbDir('rtl')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="9" x2="21" y1="6" y2="6"/>
               <line x1="11" x2="21" y1="12" y2="12"/>
@@ -1307,7 +1307,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         <div class="tfb-sep"></div>
         <!-- קבוצה 5: צבע -->
         <div class="tfb-group">
-          <div id="tfb-color-btn" title="צבע טקסט" style="position:relative;">
+          <div id="tfb-color-btn" title="צבע טקסט" data-title-key="tipFontColor" style="position:relative;">
             <span id="tfb-color-letter" style="font-weight:700;font-size:15px;line-height:1;display:block;pointer-events:none;color:#000000;">A</span>
             <div id="tfb-color-bar" style="height:3px;border-radius:1px;background:#000000;margin-top:2px;width:100%;pointer-events:none;"></div>
             <input id="tfb-color" type="color" value="#000000" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:none;padding:0;" onmousedown="event.stopPropagation()" oninput="_tfbColor(this.value)" onchange="_tfbColor(this.value)">
@@ -1316,7 +1316,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         <div class="tfb-sep"></div>
         <!-- קבוצה 6: רשימות -->
         <div class="tfb-group">
-          <button id="tfb-list-btn" title="סגנון רשימה" onmousedown="event.preventDefault();_tfbListToggle(this)" style="gap:3px">
+          <button id="tfb-list-btn" title="סגנון רשימה" data-title-key="tipListStyle" onmousedown="event.preventDefault();_tfbListToggle(this)" style="gap:3px">
             <span id="tfb-list-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="6" y2="6"/>
@@ -1332,7 +1332,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
         </div>
   </div>
   <div class="pages-bar" id="pages-bar">
-    <button class="page-add-btn" onclick="addPage()">+ דף חדש</button>
+    <button class="page-add-btn" data-lang-key="pageNew" onclick="addPage()">+ דף חדש</button>
   </div>
 </div>
 
@@ -1405,8 +1405,8 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
             <rect x="4" y="4" width="48" height="48" rx="10" stroke="#7c6fff" stroke-width="2" stroke-dasharray="6 4"/>
             <path d="M28 18v20M18 28h20" stroke="#7c6fff" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
-          <p style="font-family:'Heebo',sans-serif;font-size:15px;color:#aaa;font-weight:500;margin:0">בחר כלי מהסרגל כדי להתחיל</p>
-          <p style="font-family:'Heebo',sans-serif;font-size:12px;color:#888;margin:0">צורות · משוואות · טבלאות · גרפים</p>
+          <p id="canvas-hint-main" style="font-family:'Heebo',sans-serif;font-size:15px;color:#aaa;font-weight:500;margin:0">בחר כלי מהסרגל כדי להתחיל</p>
+          <p id="canvas-hint-sub" style="font-family:'Heebo',sans-serif;font-size:12px;color:#888;margin:0">צורות · משוואות · טבלאות · גרפים</p>
         </div>
       </div>
     </div>
@@ -2111,18 +2111,18 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   <!-- BASIC row -->
   <div class="kb-label" data-lang-key="kbBasic">בסיסי</div>
   <div class="kb-row">
-    <button class="eq-sym-btn" title="שורש (sq)"        onmousedown="event.preventDefault();_eqInsertSym('√')">√</button>
-    <button class="eq-sym-btn" title="פאי (pi)"         onmousedown="event.preventDefault();_eqInsertSym('π')">π</button>
-    <button class="eq-sym-btn" title="אינסוף (inf)"     onmousedown="event.preventDefault();_eqInsertSym('∞')">∞</button>
-    <button class="eq-sym-btn" title="מעלות (deg)"      onmousedown="event.preventDefault();_eqInsertSym('°')">°</button>
-    <button class="eq-sym-btn" title="משולש (tri)"      onmousedown="event.preventDefault();_eqInsertSym('△')">△</button>
+    <button class="eq-sym-btn" title="שורש (sq)" data-title-key="tipSqrt"       onmousedown="event.preventDefault();_eqInsertSym('√')">√</button>
+    <button class="eq-sym-btn" title="פאי (pi)" data-title-key="tipPi"        onmousedown="event.preventDefault();_eqInsertSym('π')">π</button>
+    <button class="eq-sym-btn" title="אינסוף (inf)" data-title-key="tipInfinity"    onmousedown="event.preventDefault();_eqInsertSym('∞')">∞</button>
+    <button class="eq-sym-btn" title="מעלות (deg)" data-title-key="tipDegrees"     onmousedown="event.preventDefault();_eqInsertSym('°')">°</button>
+    <button class="eq-sym-btn" title="משולש (tri)" data-title-key="tipTriangle"     onmousedown="event.preventDefault();_eqInsertSym('△')">△</button>
     <div class="eq-sym-sep"></div>
-    <button class="eq-sym-btn" title="כפל"              onmousedown="event.preventDefault();_eqInsertSym('×')">×</button>
-    <button class="eq-sym-btn" title="כפל (נקודה)"      onmousedown="event.preventDefault();_eqInsertSym('·')">·</button>
-    <button class="eq-sym-btn" title="פלוס-מינוס (+-)"  onmousedown="event.preventDefault();_eqInsertSym('±')">±</button>
-    <button class="eq-sym-btn" title="קטן-שווה (<=)"    onmousedown="event.preventDefault();_eqInsertSym('≤')">≤</button>
-    <button class="eq-sym-btn" title="גדול-שווה (>=)"   onmousedown="event.preventDefault();_eqInsertSym('≥')">≥</button>
-    <button class="eq-sym-btn" title="לא שווה (!=)"     onmousedown="event.preventDefault();_eqInsertSym('≠')">≠</button>
+    <button class="eq-sym-btn" title="כפל" data-title-key="tipMultiply"             onmousedown="event.preventDefault();_eqInsertSym('×')">×</button>
+    <button class="eq-sym-btn" title="כפל (נקודה)" data-title-key="tipMultiplyDot"     onmousedown="event.preventDefault();_eqInsertSym('·')">·</button>
+    <button class="eq-sym-btn" title="פלוס-מינוס (+-)" data-title-key="tipPlusMinus" onmousedown="event.preventDefault();_eqInsertSym('±')">±</button>
+    <button class="eq-sym-btn" title="קטן-שווה (<=)" data-title-key="tipLessEq"   onmousedown="event.preventDefault();_eqInsertSym('≤')">≤</button>
+    <button class="eq-sym-btn" title="גדול-שווה (>=)" data-title-key="tipGreaterEq"  onmousedown="event.preventDefault();_eqInsertSym('≥')">≥</button>
+    <button class="eq-sym-btn" title="לא שווה (!=)" data-title-key="tipNotEqual"    onmousedown="event.preventDefault();_eqInsertSym('≠')">≠</button>
     <div class="eq-sym-sep"></div>
     <button id="eq-adv-toggle" class="eq-sym-btn" style="font-size:12px;font-family:Heebo,sans-serif;min-width:64px;letter-spacing:0" onmousedown="event.preventDefault();_eqToggleAdv()" data-lang-key="kbAdv">מתקדם ▾</button>
   </div>
@@ -2130,23 +2130,23 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   <div id="eq-adv-panel" style="display:none;margin-top:6px">
     <div class="kb-label" data-lang-key="kbGreek">אותיות יווניות</div>
     <div class="kb-row">
-      <button class="eq-sym-btn" title="אלפא (al)"      onmousedown="event.preventDefault();_eqInsertSym('α')">α</button>
-      <button class="eq-sym-btn" title="בטא (be)"       onmousedown="event.preventDefault();_eqInsertSym('β')">β</button>
-      <button class="eq-sym-btn" title="גמא (ga)"       onmousedown="event.preventDefault();_eqInsertSym('γ')">γ</button>
-      <button class="eq-sym-btn" title="תטא (th)"       onmousedown="event.preventDefault();_eqInsertSym('θ')">θ</button>
-      <button class="eq-sym-btn" title="דלתא (de)"      onmousedown="event.preventDefault();_eqInsertSym('δ')">δ</button>
-      <button class="eq-sym-btn" title="דלתא גדול (De)" onmousedown="event.preventDefault();_eqInsertSym('Δ')">Δ</button>
+      <button class="eq-sym-btn" title="אלפא (al)" data-title-key="tipAlpha"     onmousedown="event.preventDefault();_eqInsertSym('α')">α</button>
+      <button class="eq-sym-btn" title="בטא (be)" data-title-key="tipBeta"      onmousedown="event.preventDefault();_eqInsertSym('β')">β</button>
+      <button class="eq-sym-btn" title="גמא (ga)" data-title-key="tipGamma"      onmousedown="event.preventDefault();_eqInsertSym('γ')">γ</button>
+      <button class="eq-sym-btn" title="תטא (th)" data-title-key="tipTheta"      onmousedown="event.preventDefault();_eqInsertSym('θ')">θ</button>
+      <button class="eq-sym-btn" title="דלתא (de)" data-title-key="tipDelta"     onmousedown="event.preventDefault();_eqInsertSym('δ')">δ</button>
+      <button class="eq-sym-btn" title="דלתא גדול (De)" data-title-key="tipDeltaBig" onmousedown="event.preventDefault();_eqInsertSym('Δ')">Δ</button>
     </div>
     <div class="kb-label" style="margin-top:6px" data-lang-key="kbTrig">טריגונומטריה</div>
     <div class="kb-row">
-      <button class="eq-sym-btn" title="סינוס"          onmousedown="event.preventDefault();_eqInsertSym('sin(')">sin</button>
-      <button class="eq-sym-btn" title="קוסינוס"        onmousedown="event.preventDefault();_eqInsertSym('cos(')">cos</button>
-      <button class="eq-sym-btn" title="טנגנס"          onmousedown="event.preventDefault();_eqInsertSym('tan(')">tan</button>
-      <button class="eq-sym-btn" title="קוטנגנס"        onmousedown="event.preventDefault();_eqInsertSym('cot(')">cot</button>
-      <button class="eq-sym-btn" title="לוגריתם טבעי"  onmousedown="event.preventDefault();_eqInsertSym('ln(')">ln</button>
-      <button class="eq-sym-btn" title="ארק-סינוס"      onmousedown="event.preventDefault();_eqInsertSym('arcsin(')">arcsin</button>
-      <button class="eq-sym-btn" title="ארק-קוסינוס"    onmousedown="event.preventDefault();_eqInsertSym('arccos(')">arccos</button>
-      <button class="eq-sym-btn" title="ארק-טנגנס"      onmousedown="event.preventDefault();_eqInsertSym('arctan(')">arctan</button>
+      <button class="eq-sym-btn" title="סינוס" data-title-key="tipSin"         onmousedown="event.preventDefault();_eqInsertSym('sin(')">sin</button>
+      <button class="eq-sym-btn" title="קוסינוס" data-title-key="tipCos"       onmousedown="event.preventDefault();_eqInsertSym('cos(')">cos</button>
+      <button class="eq-sym-btn" title="טנגנס" data-title-key="tipTan"         onmousedown="event.preventDefault();_eqInsertSym('tan(')">tan</button>
+      <button class="eq-sym-btn" title="קוטנגנס" data-title-key="tipCot"       onmousedown="event.preventDefault();_eqInsertSym('cot(')">cot</button>
+      <button class="eq-sym-btn" title="לוגריתם טבעי" data-title-key="tipLn" onmousedown="event.preventDefault();_eqInsertSym('ln(')">ln</button>
+      <button class="eq-sym-btn" title="ארק-סינוס" data-title-key="tipArcsin"     onmousedown="event.preventDefault();_eqInsertSym('arcsin(')">arcsin</button>
+      <button class="eq-sym-btn" title="ארק-קוסינוס" data-title-key="tipArccos"   onmousedown="event.preventDefault();_eqInsertSym('arccos(')">arccos</button>
+      <button class="eq-sym-btn" title="ארק-טנגנס" data-title-key="tipArctan"     onmousedown="event.preventDefault();_eqInsertSym('arctan(')">arctan</button>
     </div>
   </div>
 </div>
@@ -12657,6 +12657,64 @@ var LANGS = {
       pgStraightLine:'ישר', pgSlope:'שיפוע', pgSlopePos:'↗ חיובי', pgSlopeNeg:'↘ שלילי', pgSlopeZero:'→ אפס',
       pgPointsOnLine:'נקודות על הישר', pgMidpoint:'⊙ נקודת אמצע', pgAddPoint:'הוסף נקודה חופשית',
       pgXIntercept:'חיתוך עם ציר X (כש-y=0)', pgSlopeM:'שיפוע m', pgInterceptB:'חיתוך b',
+      // about & contact modals
+      aboutTitle:'אודות MathDrafting',
+      aboutBody:'MathDrafting הוא בונה דפי עבודה מתמטיים מתקדם, המאפשר למורים וסטודנטים ליצור דפי עבודה מקצועיים בקלות ובמהירות.<br><br>תומך בעברית ואנגלית, עם כלים לציור, נוסחאות, גרפים ועוד.',
+      aboutVersion:'גרסה 1.0 · 2025',
+      contactTitle:'צור קשר',
+      contactBody:'לשאלות, הצעות ושיתופי פעולה:',
+      contactFooter:'נשמח לשמוע ממך!',
+      // canvas hint
+      canvasHint:'בחר כלי מהסרגל כדי להתחיל',
+      canvasHintSub:'צורות · משוואות · טבלאות · גרפים',
+      // tooltip titles
+      tipZoomReset:'איפוס זום',
+      tipBgToggle:'רקע הדף',
+      tipBgBlank:'דף חלק',
+      tipBgGrid:'רשת',
+      tipBgDots:'נקודות',
+      tipBgLines:'קווים אופקיים',
+      tipBgDiag:'אלכסונים',
+      tipNlToggle:'הפעל/כבה מספור',
+      tipNlBold:'מודגש',
+      tipFont:'גופן',
+      tipFontSize:'גודל גופן',
+      tipBold:'מודגש',
+      tipItalic:'נטוי',
+      tipUnderline:'קו תחתי',
+      tipAlignLeft:'יישור שמאל',
+      tipAlignCenter:'מרכז',
+      tipAlignRight:'יישור ימין',
+      tipDirLTR:'כיוון שמאל לימין',
+      tipDirRTL:'כיוון ימין לשמאל',
+      tipFontColor:'צבע טקסט',
+      tipListStyle:'סגנון רשימה',
+      // math symbol tooltips
+      tipSqrt:'שורש (√)',
+      tipPi:'פאי (π)',
+      tipInfinity:'אינסוף (∞)',
+      tipDegrees:'מעלות (°)',
+      tipTriangle:'משולש (△)',
+      tipMultiply:'כפל (×)',
+      tipMultiplyDot:'כפל נקודה (·)',
+      tipPlusMinus:'פלוס-מינוס (±)',
+      tipLessEq:'קטן-שווה (≤)',
+      tipGreaterEq:'גדול-שווה (≥)',
+      tipNotEqual:'לא שווה (≠)',
+      tipAlpha:'אלפא (α)',
+      tipBeta:'בטא (β)',
+      tipGamma:'גמא (γ)',
+      tipTheta:'תטא (θ)',
+      tipDelta:'דלתא (δ)',
+      tipDeltaBig:'דלתא גדול (Δ)',
+      tipSin:'סינוס',
+      tipCos:'קוסינוס',
+      tipTan:'טנגנס',
+      tipCot:'קוטנגנס',
+      tipLn:'לוגריתם טבעי',
+      tipArcsin:'ארק-סינוס',
+      tipArccos:'ארק-קוסינוס',
+      tipArctan:'ארק-טנגנס',
     }
   },
   en: {
@@ -12763,6 +12821,64 @@ var LANGS = {
       pgStraightLine:'Straight line', pgSlope:'Slope', pgSlopePos:'↗ Positive', pgSlopeNeg:'↘ Negative', pgSlopeZero:'→ Zero',
       pgPointsOnLine:'Points on line', pgMidpoint:'⊙ Midpoint', pgAddPoint:'Add free point',
       pgXIntercept:'X-intercept (y=0)', pgSlopeM:'Slope m', pgInterceptB:'Intercept b',
+      // about & contact modals
+      aboutTitle:'About MathDrafting',
+      aboutBody:'MathDrafting is an advanced mathematical worksheet builder, enabling teachers and students to create professional worksheets easily and quickly.<br><br>Supports Hebrew and English, with tools for drawing, formulas, graphs, and more.',
+      aboutVersion:'Version 1.0 · 2025',
+      contactTitle:'Contact Us',
+      contactBody:'For questions, suggestions, and collaborations:',
+      contactFooter:"We'd love to hear from you!",
+      // canvas hint
+      canvasHint:'Choose a tool from the toolbar to start',
+      canvasHintSub:'Shapes · Equations · Tables · Graphs',
+      // tooltip titles
+      tipZoomReset:'Reset zoom',
+      tipBgToggle:'Page background',
+      tipBgBlank:'Blank',
+      tipBgGrid:'Grid',
+      tipBgDots:'Dots',
+      tipBgLines:'Horizontal lines',
+      tipBgDiag:'Diagonal lines',
+      tipNlToggle:'Toggle line numbers',
+      tipNlBold:'Bold',
+      tipFont:'Font',
+      tipFontSize:'Font size',
+      tipBold:'Bold',
+      tipItalic:'Italic',
+      tipUnderline:'Underline',
+      tipAlignLeft:'Align left',
+      tipAlignCenter:'Align centre',
+      tipAlignRight:'Align right',
+      tipDirLTR:'Left-to-right (LTR)',
+      tipDirRTL:'Right-to-left (RTL)',
+      tipFontColor:'Font colour',
+      tipListStyle:'List style',
+      // math symbol tooltips
+      tipSqrt:'Square root (√)',
+      tipPi:'Pi (π)',
+      tipInfinity:'Infinity (∞)',
+      tipDegrees:'Degrees (°)',
+      tipTriangle:'Triangle (△)',
+      tipMultiply:'Multiply (×)',
+      tipMultiplyDot:'Multiply (·)',
+      tipPlusMinus:'Plus-minus (±)',
+      tipLessEq:'Less than or equal (≤)',
+      tipGreaterEq:'Greater than or equal (≥)',
+      tipNotEqual:'Not equal (≠)',
+      tipAlpha:'Alpha (α)',
+      tipBeta:'Beta (β)',
+      tipGamma:'Gamma (γ)',
+      tipTheta:'Theta (θ)',
+      tipDelta:'Delta (δ)',
+      tipDeltaBig:'Delta (Δ)',
+      tipSin:'Sine (sin)',
+      tipCos:'Cosine (cos)',
+      tipTan:'Tangent (tan)',
+      tipCot:'Cotangent (cot)',
+      tipLn:'Natural log (ln)',
+      tipArcsin:'Arc sine (arcsin)',
+      tipArccos:'Arc cosine (arccos)',
+      tipArctan:'Arc tangent (arctan)',
     }
   },
   de: {
@@ -12868,6 +12984,61 @@ var LANGS = {
       pgStraightLine:'Gerade', pgSlope:'Steigung', pgSlopePos:'↗ Positiv', pgSlopeNeg:'↘ Negativ', pgSlopeZero:'→ Null',
       pgPointsOnLine:'Punkte auf der Geraden', pgMidpoint:'⊙ Mittelpunkt', pgAddPoint:'Freien Punkt hinzufügen',
       pgXIntercept:'X-Achsenabschnitt (y=0)', pgSlopeM:'Steigung m', pgInterceptB:'Abschnitt b',
+      // about & contact modals
+      aboutTitle:'Über MathDrafting',
+      aboutBody:'MathDrafting ist ein fortschrittlicher mathematischer Arbeitsblatt-Builder, der Lehrern und Studenten ermöglicht, professionelle Arbeitsblätter einfach und schnell zu erstellen.<br><br>Unterstützt Hebräisch und Englisch, mit Werkzeugen zum Zeichnen, Formeln, Graphen und mehr.',
+      aboutVersion:'Version 1.0 · 2025',
+      contactTitle:'Kontakt',
+      contactBody:'Für Fragen, Vorschläge und Zusammenarbeit:',
+      contactFooter:'Wir freuen uns von Ihnen zu hören!',
+      canvasHint:'Wähle ein Werkzeug aus der Symbolleiste',
+      canvasHintSub:'Formen · Gleichungen · Tabellen · Graphen',
+      tipZoomReset:'Zoom zurücksetzen',
+      tipBgToggle:'Seitenhintergrund',
+      tipBgBlank:'Leer',
+      tipBgGrid:'Gitter',
+      tipBgDots:'Punkte',
+      tipBgLines:'Horizontale Linien',
+      tipBgDiag:'Diagonale Linien',
+      tipNlToggle:'Zeilennummern umschalten',
+      tipNlBold:'Fett',
+      tipFont:'Schriftart',
+      tipFontSize:'Schriftgröße',
+      tipBold:'Fett',
+      tipItalic:'Kursiv',
+      tipUnderline:'Unterstrichen',
+      tipAlignLeft:'Linksbündig',
+      tipAlignCenter:'Zentriert',
+      tipAlignRight:'Rechtsbündig',
+      tipDirLTR:'Links nach rechts (LTR)',
+      tipDirRTL:'Rechts nach links (RTL)',
+      tipFontColor:'Schriftfarbe',
+      tipListStyle:'Listenstil',
+      tipSqrt:'Quadratwurzel (√)',
+      tipPi:'Pi (π)',
+      tipInfinity:'Unendlich (∞)',
+      tipDegrees:'Grad (°)',
+      tipTriangle:'Dreieck (△)',
+      tipMultiply:'Multiplizieren (×)',
+      tipMultiplyDot:'Multiplizieren (·)',
+      tipPlusMinus:'Plus-minus (±)',
+      tipLessEq:'Kleiner gleich (≤)',
+      tipGreaterEq:'Größer gleich (≥)',
+      tipNotEqual:'Ungleich (≠)',
+      tipAlpha:'Alpha (α)',
+      tipBeta:'Beta (β)',
+      tipGamma:'Gamma (γ)',
+      tipTheta:'Theta (θ)',
+      tipDelta:'Delta (δ)',
+      tipDeltaBig:'Delta groß (Δ)',
+      tipSin:'Sinus',
+      tipCos:'Kosinus',
+      tipTan:'Tangens',
+      tipCot:'Kotangens',
+      tipLn:'Natürlicher Logarithmus (ln)',
+      tipArcsin:'Arkussinus (arcsin)',
+      tipArccos:'Arkuskosinus (arccos)',
+      tipArctan:'Arkustangens (arctan)',
     }
   }
 };
@@ -13075,6 +13246,34 @@ function setLang(lang) {
   // graph hint — uses innerHTML (contains <b> tags)
   const graphHintEl = document.getElementById('graph-hint');
   if(graphHintEl && u.graphHint) graphHintEl.innerHTML = u.graphHint;
+
+  // about modal body (innerHTML — contains <br> tags)
+  const aboutBodyEl = document.getElementById('about-modal-body');
+  if(aboutBodyEl && u.aboutBody) aboutBodyEl.innerHTML = u.aboutBody;
+
+  // canvas hint texts
+  const chMain = document.getElementById('canvas-hint-main');
+  if(chMain && u.canvasHint) chMain.textContent = u.canvasHint;
+  const chSub = document.getElementById('canvas-hint-sub');
+  if(chSub && u.canvasHintSub) chSub.textContent = u.canvasHintSub;
+
+  // title attributes (tooltips)
+  document.querySelectorAll('[data-title-key]').forEach(el => {
+    const k = el.getAttribute('data-title-key');
+    if(u[k]) el.title = u[k];
+  });
+
+  // rename auto-generated page tabs to match current language
+  const pagePrefix = u.pagePrefix || 'דף';
+  const oldPrefixes = ['דף', 'Page', 'Seite'];
+  pages.forEach(p => {
+    for(const prefix of oldPrefixes) {
+      if(p.name === prefix + ' ' + p.id) {
+        p.name = pagePrefix + ' ' + p.id;
+        break;
+      }
+    }
+  });
 
   // graph input placeholder (graphAuto key)
   const graphIn = document.getElementById('graph-in');
