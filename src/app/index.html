@@ -1208,15 +1208,20 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
 
 <!-- Contact Modal -->
 <div id="contact-modal" class="modal-overlay" onclick="if(event.target===this)closeContactModal()">
-  <div class="modal-card">
+  <div class="modal-card" style="max-width:460px">
     <button class="modal-close" onclick="closeContactModal()">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="modal-logo">Math<span>Drafting</span>.com</div>
     <h2 class="modal-title" data-lang-key="contactTitle">צור קשר</h2>
-    <p class="modal-body" data-lang-key="contactBody">לשאלות, הצעות ושיתופי פעולה:</p>
-    <a class="modal-email" href="mailto:contact@mathdrafting.com">contact@mathdrafting.com</a>
-    <p class="modal-body" data-lang-key="contactFooter" style="margin-top:16px;font-size:13px;opacity:0.7">נשמח לשמוע ממך!</p>
+    <p class="modal-body" data-lang-key="contactBody" style="margin-bottom:18px">לשאלות, הצעות ושיתופי פעולה:</p>
+    <form id="contact-form" onsubmit="submitContactForm(event)" style="display:flex;flex-direction:column;gap:12px;width:100%">
+      <input id="cf-name" type="text" placeholder="שם" required style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;">
+      <input id="cf-email" type="email" placeholder="אימייל" required style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;direction:ltr;text-align:left;">
+      <textarea id="cf-msg" placeholder="הודעה" required rows="4" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;resize:vertical;"></textarea>
+      <button type="submit" id="cf-submit" style="padding:11px;background:linear-gradient(135deg,#6c63ff,#a78bfa);border:none;border-radius:10px;color:white;font-family:'Heebo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;">שלח</button>
+    </form>
+    <div id="cf-success" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.3);border-radius:10px;font-size:13px;color:rgba(67,233,123,0.9);text-align:center;">ההודעה נשלחה! נחזור אליך בקרוב.</div>
   </div>
 </div>
 
@@ -13095,7 +13100,25 @@ function closeMainMenu(){
 function openAboutModal(){document.getElementById('about-modal').classList.add('open');}
 function closeAboutModal(){document.getElementById('about-modal').classList.remove('open');}
 function openContactModal(){document.getElementById('contact-modal').classList.add('open');}
-function closeContactModal(){document.getElementById('contact-modal').classList.remove('open');}
+function closeContactModal(){
+  document.getElementById('contact-modal').classList.remove('open');
+  document.getElementById('contact-form').reset();
+  document.getElementById('cf-success').style.display='none';
+  document.getElementById('cf-submit').disabled=false;
+}
+function submitContactForm(e){
+  e.preventDefault();
+  const name=document.getElementById('cf-name').value.trim();
+  const email=document.getElementById('cf-email').value.trim();
+  const msg=document.getElementById('cf-msg').value.trim();
+  const btn=document.getElementById('cf-submit');
+  btn.disabled=true;
+  const url='https://docs.google.com/forms/d/e/1FAIpQLSfm_4qwNppSgVVGpLuhtCnbajYUv-9L1INZwQN4s-ts1-KzLQ/formResponse';
+  const body=new URLSearchParams({'entry.1438876493':name,'entry.878156174':email,'entry.1616464746':msg});
+  fetch(url,{method:'POST',mode:'no-cors',body}).catch(()=>{});
+  document.getElementById('cf-success').style.display='block';
+  document.getElementById('contact-form').reset();
+}
 // legacy stubs (keep so old references don't error)
 function closeInsertDropdown(){}
 function closeEditDropdown(){}
