@@ -1216,12 +1216,12 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <h2 class="modal-title" data-lang-key="contactTitle">צור קשר</h2>
     <p class="modal-body" data-lang-key="contactBody" style="margin-bottom:18px">לשאלות, הצעות ושיתופי פעולה:</p>
     <form id="contact-form" onsubmit="submitContactForm(event)" style="display:flex;flex-direction:column;gap:12px;width:100%">
-      <input id="cf-name" type="text" placeholder="שם" required style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;">
-      <input id="cf-email" type="email" placeholder="אימייל" required style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;direction:ltr;text-align:left;">
-      <textarea id="cf-msg" placeholder="הודעה" required rows="4" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;resize:vertical;"></textarea>
-      <button type="submit" id="cf-submit" style="padding:11px;background:linear-gradient(135deg,#6c63ff,#a78bfa);border:none;border-radius:10px;color:white;font-family:'Heebo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;">שלח</button>
+      <input id="cf-name" type="text" placeholder="שם" data-ph-key="cfName" required style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;">
+      <input id="cf-email" type="email" placeholder="אימייל" data-ph-key="cfEmail" required style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;direction:ltr;text-align:left;">
+      <textarea id="cf-msg" placeholder="הודעה" data-ph-key="cfMsg" required rows="4" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(108,99,255,0.25);border-radius:10px;padding:10px 14px;font-size:14px;font-family:'Heebo',sans-serif;color:var(--text);outline:none;resize:vertical;"></textarea>
+      <button type="submit" id="cf-submit" data-lang-key="cfSend" style="padding:11px;background:linear-gradient(135deg,#6c63ff,#a78bfa);border:none;border-radius:10px;color:white;font-family:'Heebo',sans-serif;font-size:15px;font-weight:600;cursor:pointer;">שלח</button>
     </form>
-    <div id="cf-success" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.3);border-radius:10px;font-size:13px;color:rgba(67,233,123,0.9);text-align:center;">ההודעה נשלחה! נחזור אליך בקרוב.</div>
+    <div id="cf-success" data-lang-key="cfSuccess" style="display:none;margin-top:14px;padding:10px 14px;background:rgba(67,233,123,0.1);border:1px solid rgba(67,233,123,0.3);border-radius:10px;font-size:13px;color:rgba(67,233,123,0.9);text-align:center;">ההודעה נשלחה! נחזור אליך בקרוב.</div>
   </div>
 </div>
 
@@ -12720,6 +12720,7 @@ var LANGS = {
       tipArcsin:'ארק-סינוס',
       tipArccos:'ארק-קוסינוס',
       tipArctan:'ארק-טנגנס',
+      cfName:'שם', cfEmail:'אימייל', cfMsg:'הודעה', cfSend:'שלח', cfSuccess:'ההודעה נשלחה! נחזור אליך בקרוב.',
     }
   },
   en: {
@@ -12884,6 +12885,7 @@ var LANGS = {
       tipArcsin:'Arc sine (arcsin)',
       tipArccos:'Arc cosine (arccos)',
       tipArctan:'Arc tangent (arctan)',
+      cfName:'Name', cfEmail:'Email', cfMsg:'Message', cfSend:'Send', cfSuccess:'Message sent! We\'ll get back to you soon.',
     }
   },
   de: {
@@ -13044,6 +13046,7 @@ var LANGS = {
       tipArcsin:'Arkussinus (arcsin)',
       tipArccos:'Arkuskosinus (arccos)',
       tipArctan:'Arkustangens (arctan)',
+      cfName:'Name', cfEmail:'E-Mail', cfMsg:'Nachricht', cfSend:'Senden', cfSuccess:'Nachricht gesendet! Wir melden uns bald.',
     }
   }
 };
@@ -13284,6 +13287,12 @@ function setLang(lang) {
   document.querySelectorAll('[data-title-key]').forEach(el => {
     const k = el.getAttribute('data-title-key');
     if(u[k]) el.title = u[k];
+  });
+
+  // contact form placeholders
+  document.querySelectorAll('[data-ph-key]').forEach(el => {
+    const k = el.getAttribute('data-ph-key');
+    if(u[k]) el.placeholder = u[k];
   });
 
   // rename auto-generated page tabs to match current language
