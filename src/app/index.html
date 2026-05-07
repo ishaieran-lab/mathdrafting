@@ -1103,6 +1103,11 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
           <input type="range" id="bg-size-slider" min="10" max="80" value="30" oninput="_bgSize(this.value)">
           <span class="bg-lbl" id="bg-size-lbl">30</span>
         </div>
+        <div class="bg-scale-row" id="bg-dark-row" style="display:none">
+          <span>כהות:</span>
+          <input type="range" id="bg-dark-slider" min="0" max="100" value="40" oninput="_bgDark(this.value)">
+          <span class="bg-lbl" id="bg-dark-lbl">40</span>
+        </div>
       </div>
     </div>
     <!-- מספור שורות -->
@@ -1163,6 +1168,12 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
           <span class="nl-label" data-lang-key="nlHeight">גובה שורה:</span>
           <input type="range" id="nl-size-range" min="20" max="80" value="30" oninput="_nlSetSize(this.value)" style="flex:1;accent-color:#6c63ff;">
           <span id="nl-size-lbl" style="font-family:monospace;font-size:11px;color:#6c63ff;min-width:26px;font-weight:600;">30</span>
+        </div>
+        <!-- כהות קווים -->
+        <div class="nl-row">
+          <span class="nl-label">כהות:</span>
+          <input type="range" id="nl-dark-range" min="0" max="100" value="45" oninput="_nlSetDark(this.value)" style="flex:1;accent-color:#6c63ff;">
+          <span id="nl-dark-lbl" style="font-family:monospace;font-size:11px;color:#6c63ff;min-width:26px;font-weight:600;">45</span>
         </div>
       </div>
     </div>
@@ -2695,7 +2706,10 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
 <script>
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
 let canvasType='free',gridSize=30,tool='select';
-let bgType='none',bgSize=30;
+let bgType='none',bgSize=30,bgLineDark=40,nlLineDark=45;
+function _lineColor(dark){const v=100-dark;const r=Math.round(16+v*1.88);const g=Math.round(16+v*1.96);const b=Math.round(24+v*2.04);return`rgb(${r},${g},${b})`;}
+function _bgDark(v){bgLineDark=parseInt(v);document.getElementById('bg-dark-lbl').textContent=v;redraw();}
+function _nlSetDark(v){nlLineDark=parseInt(v);document.getElementById('nl-dark-lbl').textContent=v;redraw();}
 let _marginMm=20;
 let _nlOn=false,_nlType='num',_nlSide='right',_nlStart=1,_nlSpacing=0,_nlSize=30,_nlFromLine=1,_nlToLine=0,_nlBold=false;
 
@@ -2852,6 +2866,7 @@ function _setBg(type){
     if(b) b.classList.toggle('active',t===type);
   });
   document.getElementById('bg-scale-row').style.display=(type==='none')?'none':'flex';
+  document.getElementById('bg-dark-row').style.display=(type==='none')?'none':'flex';
   redraw();
 }
 function _bgSize(v){
@@ -3010,9 +3025,9 @@ function _drawNumberedLines(){
   const lblX=isRight?cv.width-gutter+4:gutter-4;
   const lblAlign=isRight?'left':'right';
   ctx.save();
-  ctx.strokeStyle='#7080a8';ctx.lineWidth=_nlBold?1.5:0.9;ctx.setLineDash([]);
+  const _nlC=_lineColor(nlLineDark);ctx.strokeStyle=_nlC;ctx.lineWidth=_nlBold?1.5:0.9;ctx.setLineDash([]);
   ctx.font=(_nlBold?'bold ':'')+' 9px "JetBrains Mono",monospace';
-  ctx.fillStyle=_nlBold?'#3a4e90':'#6070a0';
+  ctx.fillStyle=_nlC;
   ctx.textAlign=lblAlign;
   let labelNum=_nlStart;
   let physLine=0;
@@ -3130,22 +3145,23 @@ function drawBackground(){
   if(bgType==='none')return;
   const sz=bgSize;
   ctx.save();
+  const _bgC=_lineColor(bgLineDark);
   if(bgType==='grid'){
-    ctx.strokeStyle='#9aa4bf';ctx.lineWidth=1;
+    ctx.strokeStyle=_bgC;ctx.lineWidth=1;
     for(let x=0;x<=cv.width;x+=sz){const px=Math.round(x)+0.5;ctx.beginPath();ctx.moveTo(px,0);ctx.lineTo(px,cv.height);ctx.stroke();}
     for(let y=0;y<=cv.height;y+=sz){const py=Math.round(y)+0.5;ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(cv.width,py);ctx.stroke();}
   } else if(bgType==='dots'){
-    ctx.fillStyle='#8a94b0';
+    ctx.fillStyle=_bgC;
     for(let x=sz;x<cv.width;x+=sz){
       for(let y=sz;y<cv.height;y+=sz){
         ctx.beginPath();ctx.arc(Math.round(x),Math.round(y),1.4,0,Math.PI*2);ctx.fill();
       }
     }
   } else if(bgType==='lines'){
-    ctx.strokeStyle='#9aa4bf';ctx.lineWidth=1;
+    ctx.strokeStyle=_bgC;ctx.lineWidth=1;
     for(let y=sz;y<=cv.height;y+=sz){const py=Math.round(y)+0.5;ctx.beginPath();ctx.moveTo(0,py);ctx.lineTo(cv.width,py);ctx.stroke();}
   } else if(bgType==='diag'){
-    ctx.strokeStyle='#9aa4bf';ctx.lineWidth=0.9;
+    ctx.strokeStyle=_bgC;ctx.lineWidth=0.9;
     const total=cv.width+cv.height;
     for(let d=-cv.height;d<=cv.width;d+=sz){
       ctx.beginPath();ctx.moveTo(d,0);ctx.lineTo(d+cv.height,cv.height);ctx.stroke();
