@@ -737,7 +737,7 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-type-btn{padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-family:'Heebo',sans-serif;font-size:12px;text-align:center;transition:all 0.12s;}
 .eq-type-btn:hover,.eq-type-btn.sel{background:var(--accent);color:white;border-color:var(--accent);}
 .eq-fields{background:var(--surface2);border-radius:8px;padding:14px;margin-top:10px;}
-/* latex template panel */
+/* latex template panel (modal) */
 .eq-tmpl-panel{background:var(--surface2);border-radius:8px;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);}
 .eq-tmpl-tabs{display:flex;gap:4px;margin-bottom:7px;flex-wrap:wrap;}
 .eq-tmpl-tab{padding:3px 11px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:11px;font-family:'Heebo',sans-serif;transition:all 0.1s;}
@@ -749,6 +749,47 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-fv{display:inline-flex;flex-direction:column;align-items:center;font-size:10px;line-height:1.2;vertical-align:middle;}
 .eq-fn{border-bottom:1px solid currentColor;padding:0 2px;}
 .eq-fd{padding:0 2px;}
+/* ===== EQUATION RIBBON ===== */
+#eq-ribbon{display:none;background:#0f0f1a;border-bottom:2px solid rgba(108,99,255,0.25);padding:10px 14px 8px;flex-direction:column;gap:8px;flex-shrink:0;position:relative;z-index:50;}
+#eq-ribbon.open{display:flex;}
+body.light-theme #eq-ribbon{background:#f0f0fb;border-bottom:2px solid rgba(108,99,255,0.18);}
+.eq-rtabs{display:flex;gap:4px;align-items:center;flex-wrap:wrap;}
+.eq-rtab{padding:4px 14px;border-radius:7px;border:1px solid rgba(108,99,255,0.25);background:transparent;color:rgba(255,255,255,0.55);cursor:pointer;font-size:12px;font-family:'Heebo',sans-serif;transition:all 0.12s;}
+.eq-rtab.active{background:var(--accent);color:white;border-color:var(--accent);}
+.eq-rtab:hover:not(.active){border-color:rgba(108,99,255,0.55);color:rgba(255,255,255,0.9);}
+body.light-theme .eq-rtab{color:#555;border-color:rgba(108,99,255,0.2);}
+body.light-theme .eq-rtab:hover:not(.active){color:#1a1a3e;border-color:var(--accent);}
+.eqr-section{display:none;flex-wrap:wrap;gap:6px;}
+.eqr-section.active{display:flex;}
+/* Large ribbon template buttons */
+.eq-rb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px 10px;border-radius:10px;border:1px solid rgba(108,99,255,0.22);background:rgba(255,255,255,0.05);color:#e8e8f8;cursor:pointer;min-width:62px;min-height:68px;font-family:'Times New Roman',serif;transition:all 0.13s;}
+.eq-rb:hover{border-color:var(--accent);background:rgba(108,99,255,0.14);transform:translateY(-2px);box-shadow:0 4px 12px rgba(108,99,255,0.2);}
+.eq-rb-icon{font-size:24px;line-height:1.15;display:flex;align-items:center;justify-content:center;}
+.eq-rb-label{font-size:10px;font-family:'Heebo',sans-serif;color:rgba(255,255,255,0.45);white-space:nowrap;}
+.eq-rb .eq-fv{font-size:13px;}
+.eq-rb .eq-fn{border-bottom:1.5px solid currentColor;}
+/* Small buttons for Greek/symbols */
+.eq-rb-sm{min-width:42px;min-height:52px;padding:5px 7px;}
+.eq-rb-sm .eq-rb-icon{font-size:20px;}
+.eq-rb-sm .eq-rb-label{font-size:9px;}
+body.light-theme .eq-rb{background:white;color:#1a1a2e;border-color:rgba(108,99,255,0.18);box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+body.light-theme .eq-rb-label{color:#888;}
+/* Edit mode bar */
+#eq-ribbon-edit{display:none;flex-direction:column;gap:6px;border-top:1px solid rgba(108,99,255,0.18);padding-top:8px;margin-top:2px;}
+#eq-ribbon-edit.active{display:flex;}
+.eq-edit-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.eq-edit-part{display:flex;align-items:center;gap:5px;}
+.eq-edit-label{font-size:11px;color:rgba(255,255,255,0.5);font-family:'Heebo',sans-serif;white-space:nowrap;}
+body.light-theme .eq-edit-label{color:#777;}
+.eq-edit-input{border:1.5px solid rgba(108,99,255,0.4);border-radius:7px;background:rgba(255,255,255,0.08);color:#e8e8f8;font-family:'Times New Roman',serif;font-size:16px;padding:5px 10px;outline:none;min-width:80px;max-width:200px;transition:border-color 0.12s,box-shadow 0.12s;}
+.eq-edit-input:focus{border-color:var(--accent);background:rgba(108,99,255,0.1);}
+.eq-edit-input.eq-active-field{border-color:#7be;box-shadow:0 0 0 2px rgba(100,190,255,0.18);}
+body.light-theme .eq-edit-input{background:white;color:#1a1a2e;border-color:rgba(108,99,255,0.3);}
+#eq-edit-preview{background:white;border-radius:8px;padding:7px 14px;min-width:90px;min-height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-right:auto;box-shadow:0 2px 8px rgba(0,0,0,0.25);}
+#eq-ribbon-close{background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:20px;padding:2px 8px;border-radius:6px;line-height:1;transition:color 0.12s;margin-right:auto;}
+#eq-ribbon-close:hover{color:rgba(255,255,255,0.8);}
+body.light-theme #eq-ribbon-close{color:#aaa;}
+body.light-theme #eq-ribbon-close:hover{color:#333;}
 
 /* ===== NUMBERED LINES PANEL ===== */
 #numlines-panel{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#ffffff;border-radius:0;border:2px solid rgba(108,99,255,0.5);box-shadow:0 8px 28px rgba(60,50,120,0.15);padding:14px 16px;z-index:600;display:none;min-width:260px;}
@@ -1366,6 +1407,112 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   </div>
 </div>
 
+<!-- EQUATION RIBBON -->
+<div id="eq-ribbon">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div class="eq-rtabs">
+      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')">מבנים</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-calc')">חשבון</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')">יוונית</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-sym')">סמלים</button>
+    </div>
+    <button id="eq-ribbon-close" onclick="closeEqRibbon()" title="סגור">✕</button>
+  </div>
+  <!-- Template sections -->
+  <div style="overflow-x:auto">
+    <!-- Structures -->
+    <div id="eqr-struct" class="eqr-section active">
+      <button class="eq-rb" onclick="eqRibbonBtn('frac')" title="שבר"><span class="eq-rb-icon"><span class="eq-fv" style="font-size:14px"><span class="eq-fn"> a </span><span class="eq-fd"> b </span></span></span><span class="eq-rb-label">שבר</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('sqrt')" title="שורש"><span class="eq-rb-icon">√x</span><span class="eq-rb-label">שורש</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('nsqrt')" title="שורש n"><span class="eq-rb-icon" style="font-size:20px">ⁿ√x</span><span class="eq-rb-label">שורש n</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('pow')" title="חזקה"><span class="eq-rb-icon">x<sup style="font-size:15px">n</sup></span><span class="eq-rb-label">חזקה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('sub')" title="מנוי"><span class="eq-rb-icon">x<sub style="font-size:15px">i</sub></span><span class="eq-rb-label">מנוי</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('abs')" title="ערך מוחלט"><span class="eq-rb-icon">|x|</span><span class="eq-rb-label">ע.מוחלט</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('fracpar')" title="שבר בסוגריים"><span class="eq-rb-icon" style="font-size:18px">(<span class="eq-fv" style="font-size:11px"><span class="eq-fn">a</span><span class="eq-fd">b</span></span>)</span><span class="eq-rb-label">שבר ()</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('overline')" title="קו מעל"><span class="eq-rb-icon">x̄</span><span class="eq-rb-label">קו מעל</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('vec')" title="וקטור"><span class="eq-rb-icon">x⃗</span><span class="eq-rb-label">וקטור</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('binom')" title="בינום"><span class="eq-rb-icon"><span class="eq-fv" style="font-size:14px"><span class="eq-fn"> n </span><span class="eq-fd"> k </span></span></span><span class="eq-rb-label">בינום</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('matrix22')" title="מטריצה 2×2"><span class="eq-rb-icon" style="font-size:22px">⊡</span><span class="eq-rb-label">מטריצה</span></button>
+    </div>
+    <!-- Calculus -->
+    <div id="eqr-calc" class="eqr-section">
+      <button class="eq-rb" onclick="eqRibbonBtn('int')" title="אינטגרל"><span class="eq-rb-icon" style="font-size:30px">∫</span><span class="eq-rb-label">אינטגרל</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('defint')" title="אינטגרל מסוים"><span class="eq-rb-icon" style="font-size:20px">∫ₐᵇ</span><span class="eq-rb-label">א. מסוים</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('sum')" title="סכום"><span class="eq-rb-icon" style="font-size:28px">∑</span><span class="eq-rb-label">סכום</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('prod')" title="מכפלה"><span class="eq-rb-icon" style="font-size:28px">∏</span><span class="eq-rb-label">מכפלה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('lim')" title="גבול"><span class="eq-rb-icon" style="font-size:20px;font-family:'Times New Roman',serif">lim</span><span class="eq-rb-label">גבול</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('deriv')" title="נגזרת"><span class="eq-rb-icon"><span class="eq-fv" style="font-size:13px"><span class="eq-fn"> d </span><span class="eq-fd">dx</span></span></span><span class="eq-rb-label">נגזרת</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('partial')" title="נגזרת חלקית"><span class="eq-rb-icon"><span class="eq-fv" style="font-size:13px"><span class="eq-fn"> ∂ </span><span class="eq-fd">∂x</span></span></span><span class="eq-rb-label">חלקית</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('deriv2')" title="נגזרת שנייה"><span class="eq-rb-icon"><span class="eq-fv" style="font-size:11px"><span class="eq-fn">d²y</span><span class="eq-fd">dx²</span></span></span><span class="eq-rb-label">נגזרת ב׳</span></button>
+    </div>
+    <!-- Greek -->
+    <div id="eqr-greek" class="eqr-section">
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\alpha')"><span class="eq-rb-icon">α</span><span class="eq-rb-label">alpha</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\beta')"><span class="eq-rb-icon">β</span><span class="eq-rb-label">beta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\gamma')"><span class="eq-rb-icon">γ</span><span class="eq-rb-label">gamma</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\delta')"><span class="eq-rb-icon">δ</span><span class="eq-rb-label">delta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\varepsilon')"><span class="eq-rb-icon">ε</span><span class="eq-rb-label">epsilon</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\zeta')"><span class="eq-rb-icon">ζ</span><span class="eq-rb-label">zeta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\eta')"><span class="eq-rb-icon">η</span><span class="eq-rb-label">eta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\theta')"><span class="eq-rb-icon">θ</span><span class="eq-rb-label">theta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\lambda')"><span class="eq-rb-icon">λ</span><span class="eq-rb-label">lambda</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\mu')"><span class="eq-rb-icon">μ</span><span class="eq-rb-label">mu</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\nu')"><span class="eq-rb-icon">ν</span><span class="eq-rb-label">nu</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\xi')"><span class="eq-rb-icon">ξ</span><span class="eq-rb-label">xi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pi')"><span class="eq-rb-icon">π</span><span class="eq-rb-label">pi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\rho')"><span class="eq-rb-icon">ρ</span><span class="eq-rb-label">rho</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\sigma')"><span class="eq-rb-icon">σ</span><span class="eq-rb-label">sigma</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\tau')"><span class="eq-rb-icon">τ</span><span class="eq-rb-label">tau</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\phi')"><span class="eq-rb-icon">φ</span><span class="eq-rb-label">phi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\chi')"><span class="eq-rb-icon">χ</span><span class="eq-rb-label">chi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\psi')"><span class="eq-rb-icon">ψ</span><span class="eq-rb-label">psi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\omega')"><span class="eq-rb-icon">ω</span><span class="eq-rb-label">omega</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Gamma')"><span class="eq-rb-icon">Γ</span><span class="eq-rb-label">Gamma</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Delta')"><span class="eq-rb-icon">Δ</span><span class="eq-rb-label">Delta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Theta')"><span class="eq-rb-icon">Θ</span><span class="eq-rb-label">Theta</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Lambda')"><span class="eq-rb-icon">Λ</span><span class="eq-rb-label">Lambda</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Pi')"><span class="eq-rb-icon">Π</span><span class="eq-rb-label">Pi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Sigma')"><span class="eq-rb-icon">Σ</span><span class="eq-rb-label">Sigma</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Phi')"><span class="eq-rb-icon">Φ</span><span class="eq-rb-label">Phi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Psi')"><span class="eq-rb-icon">Ψ</span><span class="eq-rb-label">Psi</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Omega')"><span class="eq-rb-icon">Ω</span><span class="eq-rb-label">Omega</span></button>
+    </div>
+    <!-- Symbols -->
+    <div id="eqr-sym" class="eqr-section">
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\infty')"><span class="eq-rb-icon">∞</span><span class="eq-rb-label">אינסוף</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\neq')"><span class="eq-rb-icon">≠</span><span class="eq-rb-label">שונה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\leq')"><span class="eq-rb-icon">≤</span><span class="eq-rb-label">קטן-שווה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\geq')"><span class="eq-rb-icon">≥</span><span class="eq-rb-label">גדול-שווה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pm')"><span class="eq-rb-icon">±</span><span class="eq-rb-label">פלוס-מינוס</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\times')"><span class="eq-rb-icon">×</span><span class="eq-rb-label">כפל</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\div')"><span class="eq-rb-icon">÷</span><span class="eq-rb-label">חילוק</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\approx')"><span class="eq-rb-icon">≈</span><span class="eq-rb-label">בערך</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\in')"><span class="eq-rb-icon">∈</span><span class="eq-rb-label">שייך</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\notin')"><span class="eq-rb-icon">∉</span><span class="eq-rb-label">לא שייך</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cap')"><span class="eq-rb-icon">∩</span><span class="eq-rb-label">חיתוך</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cup')"><span class="eq-rb-icon">∪</span><span class="eq-rb-label">איחוד</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\emptyset')"><span class="eq-rb-icon">∅</span><span class="eq-rb-label">קבוצה ריקה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\to')"><span class="eq-rb-icon">→</span><span class="eq-rb-label">חץ</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Rightarrow')"><span class="eq-rb-icon">⇒</span><span class="eq-rb-label">גורר</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Leftrightarrow')"><span class="eq-rb-icon">⇔</span><span class="eq-rb-label">שקילות</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\forall')"><span class="eq-rb-icon">∀</span><span class="eq-rb-label">לכל</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\exists')"><span class="eq-rb-icon">∃</span><span class="eq-rb-label">קיים</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cdot')"><span class="eq-rb-icon">·</span><span class="eq-rb-label">נקודה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cdots')"><span class="eq-rb-icon">⋯</span><span class="eq-rb-label">שלוש נקודות</span></button>
+    </div>
+  </div>
+  <!-- Edit mode bar (appears when a template is selected) -->
+  <div id="eq-ribbon-edit">
+    <div class="eq-edit-row">
+      <span id="eq-edit-name" style="font-size:12px;font-weight:700;color:var(--accent);font-family:'Heebo',sans-serif;white-space:nowrap"></span>
+      <div id="eq-edit-parts" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
+      <div id="eq-edit-preview" title="תצוגה מקדימה">...</div>
+      <button class="btn btn-primary" style="font-size:12px;padding:6px 14px;flex-shrink:0" onclick="confirmEqTemplate()">הוסף לקנבס ↵</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:6px 10px;flex-shrink:0" onclick="cancelEqTemplate()">ביטול</button>
+    </div>
+  </div>
+</div>
+
 <div class="main">
 
   <!-- TOOLBAR -->
@@ -1382,7 +1529,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <button class="tbtn" onclick="startInlineText()" data-key="text" data-tip="טקסט" data-tip-key="tipText">
       <img src="../assets/icons/toolbar/text.png" width="32" height="32" style="object-fit:contain;">
     </button>
-    <button class="tbtn" onclick="openPopup('equations',this)" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
+    <button class="tbtn" onclick="toggleEqRibbon()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
       <img id="tbtn-eq-icon" src="../assets/icons/toolbar/ללא רקע.png" width="42" height="42" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
@@ -3885,8 +4032,11 @@ function drawEl(el){
       }
       break;
     case 'latex':
+      if(el._draft)ctx.globalAlpha=0.55;
       if(el.img)ctx.drawImage(el.img,el.x,el.y,el.w,el.h);
-      else{ctx.font='13px Heebo';ctx.fillStyle='#888';ctx.textBaseline='top';ctx.fillText('['+el.src+']',el.x,el.y);el.w=200;el.h=36;}break;
+      else{ctx.font='13px Heebo';ctx.fillStyle='#888';ctx.textBaseline='top';ctx.fillText('['+el.src+']',el.x,el.y);el.w=200;el.h=36;}
+      if(el._draft)ctx.globalAlpha=1;
+      break;
     case 'axes':
       if(el.fills&&el.fills.length) drawAxesFills(el);
       drawAxes(el);
@@ -9409,6 +9559,143 @@ let _editingLatexEl=null;
 function addLatexToCanvas(latex){
   closePopup();
   renderLatex(latex,img=>addEl({type:'latex',x:120,y:120,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:latex,img}));
+}
+
+// ===== EQUATION RIBBON =====
+const EQ_TEMPLATES={
+  frac:    {name:'שבר',           latex:v=>`\\frac{${v.n||'a'}}{${v.d||'b'}}`,                             parts:[{k:'n',l:'מונה',def:'a'},{k:'d',l:'מכנה',def:'b'}]},
+  sqrt:    {name:'שורש',          latex:v=>`\\sqrt{${v.x||'x'}}`,                                          parts:[{k:'x',l:'תוכן',def:'x'}]},
+  nsqrt:   {name:'שורש n',        latex:v=>`\\sqrt[${v.n||'n'}]{${v.x||'x'}}`,                             parts:[{k:'n',l:'דרגה',def:'n'},{k:'x',l:'תוכן',def:'x'}]},
+  pow:     {name:'חזקה',          latex:v=>`${v.b||'x'}^{${v.e||'2'}}`,                                   parts:[{k:'b',l:'בסיס',def:'x'},{k:'e',l:'מעריך',def:'2'}]},
+  sub:     {name:'מנוי',          latex:v=>`${v.b||'x'}_{${v.i||'i'}}`,                                   parts:[{k:'b',l:'בסיס',def:'x'},{k:'i',l:'מנוי',def:'i'}]},
+  abs:     {name:'ע.מוחלט',       latex:v=>`|${v.x||'x'}|`,                                               parts:[{k:'x',l:'תוכן',def:'x'}]},
+  fracpar: {name:'שבר ()',         latex:v=>`\\left(\\frac{${v.n||'a'}}{${v.d||'b'}}\\right)`,             parts:[{k:'n',l:'מונה',def:'a'},{k:'d',l:'מכנה',def:'b'}]},
+  overline:{name:'קו מעל',        latex:v=>`\\overline{${v.x||'x'}}`,                                     parts:[{k:'x',l:'תוכן',def:'x'}]},
+  vec:     {name:'וקטור',         latex:v=>`\\vec{${v.x||'x'}}`,                                          parts:[{k:'x',l:'תוכן',def:'x'}]},
+  binom:   {name:'בינום',         latex:v=>`\\binom{${v.n||'n'}}{${v.k||'k'}}`,                           parts:[{k:'n',l:'n',def:'n'},{k:'k',l:'k',def:'k'}]},
+  matrix22:{name:'מטריצה 2×2',   latex:v=>`\\begin{pmatrix}${v.a||'a'} & ${v.b||'b'} \\\\ ${v.c||'c'} & ${v.d||'d'}\\end{pmatrix}`, parts:[{k:'a',l:'a',def:'a'},{k:'b',l:'b',def:'b'},{k:'c',l:'c',def:'c'},{k:'d',l:'d',def:'d'}]},
+  int:     {name:'אינטגרל',       latex:v=>`\\int ${v.f||'f(x)'}\\,dx`,                                   parts:[{k:'f',l:'פונקציה',def:'f(x)'}]},
+  defint:  {name:'א.מסוים',       latex:v=>`\\int_{${v.a||'a'}}^{${v.b||'b'}} ${v.f||'f(x)'}\\,dx`,      parts:[{k:'a',l:'מ-',def:'a'},{k:'b',l:'עד',def:'b'},{k:'f',l:'פונקציה',def:'f(x)'}]},
+  sum:     {name:'סכום',          latex:v=>`\\sum_{${v.i||'i'}=${v.a||'1'}}^{${v.n||'n'}} ${v.f||'a_i'}`,parts:[{k:'i',l:'משתנה',def:'i'},{k:'a',l:'מ-',def:'1'},{k:'n',l:'עד',def:'n'},{k:'f',l:'ביטוי',def:'a_i'}]},
+  prod:    {name:'מכפלה',         latex:v=>`\\prod_{${v.i||'i'}=${v.a||'1'}}^{${v.n||'n'}} ${v.f||'a_i'}`,parts:[{k:'i',l:'משתנה',def:'i'},{k:'a',l:'מ-',def:'1'},{k:'n',l:'עד',def:'n'},{k:'f',l:'ביטוי',def:'a_i'}]},
+  lim:     {name:'גבול',          latex:v=>`\\lim_{${v.x||'x'}\\to ${v.t||'\\infty'}} ${v.f||'f(x)'}`,   parts:[{k:'x',l:'משתנה',def:'x'},{k:'t',l:'ל-',def:'\\infty'},{k:'f',l:'ביטוי',def:'f(x)'}]},
+  deriv:   {name:'נגזרת',         latex:v=>`\\frac{d${v.f||'y'}}{d${v.x||'x'}}`,                         parts:[{k:'f',l:'מונה',def:'y'},{k:'x',l:'מכנה',def:'x'}]},
+  partial: {name:'נגזרת חלקית',   latex:v=>`\\frac{\\partial ${v.f||'f'}}{\\partial ${v.x||'x'}}`,        parts:[{k:'f',l:'פונקציה',def:'f'},{k:'x',l:'משתנה',def:'x'}]},
+  deriv2:  {name:'נגזרת שנייה',   latex:v=>`\\frac{d^2${v.f||'y'}}{d${v.x||'x'}^2}`,                     parts:[{k:'f',l:'פונקציה',def:'y'},{k:'x',l:'משתנה',def:'x'}]},
+};
+let _eqRTpl=null,_eqRVals={},_eqRCurKey=null,_eqRDraftEl=null,_eqRTimer=null;
+
+function toggleEqRibbon(){
+  const r=document.getElementById('eq-ribbon');
+  if(r.classList.contains('open'))closeEqRibbon();
+  else r.classList.add('open');
+}
+function closeEqRibbon(){
+  cancelEqTemplate();
+  document.getElementById('eq-ribbon').classList.remove('open');
+}
+function switchEqRTab(btn,tabId){
+  document.querySelectorAll('.eq-rtab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.eqr-section').forEach(d=>d.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+function eqRibbonBtn(key){
+  if(_eqRTpl){
+    // Edit mode: insert default latex of this template into current field
+    const tpl=EQ_TEMPLATES[key];if(!tpl)return;
+    const defVals=Object.fromEntries(tpl.parts.map(p=>[p.k,p.def||'']));
+    eqRibbonInsert(tpl.latex(defVals));
+  } else {
+    startEqTemplate(key);
+  }
+}
+function eqRibbonInsert(latex){
+  if(_eqRTpl&&_eqRCurKey){
+    // Insert into currently active field
+    const inp=document.getElementById('eqr-inp-'+_eqRCurKey);
+    if(inp){
+      const s=inp.selectionStart,e=inp.selectionEnd,v=inp.value;
+      inp.value=v.slice(0,s)+latex+v.slice(e);
+      inp.setSelectionRange(s+latex.length,s+latex.length);
+      _eqRVals[_eqRCurKey]=inp.value;
+      _schedEqUpdate();inp.focus();
+    }
+  } else {
+    // Not editing: add directly to canvas
+    renderLatex(latex,img=>addEl({type:'latex',x:120,y:120,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:latex,img}));
+  }
+}
+function startEqTemplate(key){
+  const tpl=EQ_TEMPLATES[key];if(!tpl)return;
+  cancelEqTemplate();
+  _eqRTpl=tpl;_eqRVals={};
+  tpl.parts.forEach(p=>{_eqRVals[p.k]=p.def||'';});
+  _eqRCurKey=tpl.parts[0].k;
+  // Build edit UI
+  document.getElementById('eq-edit-name').textContent='✏️ '+tpl.name+':';
+  const partsDiv=document.getElementById('eq-edit-parts');partsDiv.innerHTML='';
+  tpl.parts.forEach((p,idx)=>{
+    const wrap=document.createElement('div');wrap.className='eq-edit-part';
+    const lbl=document.createElement('span');lbl.className='eq-edit-label';lbl.textContent=p.l+':';
+    const inp=document.createElement('input');
+    inp.className='eq-edit-input'+(idx===0?' eq-active-field':'');
+    inp.id='eqr-inp-'+p.k;inp.value=p.def||'';
+    inp.oninput=()=>{_eqRVals[p.k]=inp.value;_eqRCurKey=p.k;_schedEqUpdate();};
+    inp.onfocus=()=>{_eqRCurKey=p.k;document.querySelectorAll('.eq-edit-input').forEach(i=>i.classList.remove('eq-active-field'));inp.classList.add('eq-active-field');};
+    inp.onkeydown=e=>{
+      if(e.key==='Tab'||(e.key==='Enter'&&idx<tpl.parts.length-1)){
+        e.preventDefault();
+        const next=document.getElementById('eqr-inp-'+tpl.parts[idx+1].k);
+        if(next){next.focus();next.select();}
+      } else if(e.key==='Enter'&&idx===tpl.parts.length-1){
+        e.preventDefault();confirmEqTemplate();
+      }
+    };
+    wrap.appendChild(lbl);wrap.appendChild(inp);partsDiv.appendChild(wrap);
+  });
+  document.getElementById('eq-ribbon-edit').classList.add('active');
+  // Create draft element in center of canvas
+  const latex=tpl.latex(_eqRVals);
+  const cx=Math.round(cv.width/2-60),cy=80;
+  _eqRDraftEl={type:'latex',id:Date.now()+Math.random(),x:cx,y:cy,w:140,h:50,color:'#000',fill:'none',sw:1,src:latex,img:null,_draft:true};
+  els.push(_eqRDraftEl);selId=_eqRDraftEl.id;
+  _schedEqUpdate();
+  setTimeout(()=>{const f=document.getElementById('eqr-inp-'+tpl.parts[0].k);if(f){f.focus();f.select();}},60);
+}
+function _schedEqUpdate(){
+  clearTimeout(_eqRTimer);_eqRTimer=setTimeout(_updateEqDraft,250);
+}
+function _updateEqDraft(){
+  if(!_eqRTpl||!_eqRDraftEl)return;
+  const latex=_eqRTpl.latex(_eqRVals);
+  _eqRDraftEl.src=latex;
+  const prev=document.getElementById('eq-edit-preview');
+  prev.innerHTML=`\\(${latex}\\)`;
+  if(window.MathJax)MathJax.typesetPromise([prev]).catch(()=>{});
+  renderLatex(latex,img=>{
+    if(!_eqRDraftEl)return;
+    _eqRDraftEl.img=img;
+    if(img){_eqRDraftEl.w=Math.max(img.width,80);_eqRDraftEl.h=Math.max(img.height,36);}
+    redraw();
+  });
+}
+function confirmEqTemplate(){
+  if(!_eqRDraftEl)return;
+  saveHistory();
+  _eqRDraftEl._draft=false;_eqRDraftEl=null;_eqRTpl=null;
+  document.getElementById('eq-ribbon-edit').classList.remove('active');
+  redraw();
+}
+function cancelEqTemplate(){
+  if(_eqRDraftEl){
+    const idx=els.indexOf(_eqRDraftEl);if(idx>=0)els.splice(idx,1);
+    _eqRDraftEl=null;
+  }
+  _eqRTpl=null;
+  const ed=document.getElementById('eq-ribbon-edit');
+  if(ed)ed.classList.remove('active');
+  redraw();
 }
 function insertEqTmpl(latex,selStart,selEnd){
   const inp=document.getElementById('latex-in');
