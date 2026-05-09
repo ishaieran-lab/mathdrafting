@@ -9046,11 +9046,7 @@ function updProps(){
           dirBtn.textContent=s.labelDirs[k]?dirIcons[s.labelDirs[k]]:'⟳';
           redraw();
         };
-        const resetBtn=document.createElement('button');
-        resetBtn.className='flip-btn';resetBtn.style.cssText='font-size:10px;padding:1px 5px;flex-shrink:0';
-        resetBtn.textContent='↺';resetBtn.title='אפס שם';
-        resetBtn.onclick=function(){if(s.labels)delete s.labels[k];inp.value=k;redraw();};
-        row.append(span,inp,dirBtn,resetBtn);
+        row.append(span,inp,dirBtn);
         grid.appendChild(row);
       });
     }
