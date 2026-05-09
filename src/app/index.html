@@ -737,6 +737,18 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-type-btn{padding:10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-family:'Heebo',sans-serif;font-size:12px;text-align:center;transition:all 0.12s;}
 .eq-type-btn:hover,.eq-type-btn.sel{background:var(--accent);color:white;border-color:var(--accent);}
 .eq-fields{background:var(--surface2);border-radius:8px;padding:14px;margin-top:10px;}
+/* latex template panel */
+.eq-tmpl-panel{background:var(--surface2);border-radius:8px;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);}
+.eq-tmpl-tabs{display:flex;gap:4px;margin-bottom:7px;flex-wrap:wrap;}
+.eq-tmpl-tab{padding:3px 11px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:11px;font-family:'Heebo',sans-serif;transition:all 0.1s;}
+.eq-tmpl-tab.active{background:var(--accent);color:white;border-color:var(--accent);}
+.eq-tmpl-grid>div{display:none;flex-wrap:wrap;gap:4px;}
+.eq-tmpl-grid>div.active{display:flex;}
+.eq-tb{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;font-family:'Times New Roman',serif;min-width:32px;text-align:center;line-height:1.3;transition:background 0.1s,border-color 0.1s;}
+.eq-tb:hover{border-color:var(--accent);background:rgba(108,99,255,0.09);}
+.eq-fv{display:inline-flex;flex-direction:column;align-items:center;font-size:10px;line-height:1.2;vertical-align:middle;}
+.eq-fn{border-bottom:1px solid currentColor;padding:0 2px;}
+.eq-fd{padding:0 2px;}
 
 /* ===== NUMBERED LINES PANEL ===== */
 #numlines-panel{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#ffffff;border-radius:0;border:2px solid rgba(108,99,255,0.5);box-shadow:0 8px 28px rgba(60,50,120,0.15);padding:14px 16px;z-index:600;display:none;min-width:260px;}
@@ -2604,9 +2616,101 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
 
 <!-- MODAL: LATEX -->
 <div class="modal-bg" id="latex-modal">
-  <div class="modal">
+  <div class="modal" style="max-width:520px">
     <h3>✏️ נוסחה מתמטית — LaTeX</h3>
-    <p class="msub">למשל: \frac{-b \pm \sqrt{b^2-4ac}}{2a} או \int_0^\infty x^2 dx</p>
+    <!-- Template panel -->
+    <div class="eq-tmpl-panel">
+      <div class="eq-tmpl-tabs">
+        <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'tmpl-struct')">מבנים</button>
+        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-calc')">חשבון</button>
+        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-greek')">יוונית</button>
+        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-sym')">סמלים</button>
+      </div>
+      <div class="eq-tmpl-grid">
+        <!-- Structures -->
+        <div id="tmpl-struct" class="active">
+          <button class="eq-tb" onclick="insertEqTmpl('\\frac{a}{b}',7,8)" title="שבר"><span class="eq-fv"><span class="eq-fn">a</span><span class="eq-fd">b</span></span></button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\sqrt{x}',6,7)" title="שורש">√x</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\sqrt[n]{x}',7,8)" title="שורש n">ⁿ√x</button>
+          <button class="eq-tb" onclick="insertEqTmpl('x^{2}',3,4)" title="חזקה">x²</button>
+          <button class="eq-tb" onclick="insertEqTmpl('x_{i}',3,4)" title="מנוי">x₍ᵢ₎</button>
+          <button class="eq-tb" onclick="insertEqTmpl('x_{i}^{n}',3,4)" title="מנוי+חזקה">xᵢⁿ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\left(\\frac{a}{b}\\right)',13,14)" title="שבר בסוגריים">(<span class="eq-fv"><span class="eq-fn">a</span><span class="eq-fd">b</span></span>)</button>
+          <button class="eq-tb" onclick="insertEqTmpl('|x|',1,2)" title="ערך מוחלט">|x|</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\overline{x}',10,11)" title="קו מעל">x̄</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\vec{x}',5,6)" title="וקטור">x⃗</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\binom{n}{k}',8,9)" title="בינום"><span class="eq-fv"><span class="eq-fn">n</span><span class="eq-fd">k</span></span></button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\begin{pmatrix}a & b \\\\ c & d\\end{pmatrix}',15,16)" title="מטריצה 2×2">⊡</button>
+        </div>
+        <!-- Calculus -->
+        <div id="tmpl-calc">
+          <button class="eq-tb" onclick="insertEqTmpl('\\int ',5,5)" title="אינטגרל">∫</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\int_{a}^{b} ',6,7)" title="אינטגרל מסוים">∫ₐᵇ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\sum_{i=1}^{n} ',6,7)" title="סכום">∑</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\prod_{i=1}^{n} ',7,8)" title="מכפלה">∏</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\lim_{x \\to \\infty} ',6,7)" title="גבול">lim</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\frac{d}{dx}',7,8)" title="נגזרת"><span class="eq-fv"><span class="eq-fn">d</span><span class="eq-fd">dx</span></span></button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\frac{\\partial}{\\partial x}',9,16)" title="נגזרת חלקית"><span class="eq-fv"><span class="eq-fn">∂</span><span class="eq-fd">∂x</span></span></button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\frac{d^2y}{dx^2}',7,10)" title="נגזרת שנייה"><span class="eq-fv"><span class="eq-fn">d²y</span><span class="eq-fd">dx²</span></span></button>
+        </div>
+        <!-- Greek -->
+        <div id="tmpl-greek">
+          <button class="eq-tb" onclick="insertEqTmpl('\\alpha ')">α</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\beta ')">β</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\gamma ')">γ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\delta ')">δ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\varepsilon ')">ε</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\zeta ')">ζ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\eta ')">η</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\theta ')">θ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\lambda ')">λ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\mu ')">μ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\nu ')">ν</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\xi ')">ξ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\pi ')">π</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\rho ')">ρ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\sigma ')">σ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\tau ')">τ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\phi ')">φ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\chi ')">χ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\psi ')">ψ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\omega ')">ω</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Gamma ')">Γ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Delta ')">Δ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Theta ')">Θ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Lambda ')">Λ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Pi ')">Π</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Sigma ')">Σ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Phi ')">Φ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Psi ')">Ψ</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Omega ')">Ω</button>
+        </div>
+        <!-- Symbols -->
+        <div id="tmpl-sym">
+          <button class="eq-tb" onclick="insertEqTmpl('\\infty ')">∞</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\neq ')">≠</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\leq ')">≤</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\geq ')">≥</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\pm ')">±</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\times ')">×</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\div ')">÷</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\approx ')">≈</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\in ')">∈</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\notin ')">∉</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\cap ')">∩</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\cup ')">∪</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\emptyset ')">∅</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\to ')">→</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Rightarrow ')">⇒</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\Leftrightarrow ')">⇔</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\forall ')">∀</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\exists ')">∃</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\cdot ')">·</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\cdots ')">⋯</button>
+          <button class="eq-tb" onclick="insertEqTmpl('\\ldots ')">…</button>
+        </div>
+      </div>
+    </div>
     <label class="pl">קוד LaTeX:</label>
     <input class="pi" id="latex-in" placeholder="\frac{a}{b} = \sqrt{x^2+y^2}" oninput="prevLatex()">
     <div class="latex-prev" id="latex-prev">תצוגה מקדימה...</div>
@@ -9198,6 +9302,22 @@ function closeModal(id){
 document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
 
 // ===== LATEX =====
+function switchEqTab(btn,tabId){
+  btn.closest('.eq-tmpl-panel').querySelectorAll('.eq-tmpl-tab').forEach(b=>b.classList.remove('active'));
+  btn.closest('.eq-tmpl-panel').querySelectorAll('.eq-tmpl-grid>div').forEach(d=>d.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+}
+function insertEqTmpl(latex,selStart,selEnd){
+  const inp=document.getElementById('latex-in');
+  const pos=inp.selectionStart,end=inp.selectionEnd,val=inp.value;
+  inp.value=val.slice(0,pos)+latex+val.slice(end);
+  const s=selStart!==undefined?pos+selStart:pos+latex.length;
+  const e=selEnd!==undefined?pos+selEnd:s;
+  inp.setSelectionRange(s,e);
+  inp.dispatchEvent(new Event('input'));
+  inp.focus();
+}
 let ltimer=null;
 function prevLatex(){
   clearTimeout(ltimer);ltimer=setTimeout(()=>{
