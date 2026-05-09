@@ -1382,7 +1382,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <button class="tbtn" onclick="startInlineText()" data-key="text" data-tip="טקסט" data-tip-key="tipText">
       <img src="../assets/icons/toolbar/text.png" width="32" height="32" style="object-fit:contain;">
     </button>
-    <button class="tbtn" onclick="openLatexBuilder()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
+    <button class="tbtn" onclick="openPopup('equations',this)" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
       <img id="tbtn-eq-icon" src="../assets/icons/toolbar/ללא רקע.png" width="42" height="42" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
@@ -2191,16 +2191,104 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
 
 
 <!-- POPUP: EQUATIONS -->
-<div class="popup" id="pop-equations" style="display:none">
-  <div class="popup-title" data-lang-key="eqTitle">🔢 משוואות</div>
-  <button class="pop-item" onclick="closePopup();startFreeEq()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M4 7h8M4 17h12"/></svg>
-    <span data-lang-key="eqFree">✏️ משוואה חופשית</span>
-  </button>
-  <button class="pop-item" onclick="closePopup();openEqModal('quadratic')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18 Q8 4 12 10 Q16 16 20 6"/></svg>
-    <span data-lang-key="eqQuadratic">🔲 משוואה ריבועית</span>
-  </button>
+<div class="popup" id="pop-equations" style="display:none;min-width:360px;max-width:400px">
+  <div class="popup-title">🔢 משוואות</div>
+  <!-- Tabs -->
+  <div class="eq-tmpl-tabs">
+    <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'peq-struct')">מבנים</button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-calc')">חשבון</button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-greek')">יוונית</button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-sym')">סמלים</button>
+  </div>
+  <!-- Template grid -->
+  <div class="eq-tmpl-grid" style="margin-top:8px">
+    <!-- Structures -->
+    <div id="peq-struct" class="active">
+      <button class="eq-tb" onclick="addLatexToCanvas('\\frac{a}{b}')" title="שבר"><span class="eq-fv"><span class="eq-fn">a</span><span class="eq-fd">b</span></span></button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\sqrt{x}')" title="שורש">√x</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\sqrt[n]{x}')" title="שורש n">ⁿ√x</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('x^{2}')" title="חזקה">x²</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('x_{i}')" title="מנוי">xᵢ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('x_{i}^{n}')" title="מנוי+חזקה">xᵢⁿ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\left(\\frac{a}{b}\\right)')" title="שבר בסוגריים">(<span class="eq-fv"><span class="eq-fn">a</span><span class="eq-fd">b</span></span>)</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('|x|')" title="ערך מוחלט">|x|</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\overline{x}')" title="קו מעל">x̄</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\vec{x}')" title="וקטור">x⃗</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\binom{n}{k}')" title="בינום"><span class="eq-fv"><span class="eq-fn">n</span><span class="eq-fd">k</span></span></button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\begin{pmatrix}a & b \\\\ c & d\\end{pmatrix}')" title="מטריצה 2×2">⊡</button>
+    </div>
+    <!-- Calculus -->
+    <div id="peq-calc">
+      <button class="eq-tb" onclick="addLatexToCanvas('\\int x\\,dx')" title="אינטגרל">∫</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\int_{a}^{b} f(x)\\,dx')" title="אינטגרל מסוים">∫ₐᵇ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\sum_{i=1}^{n} a_i')" title="סכום">∑</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\prod_{i=1}^{n} a_i')" title="מכפלה">∏</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\lim_{x \\to \\infty} f(x)')" title="גבול">lim</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\frac{d}{dx}f(x)')" title="נגזרת"><span class="eq-fv"><span class="eq-fn">d</span><span class="eq-fd">dx</span></span></button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\frac{\\partial f}{\\partial x}')" title="נגזרת חלקית"><span class="eq-fv"><span class="eq-fn">∂f</span><span class="eq-fd">∂x</span></span></button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\frac{d^2y}{dx^2}')" title="נגזרת שנייה"><span class="eq-fv"><span class="eq-fn">d²y</span><span class="eq-fd">dx²</span></span></button>
+    </div>
+    <!-- Greek -->
+    <div id="peq-greek">
+      <button class="eq-tb" onclick="addLatexToCanvas('\\alpha')">α</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\beta')">β</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\gamma')">γ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\delta')">δ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\varepsilon')">ε</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\zeta')">ζ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\eta')">η</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\theta')">θ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\lambda')">λ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\mu')">μ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\nu')">ν</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\xi')">ξ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\pi')">π</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\rho')">ρ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\sigma')">σ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\tau')">τ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\phi')">φ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\chi')">χ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\psi')">ψ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\omega')">ω</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Gamma')">Γ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Delta')">Δ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Theta')">Θ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Lambda')">Λ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Pi')">Π</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Sigma')">Σ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Phi')">Φ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Psi')">Ψ</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Omega')">Ω</button>
+    </div>
+    <!-- Symbols -->
+    <div id="peq-sym">
+      <button class="eq-tb" onclick="addLatexToCanvas('\\infty')">∞</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\neq')">≠</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\leq')">≤</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\geq')">≥</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\pm')">±</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\times')">×</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\div')">÷</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\approx')">≈</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\in')">∈</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\notin')">∉</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\cap')">∩</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\cup')">∪</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\emptyset')">∅</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\to')">→</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Rightarrow')">⇒</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\Leftrightarrow')">⇔</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\forall')">∀</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\exists')">∃</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\cdot')">·</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('\\cdots')">⋯</button>
+    </div>
+  </div>
+  <!-- Extra options -->
+  <div style="border-top:1px solid rgba(108,99,255,0.15);margin-top:10px;padding-top:8px;display:flex;gap:6px;flex-wrap:wrap">
+    <button class="pop-item" style="font-size:11px;padding:5px 10px;flex:1" onclick="closePopup();startFreeEq()">✏️ משוואה חופשית</button>
+    <button class="pop-item" style="font-size:11px;padding:5px 10px;flex:1" onclick="closePopup();openLatexBuilder()">⌨️ LaTeX ידני</button>
+  </div>
 </div>
 
 <!-- POPUP: STATISTICS -->
@@ -6574,6 +6662,14 @@ cv.addEventListener('dblclick',e=>{
     if(hit&&(hit.type==='text'||hit.type==='eqblock')){
       startEqEdit(hit);return;
     }
+    // Double-click latex — open LaTeX modal for editing
+    if(hit&&hit.type==='latex'){
+      _editingLatexEl=hit;
+      document.getElementById('latex-in').value=hit.src||'';
+      prevLatex();
+      openModal('latex-modal');
+      return;
+    }
     // Double-click stat charts / table — open editor
     if(hit&&['barchart','piechart','freqpoly','statmeasures','table','freegraph'].includes(hit.type)){
       _tblDblX=mx;_tblDblY=my;
@@ -9303,10 +9399,16 @@ document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>
 
 // ===== LATEX =====
 function switchEqTab(btn,tabId){
-  btn.closest('.eq-tmpl-panel').querySelectorAll('.eq-tmpl-tab').forEach(b=>b.classList.remove('active'));
-  btn.closest('.eq-tmpl-panel').querySelectorAll('.eq-tmpl-grid>div').forEach(d=>d.classList.remove('active'));
+  const container=btn.closest('.eq-tmpl-panel,.popup');
+  container.querySelectorAll('.eq-tmpl-tab').forEach(b=>b.classList.remove('active'));
+  container.querySelectorAll('.eq-tmpl-grid>div').forEach(d=>d.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById(tabId).classList.add('active');
+}
+let _editingLatexEl=null;
+function addLatexToCanvas(latex){
+  closePopup();
+  renderLatex(latex,img=>addEl({type:'latex',x:120,y:120,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:latex,img}));
 }
 function insertEqTmpl(latex,selStart,selEnd){
   const inp=document.getElementById('latex-in');
@@ -9329,7 +9431,12 @@ function prevLatex(){
 function insertLatex(){
   const v=document.getElementById('latex-in').value;if(!v)return;
   closeModal('latex-modal');
-  renderLatex(v,img=>addEl({type:'latex',x:100,y:100,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:v,img}));
+  if(_editingLatexEl){
+    const el=_editingLatexEl;_editingLatexEl=null;
+    renderLatex(v,img=>{el.src=v;if(img){el.img=img;el.w=Math.max(img.width,80);el.h=Math.max(img.height,36);}redraw();});
+  } else {
+    renderLatex(v,img=>addEl({type:'latex',x:100,y:100,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:v,img}));
+  }
 }
 function renderLatex(latex,cb){
   const d=document.createElement('div');
