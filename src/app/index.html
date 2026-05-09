@@ -1382,7 +1382,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <button class="tbtn" onclick="startInlineText()" data-key="text" data-tip="טקסט" data-tip-key="tipText">
       <img src="../assets/icons/toolbar/text.png" width="32" height="32" style="object-fit:contain;">
     </button>
-    <button class="tbtn" onclick="openEqTutorial(this)" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
+    <button class="tbtn" onclick="openLatexBuilder()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
       <img id="tbtn-eq-icon" src="../assets/icons/toolbar/ללא רקע.png" width="42" height="42" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
@@ -10975,6 +10975,13 @@ const EQ_DEFS={
 // ============================================================
 // EQUATIONS TUTORIAL
 // ============================================================
+function openLatexBuilder(){
+  const inp=document.getElementById('latex-in');
+  inp.value='';
+  document.getElementById('latex-prev').innerHTML='תצוגה מקדימה...';
+  openModal('latex-modal');
+  setTimeout(()=>inp.focus(),120);
+}
 function openEqTutorial(btn){
   document.getElementById('eq-tut-body').innerHTML = _eqTutBuildAll();
   openModal('eq-tutorial-modal');
