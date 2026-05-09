@@ -4552,9 +4552,10 @@ function _3dDot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
 function _3dViewDir(theta,phi){
   return[Math.cos(phi)*Math.sin(theta),Math.sin(phi),Math.cos(phi)*Math.cos(theta)];
 }
-function _3dEdge(c,a,b,vis,color,lw){
+function _3dEdge(c,a,b,vis,color,lw,style){
   c.beginPath();c.moveTo(a.sx,a.sy);c.lineTo(b.sx,b.sy);
-  c.setLineDash(vis?[]:[5,3]);c.strokeStyle=color;c.lineWidth=lw;c.stroke();
+  c.setLineDash(style==='dashed'?[6,4]:vis?[]:[5,3]);
+  c.strokeStyle=color;c.lineWidth=lw;c.stroke();
 }
 function _3dLabel(c,P,keys,el,color){
   if(el.showLabels===false)return;
@@ -4609,16 +4610,16 @@ function drawBox3d(c,el,ox,oy){
     AE:fv.Left||fv.Bottom,  BF:fv.Right||fv.Bottom,
     CG:fv.Right||fv.Top,    DH:fv.Left||fv.Top
   };
-  const cl=el.color||'#333', lw=el.sw||1.5;
+  const cl=el.color||'#333', lw=el.sw||1.5, ls=el.lineStyle||'solid';
   c.save();
-  _3dEdge(c,P.A,P.B,ev.AB,cl,lw);_3dEdge(c,P.B,P.C,ev.BC,cl,lw);
-  _3dEdge(c,P.C,P.D,ev.CD,cl,lw);_3dEdge(c,P.D,P.A,ev.DA,cl,lw);
-  _3dEdge(c,P.E,P.F,ev.EF,cl,lw);_3dEdge(c,P.F,P.G,ev.FG,cl,lw);
-  _3dEdge(c,P.G,P.H,ev.GH,cl,lw);_3dEdge(c,P.H,P.E,ev.HE,cl,lw);
-  _3dEdge(c,P.A,P.E,ev.AE,cl,lw);_3dEdge(c,P.B,P.F,ev.BF,cl,lw);
-  _3dEdge(c,P.C,P.G,ev.CG,cl,lw);_3dEdge(c,P.D,P.H,ev.DH,cl,lw);
+  _3dEdge(c,P.A,P.B,ev.AB,cl,lw,ls);_3dEdge(c,P.B,P.C,ev.BC,cl,lw,ls);
+  _3dEdge(c,P.C,P.D,ev.CD,cl,lw,ls);_3dEdge(c,P.D,P.A,ev.DA,cl,lw,ls);
+  _3dEdge(c,P.E,P.F,ev.EF,cl,lw,ls);_3dEdge(c,P.F,P.G,ev.FG,cl,lw,ls);
+  _3dEdge(c,P.G,P.H,ev.GH,cl,lw,ls);_3dEdge(c,P.H,P.E,ev.HE,cl,lw,ls);
+  _3dEdge(c,P.A,P.E,ev.AE,cl,lw,ls);_3dEdge(c,P.B,P.F,ev.BF,cl,lw,ls);
+  _3dEdge(c,P.C,P.G,ev.CG,cl,lw,ls);_3dEdge(c,P.D,P.H,ev.DH,cl,lw,ls);
   // Space diagonal A→G (dashed)
-  if(el.showSpaceDiag) _3dEdge(c,P.A,P.G,false,cl,lw);
+  if(el.showSpaceDiag) _3dEdge(c,P.A,P.G,false,cl,lw,ls);
   c.setLineDash([]);
   // Right angle marker at corner B (between BA, BC, BF edges)
   if(el.showRightAngle){
@@ -4665,15 +4666,15 @@ function drawCube3d(c,el,ox,oy){
     AE:fv.Left||fv.Bottom,BF:fv.Right||fv.Bottom,
     CG:fv.Right||fv.Top,  DH:fv.Left||fv.Top
   };
-  const cl=el.color||'#333', lw=el.sw||1.5;
+  const cl=el.color||'#333', lw=el.sw||1.5, ls=el.lineStyle||'solid';
   c.save();
-  _3dEdge(c,P.A,P.B,ev.AB,cl,lw);_3dEdge(c,P.B,P.C,ev.BC,cl,lw);
-  _3dEdge(c,P.C,P.D,ev.CD,cl,lw);_3dEdge(c,P.D,P.A,ev.DA,cl,lw);
-  _3dEdge(c,P.E,P.F,ev.EF,cl,lw);_3dEdge(c,P.F,P.G,ev.FG,cl,lw);
-  _3dEdge(c,P.G,P.H,ev.GH,cl,lw);_3dEdge(c,P.H,P.E,ev.HE,cl,lw);
-  _3dEdge(c,P.A,P.E,ev.AE,cl,lw);_3dEdge(c,P.B,P.F,ev.BF,cl,lw);
-  _3dEdge(c,P.C,P.G,ev.CG,cl,lw);_3dEdge(c,P.D,P.H,ev.DH,cl,lw);
-  if(el.showSpaceDiag) _3dEdge(c,P.A,P.G,false,cl,lw);
+  _3dEdge(c,P.A,P.B,ev.AB,cl,lw,ls);_3dEdge(c,P.B,P.C,ev.BC,cl,lw,ls);
+  _3dEdge(c,P.C,P.D,ev.CD,cl,lw,ls);_3dEdge(c,P.D,P.A,ev.DA,cl,lw,ls);
+  _3dEdge(c,P.E,P.F,ev.EF,cl,lw,ls);_3dEdge(c,P.F,P.G,ev.FG,cl,lw,ls);
+  _3dEdge(c,P.G,P.H,ev.GH,cl,lw,ls);_3dEdge(c,P.H,P.E,ev.HE,cl,lw,ls);
+  _3dEdge(c,P.A,P.E,ev.AE,cl,lw,ls);_3dEdge(c,P.B,P.F,ev.BF,cl,lw,ls);
+  _3dEdge(c,P.C,P.G,ev.CG,cl,lw,ls);_3dEdge(c,P.D,P.H,ev.DH,cl,lw,ls);
+  if(el.showSpaceDiag) _3dEdge(c,P.A,P.G,false,cl,lw,ls);
   c.setLineDash([]);
   if(el.showRightAngle){
     const sz=7;
@@ -4720,13 +4721,13 @@ function drawPrism3d(c,el,ox,oy){
     DE:fv.Back||fv.Left,    DF:fv.Back||fv.Right,   EF:fv.Back||fv.Bottom,
     AD:fv.Left||fv.Right,   BE:fv.Left||fv.Bottom,  CF:fv.Right||fv.Bottom
   };
-  const cl=el.color||'#333', lw=el.sw||1.5;
+  const cl=el.color||'#333', lw=el.sw||1.5, ls=el.lineStyle||'solid';
   c.save();
-  _3dEdge(c,P.A,P.B,ev.AB,cl,lw);_3dEdge(c,P.A,P.C,ev.AC,cl,lw);_3dEdge(c,P.B,P.C,ev.BC,cl,lw);
-  _3dEdge(c,P.D,P.E,ev.DE,cl,lw);_3dEdge(c,P.D,P.F,ev.DF,cl,lw);_3dEdge(c,P.E,P.F,ev.EF,cl,lw);
-  _3dEdge(c,P.A,P.D,ev.AD,cl,lw);_3dEdge(c,P.B,P.E,ev.BE,cl,lw);_3dEdge(c,P.C,P.F,ev.CF,cl,lw);
+  _3dEdge(c,P.A,P.B,ev.AB,cl,lw,ls);_3dEdge(c,P.A,P.C,ev.AC,cl,lw,ls);_3dEdge(c,P.B,P.C,ev.BC,cl,lw,ls);
+  _3dEdge(c,P.D,P.E,ev.DE,cl,lw,ls);_3dEdge(c,P.D,P.F,ev.DF,cl,lw,ls);_3dEdge(c,P.E,P.F,ev.EF,cl,lw,ls);
+  _3dEdge(c,P.A,P.D,ev.AD,cl,lw,ls);_3dEdge(c,P.B,P.E,ev.BE,cl,lw,ls);_3dEdge(c,P.C,P.F,ev.CF,cl,lw,ls);
   // Height line A→H (dashed)
-  if(el.showHeight) _3dEdge(c,P.A,P.H,false,cl,lw);
+  if(el.showHeight) _3dEdge(c,P.A,P.H,false,cl,lw,ls);
   c.setLineDash([]);
   // Right angle at H (between AH and BC directions)
   if(el.showHeight&&el.showRightAngle){
@@ -4810,11 +4811,11 @@ function drawPyramid3d(c,el,ox,oy){
   for(const k in V3) P[k]=proj(V3[k]);
 
   const color=el.color||'#333';
-  const lw=el.sw||1.5;
+  const lw=el.sw||1.5, ls=el.lineStyle||'solid';
   c.save();
   function edge(a,b,vis){
     c.beginPath();c.moveTo(a.sx,a.sy);c.lineTo(b.sx,b.sy);
-    c.setLineDash(vis?[]:[5,3]);
+    c.setLineDash(ls==='dashed'?[6,4]:vis?[]:[5,3]);
     c.strokeStyle=color;c.lineWidth=lw;c.stroke();
   }
 
@@ -8959,6 +8960,9 @@ function updProps(){
   // 3D shape props panel
   const is3d=['box3d','cube3d','prism3d','pyramid3d'].includes(s.type);
   document.getElementById('pg-3d-props').style.display=is3d?'block':'none';
+  // hide general dash buttons for 3D (they have their own)
+  const _genDashRow=document.querySelector('#pg-stroke-dash .flip-row');
+  if(_genDashRow)_genDashRow.style.display=is3d?'none':'';
   if(is3d){
     const ls=s.lineStyle||'solid';
     const b3s=document.getElementById('btn-3d-solid');
