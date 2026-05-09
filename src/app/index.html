@@ -1048,7 +1048,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
       <div id="bg-panel">
         <div class="bg-opts">
           <button class="bg-opt active" id="bgo-none" onclick="_setBg('none')" title="דף חלק" data-title-key="tipBgBlank">
-            <svg width="32" height="32" viewBox="0 0 32 32"><rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/></svg>
+            <svg width="38" height="38" viewBox="0 0 32 32"><rect x="1.5" y="1.5" width="29" height="29" rx="4" fill="white" stroke="#d0d0e0" stroke-width="1.5"/></svg>
             <span data-lang-key="bgBlank">חלק</span>
           </button>
           <button class="bg-opt" id="bgo-grid" onclick="_setBg('grid')" title="רשת" data-title-key="tipBgGrid">
@@ -1707,68 +1707,64 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
           <button id="btn-3d-dashed" class="flip-btn" onclick="set3dLine('dashed')" style="flex:1;padding:4px 6px;font-size:11px" data-lang-key="td3Dashed">מקווקו</button>
         </div>
         <!-- 3D ROTATION + LABELS (all shapes) -->
-        <div id="pg-3d-extra" style="display:none;margin-top:10px;flex-direction:column;gap:7px">
-          <div style="height:1px;background:rgba(255,255,255,0.08);margin:2px 0"></div>
-          <div style="font-size:11px;color:var(--text2);font-weight:600" data-lang-key="td3Rotation">סיבוב תלת-מימד</div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
-            <span style="color:var(--text2);min-width:44px" data-lang-key="td3Horiz">אופקי</span>
-            <input type="range" min="0" max="359" step="1" id="s3d-theta" style="flex:1"
+        <div id="pg-3d-extra" style="display:none;margin-top:8px;flex-direction:column;gap:5px">
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px">
+            <span style="color:var(--text2);min-width:30px" data-lang-key="td3Horiz">אופקי</span>
+            <input type="range" min="0" max="359" step="1" id="s3d-theta" style="flex:1;height:14px"
               oninput="set3dRot('theta',this.value);document.getElementById('s3d-theta-lbl').textContent=this.value+'°'">
-            <span id="s3d-theta-lbl" style="min-width:28px;color:var(--text2)">30°</span>
+            <span id="s3d-theta-lbl" style="min-width:26px;color:var(--text2);font-size:10px">30°</span>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
-            <span style="color:var(--text2);min-width:44px" data-lang-key="td3Height">גובה</span>
-            <input type="range" min="5" max="80" step="1" id="s3d-phi" style="flex:1"
+          <div style="display:flex;align-items:center;gap:4px;font-size:10px">
+            <span style="color:var(--text2);min-width:30px" data-lang-key="td3Height">גובה</span>
+            <input type="range" min="5" max="80" step="1" id="s3d-phi" style="flex:1;height:14px"
               oninput="set3dRot('phi',this.value);document.getElementById('s3d-phi-lbl').textContent=this.value+'°'">
-            <span id="s3d-phi-lbl" style="min-width:28px;color:var(--text2)">25°</span>
+            <span id="s3d-phi-lbl" style="min-width:26px;color:var(--text2);font-size:10px">25°</span>
           </div>
-          <div style="height:1px;background:rgba(255,255,255,0.08);margin:2px 0"></div>
-          <div style="font-size:11px;color:var(--text2);font-weight:600" data-lang-key="td3Show">הצג</div>
-          <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-            <input type="checkbox" id="s3d-showLabels" onchange="set3dOpt('showLabels',this.checked)" style="accent-color:var(--accent)">
-            <span data-lang-key="td3VertexLabels">תוויות קודקודים</span>
-          </label>
-          <!-- Pyramid-only options -->
-          <div id="s3d-pyr-only" style="display:none;flex-direction:column;gap:5px">
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showHeight" onchange="set3dOpt('showHeight',this.checked)" style="accent-color:var(--accent)">
-              <span data-lang-key="td3HeightLine">קו גובה (S→O)</span>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center">
+            <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+              <input type="checkbox" id="s3d-showLabels" onchange="set3dOpt('showLabels',this.checked)" style="accent-color:var(--accent)">
+              <span data-lang-key="td3VertexLabels">תוויות</span>
             </label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showDiag" onchange="set3dOpt('showDiag',this.checked)" style="accent-color:var(--accent)">
-              <span>אלכסון (B→D)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showRightAngle" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
-              <span>זווית ישרה ב-O</span>
-            </label>
-          </div>
-          <!-- Box/Cube-only options -->
-          <div id="s3d-box-only" style="display:none;flex-direction:column;gap:5px">
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showSpaceDiag" onchange="set3dOpt('showSpaceDiag',this.checked)" style="accent-color:var(--accent)">
-              <span>אלכסון מרחבי (A→G)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showRightAngleBox" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
-              <span>זווית ישרה בקודקוד</span>
-            </label>
-          </div>
-          <!-- Prism-only options -->
-          <div id="s3d-prism-only" style="display:none;flex-direction:column;gap:5px">
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showPrismHeight" onchange="set3dOpt('showHeight',this.checked)" style="accent-color:var(--accent)">
-              <span>גובה משולש (A→H)</span>
-            </label>
-            <label style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer">
-              <input type="checkbox" id="s3d-showRightAnglePrism" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
-              <span>זווית ישרה ב-H</span>
-            </label>
+            <!-- Pyramid-only options -->
+            <div id="s3d-pyr-only" style="display:none;flex-wrap:wrap;gap:4px">
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showHeight" onchange="set3dOpt('showHeight',this.checked)" style="accent-color:var(--accent)">
+                <span>גובה</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showDiag" onchange="set3dOpt('showDiag',this.checked)" style="accent-color:var(--accent)">
+                <span>אלכסון</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showRightAngle" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
+                <span>זווית ישרה</span>
+              </label>
+            </div>
+            <!-- Box/Cube-only options -->
+            <div id="s3d-box-only" style="display:none;flex-wrap:wrap;gap:4px">
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showSpaceDiag" onchange="set3dOpt('showSpaceDiag',this.checked)" style="accent-color:var(--accent)">
+                <span>אלכסון מרחבי</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showRightAngleBox" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
+                <span>זווית ישרה</span>
+              </label>
+            </div>
+            <!-- Prism-only options -->
+            <div id="s3d-prism-only" style="display:none;flex-wrap:wrap;gap:4px">
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showPrismHeight" onchange="set3dOpt('showHeight',this.checked)" style="accent-color:var(--accent)">
+                <span>גובה</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
+                <input type="checkbox" id="s3d-showRightAnglePrism" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
+                <span>זווית ישרה</span>
+              </label>
+            </div>
           </div>
           <!-- Label grid (built dynamically) -->
-          <div style="height:1px;background:rgba(255,255,255,0.08);margin:2px 0"></div>
-          <div style="font-size:11px;color:var(--text2);font-weight:600">שמות קודקודים</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px" id="s3d-lbl-grid"></div>
+          <div id="s3d-lbl-grid"></div>
         </div>
       </div>
       <!-- CURVE EDIT -->
@@ -4563,6 +4559,7 @@ function _3dEdge(c,a,b,vis,color,lw){
 function _3dLabel(c,P,keys,el,color){
   if(el.showLabels===false)return;
   const lbls=el.labels||{};
+  const dirs=el.labelDirs||{};
   c.font=`${el.labelSize||13}px serif`;
   c.fillStyle=el.labelColor||color;
   let sx=0,sy=0,cnt=0;
@@ -4571,10 +4568,14 @@ function _3dLabel(c,P,keys,el,color){
   for(const k of keys){
     const lbl=lbls[k]!==undefined?lbls[k]:k;
     if(!lbl||!P[k])continue;
-    const dx=P[k].sx-bxc, dy=P[k].sy-byc;
-    const dist=Math.sqrt(dx*dx+dy*dy)||1;
-    const nx=dx/dist, ny=dy/dist, off=10;
-    c.fillText(lbl,P[k].sx+nx*off+(nx<-0.3?-c.measureText(lbl).width:0),P[k].sy+ny*off+4);
+    const dir=dirs[k];
+    let tx,ty;
+    if(dir==='top'){tx=P[k].sx-c.measureText(lbl).width/2;ty=P[k].sy-10;}
+    else if(dir==='bottom'){tx=P[k].sx-c.measureText(lbl).width/2;ty=P[k].sy+14;}
+    else if(dir==='right'){tx=P[k].sx+8;ty=P[k].sy+4;}
+    else if(dir==='left'){tx=P[k].sx-c.measureText(lbl).width-8;ty=P[k].sy+4;}
+    else{const dx=P[k].sx-bxc,dy=P[k].sy-byc;const dist=Math.sqrt(dx*dx+dy*dy)||1;const nx=dx/dist,ny=dy/dist,off=10;tx=P[k].sx+nx*off+(nx<-0.3?-c.measureText(lbl).width:0);ty=P[k].sy+ny*off+4;}
+    c.fillText(lbl,tx,ty);
   }
 }
 
@@ -4852,28 +4853,32 @@ function drawPyramid3d(c,el,ox,oy){
   // Labels
   if(el.showLabels!==false){
     const lbls=el.labels||{};
+    const dirs=el.labelDirs||{};
     const def={A:'A',B:'B',C:'C',D:'D',S:'S',O:'O'};
     c.font=`${el.labelSize||13}px serif`;
     const bxc=(P.A.sx+P.B.sx+P.C.sx+P.D.sx)/4;
     const byc=(P.A.sy+P.B.sy+P.C.sy+P.D.sy)/4;
-    function lblOff(k,pt){
-      const dx=pt.sx-bxc, dy=pt.sy-byc;
-      const dist=Math.sqrt(dx*dx+dy*dy)||1;
-      const nx=dx/dist, ny=dy/dist;
-      const off=k==='S'?14:10;
+    function _pyrLblXY(k,pt,autoOff){
       const lbl=lbls[k]!==undefined?lbls[k]:def[k];
-      return{dx:nx*off+(nx<-0.3?-c.measureText(lbl).width:0),dy:ny*off+4};
+      const dir=dirs[k];
+      if(dir==='top')return{x:pt.sx-c.measureText(lbl).width/2,y:pt.sy-10};
+      if(dir==='bottom')return{x:pt.sx-c.measureText(lbl).width/2,y:pt.sy+14};
+      if(dir==='right')return{x:pt.sx+8,y:pt.sy+4};
+      if(dir==='left')return{x:pt.sx-c.measureText(lbl).width-8,y:pt.sy+4};
+      const dx=pt.sx-bxc,dy=pt.sy-byc;const dist=Math.sqrt(dx*dx+dy*dy)||1;
+      const nx=dx/dist,ny=dy/dist;
+      return{x:pt.sx+nx*autoOff+(nx<-0.3?-c.measureText(lbl).width:0),y:pt.sy+ny*autoOff+4};
     }
     for(const k of['A','B','C','D','S']){
       const lbl=lbls[k]!==undefined?lbls[k]:def[k];
       if(!lbl)continue;
       c.fillStyle=k==='S'?'#000':(el.labelColor||color);
-      const off=lblOff(k,P[k]);
-      c.fillText(lbl,P[k].sx+off.dx,P[k].sy+off.dy);
+      const p=_pyrLblXY(k,P[k],k==='S'?14:10);
+      c.fillText(lbl,p.x,p.y);
     }
     if(el.showHeight!==false){
       const lbl=lbls['O']!==undefined?lbls['O']:'O';
-      if(lbl){c.fillStyle=el.labelColor||color;c.fillText(lbl,P.O.sx+6,P.O.sy+4);}
+      if(lbl){c.fillStyle=el.labelColor||color;const p=_pyrLblXY('O',P.O,8);c.fillText(lbl,p.x,p.y);}
     }
   }
   c.restore();
@@ -5022,6 +5027,7 @@ function drawPtsAngles(pts, el){
 }
 
 let rotating=false; // are we currently rotating an element?
+let _3dRotDragging=false,_3dRotStartX=0,_3dRotStartY=0,_3dRotStartTheta=0,_3dRotStartPhi=0;
 
 function drawHandles(el){
   if(!el)return;
@@ -5157,6 +5163,43 @@ function drawHandles(el){
     ctx.strokeStyle='rgba(60,100,200,0.6)';ctx.lineWidth=1;ctx.setLineDash([5,4]);
     ctx.strokeRect(bx2,by2,bw2,bh2);
     ctx.setLineDash([]);
+    ctx.restore();
+    return;
+  }
+
+  // 3D SHAPES — custom handles with 3D orbit rotation handle (theta/phi)
+  if(_is3dShape(el)){
+    const w=el.w||80,h=el.h||40;
+    const rx=w<0?el.x+w:el.x,ry=h<0?el.y+h:el.y;
+    const aw=Math.abs(w),ah=Math.abs(h);
+    const pad=4,bx=rx-pad,by=ry-pad,bw=aw+pad*2,bh=ah+pad*2;
+    ctx.save();
+    ctx.strokeStyle='rgba(60,100,200,0.7)';ctx.lineWidth=1.5;
+    ctx.setLineDash(dragging?[5,4]:[]);
+    ctx.strokeRect(bx,by,bw,bh);
+    ctx.setLineDash([]);
+    [[bx,by],[bx+bw/2,by],[bx+bw,by],
+     [bx+bw,by+bh/2],
+     [bx+bw,by+bh],[bx+bw/2,by+bh],[bx,by+bh],
+     [bx,by+bh/2]].forEach(([hx,hy])=>{
+      ctx.fillStyle='white';ctx.beginPath();ctx.rect(hx-5,hy-5,10,10);ctx.fill();
+      ctx.strokeStyle='rgba(60,100,200,0.8)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.rect(hx-5,hy-5,10,10);ctx.stroke();
+    });
+    // 3D orbit handle (top-centre) — controls theta + phi
+    const rhx=bx+bw/2,rhy=by-24;
+    ctx.strokeStyle='rgba(108,99,255,0.5)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(bx+bw/2,by);ctx.lineTo(rhx,rhy);ctx.stroke();
+    ctx.beginPath();ctx.arc(rhx,rhy,8,0,Math.PI*2);
+    ctx.fillStyle=_3dRotDragging?'rgba(108,99,255,0.15)':'white';ctx.fill();
+    ctx.strokeStyle=_3dRotDragging?'rgba(108,99,255,1)':'rgba(108,99,255,0.9)';
+    ctx.lineWidth=1.5;ctx.stroke();
+    // orbit icon: two ellipses suggesting a 3D sphere
+    ctx.save();ctx.translate(rhx,rhy);
+    ctx.strokeStyle='rgba(108,99,255,0.75)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.ellipse(0,0,5.5,2.5,0,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.ellipse(0,0,2.5,5.5,Math.PI/4,0,Math.PI*2);ctx.stroke();
+    ctx.restore();
     ctx.restore();
     return;
   }
@@ -5437,6 +5480,15 @@ function getRotateHandlePos(el){
 function hitRotateHandle(mx,my,el){
   const p=getRotateHandlePos(el);
   return Math.sqrt((mx-p.x)**2+(my-p.y)**2) <= 10;
+}
+function _is3dShape(el){return el&&['box3d','cube3d','prism3d','pyramid3d'].includes(el.type);}
+function hit3dOrbitHandle(mx,my,el){
+  const w=el.w||80,h=el.h||40;
+  const rx=w<0?el.x+w:el.x,ry=h<0?el.y+h:el.y;
+  const aw=Math.abs(w);
+  const pad=4,bx=rx-pad,bw=aw+pad*2,by=ry-pad;
+  const hx=bx+bw/2,hy=by-24;
+  return Math.sqrt((mx-hx)**2+(my-hy)**2)<=10;
 }
 
 function hitHandle(mx,my,el){
@@ -5735,6 +5787,16 @@ cv.addEventListener('mousedown',e=>{
           }
         }
       }
+      // 3D shapes — check 3D orbit handle before standard resize handles
+      if(_is3dShape(s)){
+        if(hit3dOrbitHandle(mx,my,s)){
+          saveHistory();_3dRotDragging=true;
+          _3dRotStartX=mx;_3dRotStartY=my;
+          _3dRotStartTheta=s.theta!==undefined?s.theta:30;
+          _3dRotStartPhi=s.phi!==undefined?s.phi:25;
+          return;
+        }
+      }
       // freehand, curve, line, arrow, text don't use standard resize handles
       if(s.type!=='freehand'&&s.type!=='curve'&&s.type!=='line'&&s.type!=='arrow'&&s.type!=='text'){
       // Check rotation handle first
@@ -5836,6 +5898,22 @@ cv.addEventListener('mousedown',e=>{
 cv.addEventListener('mousemove',e=>{
   const{x:mx,y:my}=cvPos(e);
   {const _sp=document.getElementById('st-pos');if(_sp)_sp.textContent=`X:${Math.round(mx)} Y:${Math.round(my)}`;}
+
+  // ===== 3D ORBIT ROTATION DRAG =====
+  if(_3dRotDragging){
+    const s=getSel();
+    if(s&&_is3dShape(s)){
+      const dx=mx-_3dRotStartX,dy=my-_3dRotStartY;
+      s.theta=((_3dRotStartTheta+dx*0.5)%360+360)%360;
+      s.phi=Math.max(5,Math.min(80,_3dRotStartPhi-dy*0.3));
+      const tEl=document.getElementById('s3d-theta');
+      const pEl=document.getElementById('s3d-phi');
+      if(tEl){tEl.value=Math.round(s.theta);document.getElementById('s3d-theta-lbl').textContent=Math.round(s.theta)+'°';}
+      if(pEl){pEl.value=Math.round(s.phi);document.getElementById('s3d-phi-lbl').textContent=Math.round(s.phi)+'°';}
+      redraw();return;
+    }
+    _3dRotDragging=false;
+  }
 
   // ===== EQUATION DRAG SELECTION =====
   if(eqCursor&&eqCursor.active&&eqCursor._dragging){
@@ -6041,6 +6119,14 @@ cv.addEventListener('mousemove',e=>{
     }
     ctx.restore();
     return;
+  }
+
+  // 3D orbit handle — change cursor when hovering
+  if(tool==='select'&&!_3dRotDragging){
+    const s=getSel();
+    if(s&&_is3dShape(s)&&hit3dOrbitHandle(mx,my,s)){
+      cv.style.cursor='grab';return;
+    }
   }
 
   // cursor update in edit mode
@@ -6275,6 +6361,7 @@ cv.addEventListener('mouseup',e=>{
   if(multiDragging){multiDragging=false;return;}
 
   if(rotating){rotating=false;const _rs=getSel();if(_rs)delete _rs._rotAngle;updProps();return;}
+  if(_3dRotDragging){_3dRotDragging=false;updProps();redraw();return;}
 
   // After resize: normalize negative w/h so the element's x/y/w/h are always
   // top-left + positive dimensions. This "commits" any flip done by dragging past centre.
@@ -8924,15 +9011,43 @@ function updProps(){
     const keys=lblKeys[s.type]||[];
     const grid=document.getElementById('s3d-lbl-grid');
     if(grid){
+      grid.style.cssText='display:flex;flex-direction:column;gap:3px';
       grid.innerHTML='';
       const lbls=s.labels||{};
+      const lDirs=s.labelDirs||{};
+      const dirIcons={top:'↑',right:'→',bottom:'↓',left:'←'};
+      const dirSeq=['top','right','bottom','left'];
       keys.forEach(k=>{
         const val=lbls[k]!==undefined?lbls[k]:k;
-        const cell=document.createElement('div');
-        cell.style.cssText='display:flex;flex-direction:column;gap:2px;font-size:10px;color:var(--text2);align-items:center';
-        cell.innerHTML=`<span>${k}</span><input class="pi" data-k="${k}" value="${val}" style="width:100%;text-align:center;padding:2px 4px" maxlength="4">`;
-        cell.querySelector('input').addEventListener('input',function(){set3dLabel(this.dataset.k,this.value);});
-        grid.appendChild(cell);
+        const row=document.createElement('div');
+        row.style.cssText='display:flex;align-items:center;gap:3px;background:var(--surface2);border-radius:6px;padding:2px 4px';
+        const span=document.createElement('span');
+        span.style.cssText='font-size:10px;color:var(--text2);min-width:14px;text-align:center;flex-shrink:0';
+        span.textContent=k;
+        const inp=document.createElement('input');
+        inp.className='pi';inp.style.cssText='flex:1;font-size:11px;padding:2px 4px;text-align:center';
+        inp.value=val;inp.maxLength=4;
+        inp.oninput=function(){set3dLabel(k,this.value);};
+        const dirBtn=document.createElement('button');
+        dirBtn.className='flip-btn';
+        dirBtn.style.cssText='font-size:12px;padding:1px 5px;min-width:26px;flex-shrink:0';
+        dirBtn.textContent=lDirs[k]?dirIcons[lDirs[k]]:'⟳';
+        dirBtn.title='כיוון תווית';
+        dirBtn.onclick=function(){
+          if(!s.labelDirs)s.labelDirs={};
+          const cur=s.labelDirs[k];
+          const idx=dirSeq.indexOf(cur);
+          const next=idx===-1?dirSeq[0]:idx===dirSeq.length-1?null:dirSeq[idx+1];
+          if(next)s.labelDirs[k]=next; else delete s.labelDirs[k];
+          dirBtn.textContent=s.labelDirs[k]?dirIcons[s.labelDirs[k]]:'⟳';
+          redraw();
+        };
+        const resetBtn=document.createElement('button');
+        resetBtn.className='flip-btn';resetBtn.style.cssText='font-size:10px;padding:1px 5px;flex-shrink:0';
+        resetBtn.textContent='↺';resetBtn.title='אפס שם';
+        resetBtn.onclick=function(){if(s.labels)delete s.labels[k];inp.value=k;redraw();};
+        row.append(span,inp,dirBtn,resetBtn);
+        grid.appendChild(row);
       });
     }
   }
