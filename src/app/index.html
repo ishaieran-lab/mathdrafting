@@ -134,21 +134,24 @@ body.light-theme .theme-toggle-sun{opacity:1;}
 .hdr-action-btn:disabled{opacity:0.28;cursor:default;pointer-events:none;}
 /* Language cycle button */
 .lang-cycle-btn{
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  background:transparent;
-  border:none;
-  border-radius:20px;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  background:rgba(22,22,34,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
   padding:0 16px;
-  cursor:pointer;color:rgba(210,206,245,0.9);
+  cursor:pointer;color:#ffffff;
   font-family:'Heebo',sans-serif;
-  font-size:14px;
+  font-size:13px;font-weight:600;
   height:36px;
-  min-width:120px;
-  transition:background 0.2s,color 0.2s;
+  min-width:0;
+  box-shadow:0 4px 20px rgba(0,0,0,0.45);
+  transition:background 0.15s,color 0.15s,box-shadow 0.15s;
 }
-.lang-cycle-btn:hover{background:rgba(255,255,255,0.12);color:#fff;}
-body.light-theme .lang-cycle-btn{background:transparent;border:none;color:#2a2a50;}
-body.light-theme .lang-cycle-btn:hover{background:rgba(0,0,0,0.1);}
+.lang-cycle-btn:hover{background:rgba(108,99,255,0.22);color:#fff;box-shadow:0 4px 24px rgba(108,99,255,0.3);}
+.lang-cycle-btn:active{background:rgba(108,99,255,0.35);}
+body.light-theme .lang-cycle-btn{background:rgba(235,233,255,0.95);border-color:rgba(108,99,255,0.25);color:#2a2060;font-size:13px;font-weight:600;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+body.light-theme .lang-cycle-btn:hover{background:rgba(108,99,255,0.15);color:#3b33b0;}
 /* Accent cycle button */
 .accent-cycle-btn{
   display:flex;align-items:center;gap:6px;
@@ -192,8 +195,8 @@ body.light-theme .accent-cycle-arrow{color:rgba(60,60,100,0.6);}
   color:#fff;
 }
 /* Light theme overrides */
-body.light-theme .hdr-action-btn{color:#4a4a80;}
-body.light-theme .hdr-action-btn:hover{background:rgba(108,99,255,0.1);color:#1a1a3e;}
+body.light-theme .hdr-action-btn{color:#111;font-size:13px;font-weight:600;}
+body.light-theme .hdr-action-btn:hover{background:rgba(108,99,255,0.1);color:#111;}
 body.light-theme .hdr-export-btn{background:rgba(108,99,255,0.1);color:#5046e5;}
 body.light-theme .hdr-export-btn:hover{background:rgba(108,99,255,0.18);color:#3730a3;}
 body.light-theme .hdr-lang-btn{background:rgba(108,99,255,0.12);color:#5046e5;}
@@ -237,24 +240,24 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
 
 /* TOOLBAR */
 .toolbar{
-  width:72px;
+  width:68px;
   position:absolute;
   right:16px;
   top:50%;
   transform:translateY(-50%);
-  background:rgba(14,14,22,0.88);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border:1px solid rgba(108,99,255,0.2);
-  border-radius:20px;
-  box-shadow:0 8px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(108,99,255,0.06);
-  display:flex;flex-direction:column;align-items:center;padding:12px 0 10px;gap:4px;
+  background:rgba(22,22,34,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:999px;
+  box-shadow:0 8px 36px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.08);
+  display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:2px;
   z-index:20;
   height:auto;
 }
 [dir=ltr] .toolbar{right:auto;left:16px;}
 .tsep{display:none;}
 .tbtn{
-  width:56px;height:56px;border-radius:14px;border:1px solid rgba(255,255,255,0.06);
+  width:50px;height:50px;border-radius:50%;border:none;
   background:rgba(255,255,255,0.05);color:rgba(180,175,220,0.75);cursor:pointer;
   display:flex;align-items:center;justify-content:center;position:relative;
   transition:all 0.17s cubic-bezier(.34,1.4,.64,1);
@@ -420,7 +423,7 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
   background:rgba(14,14,22,0.88);
   backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   border:1px solid rgba(108,99,255,0.2);
-  border-radius:16px;
+  border-radius:0;
   box-shadow:0 8px 36px rgba(0,0,0,0.55), 0 0 0 1px rgba(108,99,255,0.06);
   padding:0;overflow-y:auto;z-index:20;
 }
@@ -429,7 +432,7 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
   position:absolute;top:0;right:0;width:8px;height:100%;
   cursor:ew-resize;z-index:25;
   background:transparent;
-  border-radius:0 16px 16px 0;
+  border-radius:0;
 }
 [dir=ltr] .props-resize-handle{right:auto;left:0;border-radius:16px 0 0 16px;}
 .props-title{
@@ -531,7 +534,7 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 #sub-bar-sep{display:none;}
 #sub-bar-controls{display:flex;align-items:center;gap:4px;padding:0 8px;margin-left:auto;flex-shrink:0;}
 .page-tab{
-  display:flex;align-items:center;gap:6px;padding:0 13px;height:28px;border-radius:8px 8px 0 0;
+  display:flex;align-items:center;gap:6px;padding:0 13px;height:28px;border-radius:0;
   border:1px solid transparent;background:transparent;color:var(--text2);
   font-family:'Heebo',sans-serif;font-size:12px;cursor:pointer;white-space:nowrap;
   transition:all 0.15s;flex-shrink:0;
@@ -545,7 +548,7 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 .page-tab-close{font-size:13px;opacity:0.55;line-height:1;padding:0 2px;border:none;background:transparent;color:inherit;cursor:pointer;border-radius:3px;transition:opacity 0.12s;}
 .page-tab-close:hover{opacity:1;background:rgba(255,255,255,0.2);}
 .page-add-btn{
-  padding:0 10px;height:28px;border-radius:7px;
+  padding:0 10px;height:28px;border-radius:0;
   border:1px dashed rgba(108,99,255,0.3);background:transparent;
   color:var(--text2);font-family:'Heebo',sans-serif;font-size:12px;cursor:pointer;flex-shrink:0;
   transition:all 0.14s;
@@ -556,13 +559,11 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 .edit-dropdown-wrap{position:relative;}
 .edit-dropdown{
   display:none;position:absolute;top:calc(100% + 10px);left:0;
-  background:#ffffff;
+  background:rgba(255,255,255,0.97);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(0,0,0,0.1);
   border-radius:18px;padding:6px;
-  box-shadow:
-    0 2px 4px rgba(0,0,0,0.04),
-    0 8px 20px rgba(60,50,120,0.1),
-    0 24px 48px rgba(60,50,120,0.12),
-    0 0 0 1px rgba(0,0,0,0.06);
+  box-shadow:0 8px 32px rgba(0,0,0,0.18);
   z-index:900;min-width:180px;
 }
 .edit-dropdown.open{display:block;animation:menuPop 0.2s cubic-bezier(.34,1.3,.64,1);}
@@ -575,19 +576,19 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
   color:transparent;
 }
 .menu-section-label::after{
-  content:'';flex:1;height:1px;background:#f0eeff;
+  content:'';flex:1;height:1px;background:rgba(0,0,0,0.1);
 }
 
 .edit-item{
   display:flex;align-items:center;gap:10px;
   padding:8px 10px;border-radius:10px;border:none;
-  background:transparent;color:#1e1b40;
+  background:transparent;color:#1a1a3e;
   font-family:'Heebo',sans-serif;font-size:14px;font-weight:500;
   width:100%;text-align:right;cursor:pointer;
   transition:background 0.12s, color 0.12s;
 }
-.edit-item:hover{background:#f4f2ff;color:#3b33b0;}
-.edit-item:active{background:#ebe8ff;}
+.edit-item:hover{background:rgba(108,99,255,0.12);color:#3b33b0;}
+.edit-item:active{background:rgba(108,99,255,0.22);}
 
 .menu-icon-wrap{
   width:28px;height:28px;border-radius:7px;
@@ -801,7 +802,7 @@ body.light-theme #eq-ribbon-close{color:#aaa;}
 body.light-theme #eq-ribbon-close:hover{color:#333;}
 
 /* ===== NUMBERED LINES PANEL ===== */
-#numlines-panel{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#ffffff;border-radius:0;border:2px solid rgba(108,99,255,0.5);box-shadow:0 8px 28px rgba(60,50,120,0.15);padding:14px 16px;z-index:600;display:none;min-width:260px;}
+#numlines-panel{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(14,14,22,0.97);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:14px;border:1px solid rgba(108,99,255,0.25);box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(108,99,255,0.08);padding:14px 16px;z-index:600;display:none;min-width:260px;}
 #numlines-panel.open{display:block;animation:menuPop 0.18s cubic-bezier(.34,1.3,.64,1);}
 body.light-theme #numlines-panel{border-color:rgba(108,99,255,0.5);box-shadow:0 8px 28px rgba(60,50,120,0.15);}
 .nl-row{display:flex;align-items:center;gap:6px;margin-bottom:9px;font-size:12px;color:#4a4870;white-space:nowrap;}
@@ -884,15 +885,18 @@ body.light-theme .modal-title{color:#1a1a3e;}
 body.light-theme .modal-body{color:#555;}
 body.light-theme .modal-close{background:rgba(0,0,0,0.06);border-color:rgba(0,0,0,0.1);color:#555;}
 body.light-theme .modal-close:hover{background:rgba(0,0,0,0.12);color:#1a1a3e;}
-body.light-theme .edit-dropdown{background:rgba(255,255,255,0.98);box-shadow:0 32px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9);}
-body.light-theme .edit-item{color:#2a2a4e;}
-body.light-theme .edit-item:hover{background:rgba(108,99,255,0.08);color:#1a1a3e;}
+body.light-theme .edit-dropdown{background:rgba(255,255,255,0.97);border-color:rgba(0,0,0,0.1);}
+body.light-theme .edit-item{color:#1a1a3e;}
+body.light-theme .edit-item:hover{background:rgba(108,99,255,0.1);color:#3b33b0;}
 body.light-theme .edit-sep{background:rgba(0,0,0,0.07);}
 body.light-theme .edit-item .edit-shortcut{color:rgba(0,0,0,0.3);background:rgba(0,0,0,0.05);}
 
 /* === DARK THEME — brighten PNG icons so they're visible === */
 .tbtn img{filter:brightness(1.9) saturate(0.9);}
 .tbtn.active img{filter:brightness(2.2) saturate(1);}
+/* עפרון JPG — רקע לבן נעלם בלילה עם mix-blend-mode */
+#tbtn-freehand-img{mix-blend-mode:screen;filter:none;}
+body.light-theme #tbtn-freehand-img{mix-blend-mode:normal;}
 /* text icon is dark-colored — invert to white in dark mode */
 .tbtn [src*="text.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="text.png"]{filter:invert(1) brightness(2);}
@@ -919,8 +923,10 @@ body.light-theme .tsep{background:linear-gradient(90deg,transparent,rgba(108,99,
 body.light-theme .btn-ghost{color:#3a3a6a;}
 body.light-theme .btn-ghost:hover{background:rgba(108,99,255,0.1);color:#1a1a3e;}
 body.light-theme .hpill{background:rgba(0,0,0,0.06);}
-body.light-theme .hdr-action-btn{color:#3a3a6a;}
-body.light-theme .hdr-action-btn:hover{background:rgba(108,99,255,0.1);color:#1a1a3e;}
+body.light-theme .hdr-action-btn{color:#111;font-size:13px;font-weight:600;}
+body.light-theme .hdr-action-btn:hover{background:rgba(108,99,255,0.1);color:#111;}
+body.light-theme .lang-cycle-btn{color:#2a2060;font-size:13px;font-weight:600;}
+body.light-theme .lang-cycle-btn:hover{background:rgba(108,99,255,0.15);color:#3b33b0;}
 
 /* === POPUP + DROPDOWN — always dark glass → always white text === */
 /* (no overrides — popup background is always dark rgba, text stays white) */
@@ -986,6 +992,67 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
 .zoom-fab-btn:hover{background:rgba(108,99,255,0.2);color:white;}
 #zoom-fab-label{font-family:monospace;font-size:12px;color:var(--text2);min-width:40px;text-align:center;cursor:pointer;padding:0 4px;}
 #zoom-fab-label:hover{color:var(--accent);}
+/* History pill (undo/redo) */
+#history-pill{
+  display:flex;align-items:center;
+  background:rgba(22,22,34,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.45);
+  overflow:hidden;
+  height:36px;
+}
+.history-pill-btn{
+  width:36px;height:36px;border:none;background:transparent;
+  color:rgba(200,196,240,0.85);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s,color 0.15s,opacity 0.15s;
+  flex-shrink:0;
+}
+.history-pill-btn:hover:not(:disabled){background:rgba(108,99,255,0.2);color:#fff;}
+.history-pill-btn:active:not(:disabled){background:rgba(108,99,255,0.35);}
+.history-pill-btn:disabled{opacity:0.28;cursor:default;}
+.history-pill-btn:first-child{border-right:1px solid rgba(255,255,255,0.08);}
+body.light-theme #history-pill{background:rgba(235,233,255,0.95);border-color:rgba(108,99,255,0.25);box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+body.light-theme .history-pill-btn{color:#2a2060;}
+body.light-theme .history-pill-btn:hover:not(:disabled){background:rgba(108,99,255,0.15);color:#3b33b0;}
+body.light-theme .history-pill-btn:first-child{border-right:1px solid rgba(108,99,255,0.2);}
+/* Zoom pill */
+#zoom-pill{
+  display:flex;align-items:center;
+  background:rgba(22,22,34,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.45),0 0 0 1px rgba(108,99,255,0.08);
+  overflow:hidden;
+  height:36px;
+}
+.zoom-pill-btn{
+  width:36px;height:36px;border:none;background:transparent;
+  color:rgba(200,196,240,0.85);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s,color 0.15s;
+  flex-shrink:0;
+}
+.zoom-pill-btn:hover{background:rgba(108,99,255,0.2);color:#fff;}
+.zoom-pill-btn:active{background:rgba(108,99,255,0.35);}
+#zoom-label{
+  font-family:'Heebo',monospace;font-size:12px;font-weight:600;
+  color:rgba(200,196,240,0.9);
+  min-width:46px;text-align:center;
+  cursor:pointer;user-select:none;
+  letter-spacing:0.5px;
+  padding:0 2px;
+  border-left:1px solid rgba(255,255,255,0.08);
+  border-right:1px solid rgba(255,255,255,0.08);
+}
+#zoom-label:hover{color:#fff;}
+body.light-theme #zoom-pill{background:rgba(235,233,255,0.95);border-color:rgba(108,99,255,0.25);box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+body.light-theme .zoom-pill-btn{color:#2a2060;}
+body.light-theme .zoom-pill-btn:hover{background:rgba(108,99,255,0.15);color:#3b33b0;}
+body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
 </style>
 </head>
 <body>
@@ -998,7 +1065,11 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   <!-- תפריט — קרוב ללוגו -->
   <div class="edit-dropdown-wrap" style="position:relative;">
     <button class="lang-cycle-btn" onclick="toggleMainMenu()" id="main-menu-btn">
-      <img id="menu-icon" src="../assets/icons/menu/menu-dark.png" width="30" height="30" style="object-fit:contain;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
       <span data-lang-key="menuBtn" style="font-weight:600;letter-spacing:0.2px">תפריט</span>
     </button>
     <div class="edit-dropdown main-menu-dropdown" id="main-menu-dropdown">
@@ -1080,22 +1151,30 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   </div>
 
   <!-- בטל / בצע שוב + זום -->
-  <div style="display:flex;align-items:center;gap:1px;">
-    <div style="width:1px;height:18px;background:var(--border);margin:0 8px;opacity:0.45;flex-shrink:0;"></div>
-    <button class="btn hdr-action-btn" id="btn-undo" onclick="undo()" data-tip="בטל (Ctrl+Z)" data-tip-key="tipUndo" disabled style="padding:4px;">
-      <img src="../assets/icons/toolbar/undo.png" width="30" height="30" style="object-fit:contain;">
-    </button>
-    <button class="btn hdr-action-btn" id="btn-redo" onclick="redo()" data-tip="בצע שוב (Ctrl+Y)" data-tip-key="tipRedo" disabled style="padding:4px;">
-      <img src="../assets/icons/toolbar/redo.png" width="30" height="30" style="object-fit:contain;">
-    </button>
-    <div style="width:1px;height:18px;background:var(--border);margin:0 6px;opacity:0.45;flex-shrink:0;"></div>
-    <button class="btn hdr-action-btn" onclick="zoomOut()" data-tip="הקטן תצוגה" data-tip-key="tipZoomOut" style="padding:4px;">
-      <img src="../assets/icons/toolbar/zoom-out.png" width="30" height="30" style="object-fit:contain;">
-    </button>
-    <span id="zoom-label" onclick="zoomReset()" title="איפוס זום" data-title-key="tipZoomReset" style="font-size:12px;color:var(--text2);min-width:40px;text-align:center;cursor:pointer;font-family:monospace;padding:2px 4px;user-select:none;letter-spacing:0.3px;">100%</span>
-    <button class="btn hdr-action-btn" onclick="zoomIn()" data-tip="הגדל תצוגה" data-tip-key="tipZoomIn" style="padding:4px;">
-      <img src="../assets/icons/toolbar/zoom-in.png" width="30" height="30" style="object-fit:contain;">
-    </button>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div id="history-pill">
+      <button class="history-pill-btn" id="btn-undo" onclick="undo()" title="בטל (Ctrl+Z)" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9h13a5 5 0 0 1 0 10H7"/>
+          <polyline points="7 5 3 9 7 13"/>
+        </svg>
+      </button>
+      <button class="history-pill-btn" id="btn-redo" onclick="redo()" title="בצע שוב (Ctrl+Y)" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 9H8a5 5 0 0 0 0 10h9"/>
+          <polyline points="17 5 21 9 17 13"/>
+        </svg>
+      </button>
+    </div>
+    <div id="zoom-pill">
+      <button class="zoom-pill-btn" onclick="zoomOut()" title="הקטן תצוגה">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+      <span id="zoom-label" onclick="zoomReset()" title="איפוס זום">100%</span>
+      <button class="zoom-pill-btn" onclick="zoomIn()" title="הגדל תצוגה">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </button>
+    </div>
   </div>
 
   <!-- הגדרות סביבה — נדחפות לקצה שמאל -->
@@ -1103,7 +1182,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
     <div style="width:1px;height:18px;background:var(--border);margin:0 6px;opacity:0.45;flex-shrink:0;"></div>
     <!-- רקע הדף -->
     <div style="position:relative;">
-      <button class="btn hdr-action-btn" id="bg-toggle-btn" onclick="_bgToggle()" title="רקע הדף" data-title-key="tipBgToggle" style="gap:4px;font-size:11px;">
+      <button class="btn hdr-action-btn" id="bg-toggle-btn" onclick="_bgToggle()" title="רקע הדף" data-title-key="tipBgToggle" style="gap:4px;">
         <img id="bg-icon" src="../assets/icons/menu/רקע-דארק.png" width="24" height="24" style="object-fit:contain;">
         רקע
       </button>
@@ -1419,8 +1498,6 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
 <!-- MATHLIVE OVERLAY (inline equation editor) -->
 <div id="mq-overlay" onmousedown="event.stopPropagation()">
   <math-field id="mf-main" virtual-keyboard-mode="off"></math-field>
-  <button id="mq-confirm-btn" onclick="confirmMF()" title="הוסף לקנבס (Enter)">✓</button>
-  <button id="mq-cancel-btn" onclick="closeMF()" title="ביטול (Esc)">✕</button>
 </div>
 <div class="mq-placement-hint" id="mq-hint">לחץ על הקנבס להוספה</div>
 
@@ -1443,13 +1520,7 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
       <button class="eq-rb" onclick="eqRibbonBtn('sqrt')" title="שורש"><span class="eq-rb-icon">√x</span><span class="eq-rb-label">שורש</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('nsqrt')" title="שורש n"><span class="eq-rb-icon" style="font-size:20px">ⁿ√x</span><span class="eq-rb-label">שורש n</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('pow')" title="חזקה"><span class="eq-rb-icon">x<sup style="font-size:15px">n</sup></span><span class="eq-rb-label">חזקה</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('sub')" title="מנוי"><span class="eq-rb-icon">x<sub style="font-size:15px">i</sub></span><span class="eq-rb-label">מנוי</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('abs')" title="ערך מוחלט"><span class="eq-rb-icon">|x|</span><span class="eq-rb-label">ע.מוחלט</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('fracpar')" title="שבר בסוגריים"><span class="eq-rb-icon" style="font-size:18px">(<span class="eq-fv" style="font-size:11px"><span class="eq-fn">a</span><span class="eq-fd">b</span></span>)</span><span class="eq-rb-label">שבר ()</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('overline')" title="קו מעל"><span class="eq-rb-icon">x̄</span><span class="eq-rb-label">קו מעל</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('vec')" title="וקטור"><span class="eq-rb-icon">x⃗</span><span class="eq-rb-label">וקטור</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('binom')" title="בינום"><span class="eq-rb-icon"><span class="eq-fv" style="font-size:14px"><span class="eq-fn"> n </span><span class="eq-fd"> k </span></span></span><span class="eq-rb-label">בינום</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('matrix22')" title="מטריצה 2×2"><span class="eq-rb-icon" style="font-size:22px">⊡</span><span class="eq-rb-label">מטריצה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('txt')" title="טקסט חופשי"><span class="eq-rb-icon" style="font-family:'Times New Roman',serif;font-size:18px">abc</span><span class="eq-rb-label">טקסט</span></button>
     </div>
     <!-- Calculus -->
     <div id="eqr-calc" class="eqr-section">
@@ -1535,7 +1606,10 @@ body.light-theme #eq-sym-close{color:rgba(60,50,140,0.4);}
   <!-- TOOLBAR -->
   <div class="toolbar">
     <button class="tbtn active" id="tbtn-select" onclick="setTool('select')" data-tip="בחירה" data-tip-key="tipSelect">
-      <img src="../assets/icons/toolbar/selection.png" width="32" height="32" style="object-fit:contain;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M4 2 L4 20 L8.5 15.5 L11.5 22 L13.5 21 L10.5 14 L17 14 Z"/></svg>
+    </button>
+    <button class="tbtn" id="tbtn-freehand" onclick="setTool('freehand')" data-tip="עפרון חופשי">
+      <img src="../assets/icons/toolbar/עפרון.jpg" width="32" height="32" style="object-fit:contain;" id="tbtn-freehand-img">
     </button>
     <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
       <img src="../assets/icons/toolbar/shapes.png" width="32" height="32" style="object-fit:contain;">
@@ -3103,6 +3177,7 @@ let pages=[{id:1,name:'דף 1',els:[]}];
 let activePage=0;
 let els=pages[0].els; // always points to active page's elements
 let nid=1,selId=null;
+let _eqGroupId=null; // current equation group id
 let showGlobalIntersections=false;
 let fillLayerData=null; // persisted flood fill pixels
 let fillOffscreen=null; // offscreen canvas for flood fills
@@ -3125,6 +3200,42 @@ let polyDrawing=false;
 
 // ===== FREEHAND PENCIL state =====
 let freehandDrawing=false, freehandEl=null;
+let _fhEraserActive=false, _fhEraserX=0, _fhEraserY=0, _fhEraserR=14;
+
+function _applyFhErase(mx,my){
+  const R=_fhEraserR;
+  const dist2=(a,b)=>(a.x-b)*(a.x-b)+(a.y-c)*(a.y-c); // unused
+  const inRange=p=>Math.hypot(p.x-mx,p.y-my)<R;
+  const toAdd=[];
+  els.forEach(el=>{
+    if(el.type!=='freehand'||!el.points||el.points.length<2)return;
+    // Split path into segments by removing erased points
+    const segs=[];let cur=[];
+    el.points.forEach(p=>{
+      if(!inRange(p)){cur.push(p);}
+      else{if(cur.length>=2)segs.push([...cur]);cur=[];}
+    });
+    if(cur.length>=2)segs.push(cur);
+    if(segs.length===0){
+      // All points erased — remove element
+      const idx=els.indexOf(el);if(idx!==-1)els.splice(idx,1);
+    } else if(segs.length===1&&segs[0].length===el.points.length){
+      // Nothing erased
+    } else {
+      // Replace with segments
+      const idx=els.indexOf(el);if(idx!==-1)els.splice(idx,1);
+      segs.forEach(pts=>{
+        const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
+        toAdd.push({type:'freehand',points:pts,color:el.color,sw:el.sw,
+          x:Math.min(...xs),y:Math.min(...ys),
+          w:Math.max(...xs)-Math.min(...xs),h:Math.max(...ys)-Math.min(...ys),
+          fill:'none',id:nid++});
+      });
+    }
+  });
+  toAdd.forEach(e=>els.push(e));
+  saveHistory();
+}
 let _fhColor='#000000', _fhSw=2;
 
 // ===== CURVE (bezier) state =====
@@ -3335,13 +3446,15 @@ function setTool(t){
   }
   tool=t;
   document.getElementById('tbtn-select').classList.toggle('active',t==='select');
+  const freehandBtn=document.getElementById('tbtn-freehand');
+  if(freehandBtn) freehandBtn.classList.toggle('active',t==='freehand');
   const fillBtn=document.getElementById('tbtn-fill');
   if(fillBtn) fillBtn.classList.toggle('active',t==='fill');
   const clearFillBtn=document.getElementById('tbtn-clearfill');
   if(clearFillBtn) clearFillBtn.classList.toggle('active',t==='clearfill');
   const delBtn=document.getElementById('tbtn-delete');
   if(delBtn) delBtn.classList.toggle('active',t==='delete');
-  cv.style.cursor=t==='fill'?_cursors.fill:t==='clearfill'?_cursors.clearFill:t==='delete'?_cursors.eraser:t==='select'?'default':t==='text'?'text':t==='freehand'?_makeFhCursor(_fhSw):'crosshair';
+  cv.style.cursor=t==='fill'?_cursors.fill:t==='clearfill'?_cursors.clearFill:t==='delete'?_cursors.eraser:t==='fheraser'?'none':t==='select'?'default':t==='text'?'text':t==='freehand'?_makeFhCursor(_fhSw):'crosshair';
   // Aa button — active when text tool is selected
   const tfbBtn=document.getElementById('tfb-toggle-btn');
   if(tfbBtn) tfbBtn.classList.toggle('active', t==='text');
@@ -3587,10 +3700,6 @@ function redraw() {
   if(selId!==null&&multiSel.length===0) drawHandles(getSel());
   // multi-select highlights
   if(multiSel.length>0){
-    multiSel.forEach(id=>{
-      const el=els.find(e=>e.id===id);
-      if(el) drawMultiHighlight(el);
-    });
     drawMultiGroupBox();
   }
   // rubber-band — PowerPoint style: clean fill, no dashes, darkens as you drag
@@ -3625,6 +3734,13 @@ function redraw() {
   if(typeof drawEqEditCursor==='function') drawEqEditCursor();
   if(typeof drawGlobalIntersections==='function') drawGlobalIntersections();
   if(showGlobalIntersections) drawGraphAxisIntersections();
+  // Draw freehand eraser circle cursor
+  if(tool==='delete'){
+    ctx.save();
+    ctx.beginPath();ctx.arc(_fhEraserX,_fhEraserY,_fhEraserR,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.stroke();
+    ctx.restore();
+  }
 }
 
 function drawGraphAxisIntersections(){
@@ -4080,6 +4196,8 @@ function drawEl(el){
     case 'simple-parabola':drawSimpleParabola(el);break;
     case 'simple-cubic':drawSimpleCubic(el);break;
     case 'eqblock':drawEqBlock(el);break;
+    case 'eqfrac':drawEqFrac(el);break;
+    case 'eqmono':drawEqMono(el);break;
     case 'barchart':drawBarChart(ctx,el,el.x,el.y);break;
     case 'piechart':drawPieChart(ctx,el,el.x,el.y);break;
     case 'freqpoly':drawFreqPoly(ctx,el,el.x,el.y);break;
@@ -4598,6 +4716,102 @@ function drawEqBlock(el){
   });
 }
 
+// ===== EQFRAC — inline fraction editor =====
+function drawEqFrac(el){
+  const isAct=p=>_eqFracActive&&_eqFracActive.el===el&&_eqFracActive.part===p;
+  const FS=22, BH=34, GAP=6;
+  const lineY=el.y+BH+GAP; // y of fraction bar
+  const totalH=BH*2+GAP*2;
+  el.h=totalH;
+
+  ctx.save();
+  ctx.textBaseline='middle';
+
+  // --- Measure all parts ---
+  ctx.font=`${FS}px "Times New Roman",serif`;
+  const preStr=el.pre||'';
+  const postStr=el.post||'';
+  const preW=preStr?ctx.measureText(preStr).width:0;
+  const postW=postStr?ctx.measureText(postStr).width:0;
+
+  ctx.font=`${FS-2}px "Times New Roman",serif`;
+  const nStr=el.nVal!==undefined?el.nVal:'a';
+  const dStr=el.dVal!==undefined?el.dVal:'b';
+  const nW=Math.max(44,ctx.measureText(nStr||'a').width+18);
+  const dW=Math.max(44,ctx.measureText(dStr||'b').width+18);
+  const fracW=Math.max(nW,dW);
+
+  // X positions
+  const fracX=el.x+(preW>0?preW+8:0);
+  const postX=fracX+fracW+8;
+  el.w=(preW>0?preW+8:0)+fracW+8+(postW>0?postW:8);
+
+  // Store click-detection rects (used in mousedown)
+  el._rects={
+    pre:{x:el.x,          y:el.y,         w:Math.max(preW+10,20), h:totalH},
+    n:  {x:fracX,         y:el.y,         w:fracW,                h:BH},
+    d:  {x:fracX,         y:lineY+GAP,    w:fracW,                h:BH},
+    post:{x:postX,        y:el.y,         w:Math.max(postW+20,24),h:totalH},
+  };
+
+  // Helper: draw cursor bar at end of text
+  function drawCursor(x,y,txt,font,vert_center){
+    ctx.font=font;
+    const tw=ctx.measureText(txt).width;
+    ctx.fillStyle='#6c63ff';
+    ctx.fillRect(x+tw+2,vert_center-FS*0.55,2,FS*1.1);
+  }
+
+  // --- Pre text ---
+  if(preStr||isAct('pre')){
+    ctx.font=`${FS}px "Times New Roman",serif`;
+    ctx.textAlign='left';
+    ctx.fillStyle='#111';
+    ctx.fillText(preStr,el.x,lineY);
+    if(isAct('pre')&&_eqFracBlink) drawCursor(el.x,lineY,preStr,`${FS}px "Times New Roman",serif`,lineY);
+  }
+
+  // --- Numerator ---
+  const nf=`${FS-2}px "Times New Roman",serif`;
+  ctx.font=nf;ctx.textAlign='center';
+  const nDispStr=nStr||'a';
+  const nTw=ctx.measureText(nDispStr).width;
+  if(isAct('n')){
+    // highlight behind the letter
+    ctx.fillStyle='rgba(108,99,255,0.22)';
+    ctx.fillRect(fracX+fracW/2-nTw/2-3,el.y+4,nTw+6,BH-8);
+  }
+  ctx.fillStyle=nStr?'#111':'#aaa';
+  ctx.fillText(nDispStr,fracX+fracW/2,el.y+BH/2);
+  if(isAct('n')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+fracW/2+nTw/2+2,el.y+4,2,BH-8);}
+
+  // --- Fraction bar ---
+  ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(fracX-4,lineY);ctx.lineTo(fracX+fracW+4,lineY);ctx.stroke();
+
+  // --- Denominator ---
+  const dy=lineY+GAP;
+  const dDispStr=dStr||'b';
+  const dTw=ctx.measureText(dDispStr).width;
+  if(isAct('d')){
+    ctx.fillStyle='rgba(108,99,255,0.22)';
+    ctx.fillRect(fracX+fracW/2-dTw/2-3,dy+4,dTw+6,BH-8);
+  }
+  ctx.fillStyle=dStr?'#111':'#aaa';
+  ctx.fillText(dDispStr,fracX+fracW/2,dy+BH/2);
+  if(isAct('d')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+fracW/2+dTw/2+2,dy+4,2,BH-8);}
+
+  // --- Post text ---
+  if(postStr||isAct('post')){
+    ctx.font=`${FS}px "Times New Roman",serif`;
+    ctx.textAlign='left';
+    ctx.fillStyle='#111';
+    ctx.fillText(postStr,postX,lineY);
+    if(isAct('post')&&_eqFracBlink) drawCursor(postX,lineY,postStr,`${FS}px "Times New Roman",serif`,lineY);
+  }
+
+  ctx.restore();
+}
 
 // ===== STATISTICS DRAW FUNCTIONS =====
 
@@ -5391,6 +5605,7 @@ let _3dRotDragging=false,_3dRotStartX=0,_3dRotStartY=0,_3dRotStartTheta=0,_3dRot
 
 function drawHandles(el){
   if(!el)return;
+  if(el.type==='eqfrac'||el.type==='eqmono')return;
 
   // POINT EDIT MODE — for triangle only
   if(editingPoints && el.pts && el.type==='triangle'){
@@ -5580,8 +5795,8 @@ function drawHandles(el){
   ctx.strokeRect(bx,by,bw,bh);
   ctx.setLineDash([]);
 
-  // 8 resize handles (skip for eqblock — equations are not resizable)
-  if(el.type!=='eqblock'){
+  // 8 resize handles (skip for eqblock/eqfrac — equations are not resizable)
+  if(el.type!=='eqblock'&&el.type!=='eqfrac'){
   [[bx,by],[bx+bw/2,by],[bx+bw,by],
    [bx+bw,by+bh/2],
    [bx+bw,by+bh],[bx+bw/2,by+bh],[bx,by+bh],
@@ -5877,7 +6092,42 @@ cv.addEventListener('mousedown',e=>{
   if(_mfPendingCmd!==null){
     const cmd=_mfPendingCmd;_mfPendingCmd=null;cv.style.cursor='';
     document.getElementById('mq-hint').style.display='none';
+    if(cmd==='__eqfrac__'){
+      const newEl={type:'eqfrac',x:mx,y:my,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1};
+      addEl(newEl);
+      const placed=els.find(e=>e.id===selId);
+      if(placed)activateEqBox(placed,'n');
+      return;
+    }
     openMFAt(mx,my,cmd);return;
+  }
+
+  // If an eqmono is active — click inside keeps active, click outside finishes
+  if(_eqMonoActive){
+    const{el}=_eqMonoActive;
+    if(el.template==='pow'&&el._rects){
+      for(const[f,r] of Object.entries(el._rects)){
+        if(mx>=r.x&&mx<=r.x+r.w&&my>=r.y&&my<=r.y+r.h){activateEqMono(el,f);return;}
+      }
+      deactivateEqMono();return;
+    }
+    if(el._rect){const r=el._rect;if(mx>=r.x&&mx<=r.x+r.w&&my>=r.y&&my<=r.y+r.h)return;}
+    deactivateEqMono();return;
+  }
+
+  // If an eqfrac is active and user clicks — check if click is in any part
+  if(_eqFracActive){
+    const {el,part:activePart}=_eqFracActive;
+    if(el._rects){
+      for(const [part,r] of Object.entries(el._rects)){
+        if(mx>=r.x&&mx<=r.x+r.w&&my>=r.y&&my<=r.y+r.h){
+          activateEqBox(el,part);return;
+        }
+      }
+    }
+    // Clicked outside: finish editing
+    deactivateEqBox(false);
+    return;
   }
 
   // Paste style mode — apply to clicked element
@@ -5987,11 +6237,15 @@ cv.addEventListener('mousedown',e=>{
     return;
   }
 
-  // ===== DELETE MODE — click to delete element =====
+  // ===== DELETE MODE — click to delete element (freehand = partial erase) =====
   if(tool==='delete'){
+    _fhEraserActive=true;_fhEraserX=mx;_fhEraserY=my;
     const hit=hitTest(mx,my);
+    if(hit&&hit.type==='freehand'){
+      _applyFhErase(mx,my);redraw();
+      return;
+    }
     if(hit){
-      // Clear fill pixels within the element's bounding box
       if(fillOffscreen){
         const octx=fillOffscreen.getContext('2d');
         const pad=4;
@@ -6164,8 +6418,8 @@ cv.addEventListener('mousedown',e=>{
           return;
         }
       }
-      // freehand, curve, line, arrow, text don't use standard resize handles
-      if(s.type!=='freehand'&&s.type!=='curve'&&s.type!=='line'&&s.type!=='arrow'&&s.type!=='text'){
+      // freehand, curve, line, arrow, text, eqfrac don't use standard resize handles
+      if(s.type!=='freehand'&&s.type!=='curve'&&s.type!=='line'&&s.type!=='arrow'&&s.type!=='text'&&s.type!=='eqfrac'){
       // Check rotation handle first
       if(hitRotateHandle(mx,my,s)){
         saveHistory();rotating=true;
@@ -6258,6 +6512,7 @@ cv.addEventListener('mousedown',e=>{
     freehandEl={type:'freehand',x:mx,y:my,w:0,h:0,color:_fhColor,sw:_fhSw,points:[{x:mx,y:my}]};
     return;
   }
+
 
   drawing=true;drawSx=snap(mx);drawSy=snap(my);
 });
@@ -6371,6 +6626,9 @@ cv.addEventListener('mousemove',e=>{
     else if(h.type==='cp2'){curveCtrlEl.cps[h.idx].cp2x=mx;curveCtrlEl.cps[h.idx].cp2y=my;}
     redraw();return;
   }
+
+  // ===== DELETE TOOL — drag to partially erase freehand =====
+  if(tool==='delete'){_fhEraserX=mx;_fhEraserY=my;if(_fhEraserActive){_applyFhErase(mx,my);redraw();}else{redraw();}return;}
 
   // ===== FREEHAND DRAW =====
   if(freehandDrawing&&freehandEl){
@@ -6530,6 +6788,9 @@ cv.addEventListener('mousemove',e=>{
   if(dragging){const s=getSel();if(!s)return;
     const newX=snap(mx-dox), newY=snap(my-doy);
     const dx=newX-s.x, dy=newY-s.y;
+    // Move all elements in the same group
+    if(s.groupId){els.forEach(e=>{if(e.groupId===s.groupId&&e.id!==s.id){e.x+=dx;e.y+=dy;}});}
+
     if(s.type==='poly'&&s.points){
       s.points=s.points.map(p=>({x:p.x+dx,y:p.y+dy}));
     }
@@ -6756,6 +7017,8 @@ cv.addEventListener('mouseup',e=>{
     updProps();redraw();return;
   }
 
+  if(tool==='delete'){_fhEraserActive=false;redraw();return;}
+
   // ===== FREEHAND mouseup — save stroke, stay in freehand mode =====
   if(freehandDrawing&&freehandEl){
     freehandDrawing=false;
@@ -6836,12 +7099,28 @@ cv.addEventListener('dblclick',e=>{
     if(hit&&(hit.type==='text'||hit.type==='eqblock')){
       startEqEdit(hit);return;
     }
-    // Double-click latex — open MathLive for inline editing
+    // Double-click eqfrac — re-activate inline editor with cursor at rightmost (post)
+    if(hit&&hit.type==='eqfrac'){
+      activateEqBox(hit,'post');return;
+    }
+    // Double-click eqmono — re-activate for editing
+    if(hit&&hit.type==='eqmono'){
+      activateEqMono(hit, hit.template==='pow'?'base':'val');return;
+    }
+    // Double-click latex — reopen as inline eqfrac editor with cursor at rightmost (post) field
     if(hit&&hit.type==='latex'){
-      _mfEditEl=hit;
-      const mf=document.getElementById('mf-main');
-      mf.value=hit.src||'';
-      openMFAt(hit.x,hit.y,null);
+      const src=hit.src||'';
+      const m=src.match(/^(.*?)\\d?frac\{([^}]*)\}\{([^}]*)\}(.*)$/s);
+      if(m){
+        const[,pre,nVal,dVal,post]=m;
+        const idx=els.indexOf(hit);
+        if(idx!==-1)els.splice(idx,1);
+        selId=null;
+        const newEl={type:'eqfrac',x:hit.x,y:hit.y,w:hit.w,h:hit.h,pre,nVal,dVal,post,color:'#111',fill:'none',sw:1};
+        addEl(newEl);
+        const placed=els.find(e=>e.id===selId);
+        if(placed)activateEqBox(placed,'post');
+      }
       return;
     }
     // Double-click stat charts / table — open editor
@@ -7868,17 +8147,8 @@ function drawMultiGroupBox(){
   const pad=14;
   const bx=minX-pad,by=minY-pad,bw=maxX-minX+pad*2,bh=maxY-minY+pad*2;
   ctx.save();
-
-  // group fill — very subtle
-  ctx.fillStyle='rgba(80,120,215,0.04)';
-  if(ctx.roundRect)ctx.roundRect(bx,by,bw,bh,5);else ctx.rect(bx,by,bw,bh);
-  ctx.fill();
-
-  // clean group border
-  ctx.strokeStyle='rgba(60,100,200,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([]);
-  ctx.beginPath();
-  if(ctx.roundRect)ctx.roundRect(bx,by,bw,bh,5);else ctx.rect(bx,by,bw,bh);
-  ctx.stroke();
+  ctx.strokeStyle='rgba(108,99,255,0.7)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+  ctx.strokeRect(bx,by,bw,bh);
 
   // 8 white square handles with blue border — PowerPoint style
   const hs=[
@@ -9585,17 +9855,298 @@ function addLatexToCanvas(latex){
   renderLatex(latex,img=>addEl({type:'latex',x:120,y:120,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:latex,img}));
 }
 
+// ===== EQMONO — single-field inline canvas math element (sqrt, abs, int, …) =====
+const EQMONO_TEMPLATES={
+  sqrt:{sym:'√',suf:''}, nsqrt:{sym:'ⁿ√',suf:''},
+  abs:{sym:'|',suf:'|'}, overline:{sym:'',suf:'‾'}, vec:{sym:'',suf:'⃗'},
+  int:{sym:'∫',suf:''}, defint:{sym:'∫',suf:''},
+  sum:{sym:'∑',suf:''}, prod:{sym:'∏',suf:''},
+  lim:{sym:'lim ',suf:''}, deriv:{sym:'d/dx(',suf:')'},
+  partial:{sym:'∂/∂x(',suf:')'}, deriv2:{sym:'d²/dx²(',suf:')'},
+  pow:{sym:'',suf:''}, sub:{sym:'',suf:''},
+  binom:{sym:'C(',suf:')'},
+};
+
+let _eqMonoActive=null;
+let _eqMonoParent=null; // {el,part} — parent eqfrac field when mono is nested inside it
+let _eqMonoFreshField=false; // true when field just activated — first char replaces default
+
+function _getEqFracCursorPos(){
+  if(!_eqFracActive)return{x:80,y:60};
+  const{el,part}=_eqFracActive;
+  if(!el._rects)return{x:el.x,y:el.y};
+  const r=el._rects[part];if(!r)return{x:el.x,y:el.y};
+  const NFS=20,FS=22,BH=34,GAP=6;
+  const lineY=el.y+BH+GAP;
+  let x=r.x,y=r.y;
+  if(part==='n'){ctx.font=`${NFS}px "Times New Roman",serif`;const tw=ctx.measureText(el.nVal||'').width;x=r.x+r.w/2+tw/2+4;y=el.y;}
+  else if(part==='d'){ctx.font=`${NFS}px "Times New Roman",serif`;const tw=ctx.measureText(el.dVal||'').width;x=r.x+r.w/2+tw/2+4;y=lineY+GAP;}
+  else if(part==='pre'){ctx.font=`${FS}px "Times New Roman",serif`;const tw=ctx.measureText(el.pre||'').width;x=el.x+tw+4;y=lineY-BH;}
+  else{ctx.font=`${FS}px "Times New Roman",serif`;const tw=ctx.measureText(el.post||'').width;x=r.x+tw+4;y=lineY-BH;}
+  return{x,y};
+}
+
+function activateEqMono(el,field){
+  if(!field)field=el.template==='pow'?'base':'val';
+  if(_eqFracActive)deactivateEqBox(false);
+  if(_eqFracBlinkTimer){clearInterval(_eqFracBlinkTimer);_eqFracBlinkTimer=null;}
+  const _ov=document.getElementById('mq-overlay');
+  if(_ov&&_ov.style.display==='flex')_ov.style.display='none';
+  _eqMonoActive={el,field};
+  _eqMonoFreshField=true;
+  _eqFracBlink=true;
+  _eqFracBlinkTimer=setInterval(()=>{_eqFracBlink=!_eqFracBlink;redraw();},530);
+  selId=el.id;
+  cv.focus();
+  redraw();
+}
+
+function deactivateEqMono(){
+  if(!_eqMonoActive)return;
+  if(_eqFracBlinkTimer){clearInterval(_eqFracBlinkTimer);_eqFracBlinkTimer=null;}
+  const{el}=_eqMonoActive;
+  _eqMonoActive=null;
+  if(_eqMonoParent){
+    const{el:pEl,part}=_eqMonoParent;
+    _eqMonoParent=null;
+    // Build text to insert into parent eqfrac field
+    let ins='';
+    if(el.template==='pow')ins=`${el.base||'x'}^${el.exp||'n'}${el.post||''}`;
+    else ins=(el.sym||'')+(el.val||'')+(el.suf||'');
+    if(part==='n')pEl.nVal=(pEl.nVal||'')+ins;
+    else if(part==='d')pEl.dVal=(pEl.dVal||'')+ins;
+    else if(part==='pre')pEl.pre=(pEl.pre||'')+ins;
+    else pEl.post=(pEl.post||'')+ins;
+    const idx=els.indexOf(el);if(idx!==-1)els.splice(idx,1);
+    activateEqBox(pEl,part); // re-activate parent field
+    return;
+  }
+  redraw();
+}
+
+function drawEqMono(el){
+  const isAct=_eqMonoActive&&_eqMonoActive.el===el;
+  ctx.save();
+
+  // ── POW template: base^exp with two editable fields ──
+  if(el.template==='pow'){
+    const BFS=22, EFS=15;
+    const baseStr=el.base!==undefined?el.base:'x';
+    const expStr=el.exp!==undefined?el.exp:'n';
+    const isActBase=isAct&&_eqMonoActive.field==='base';
+    const isActExp=isAct&&_eqMonoActive.field==='exp';
+    ctx.font=`${BFS}px "Times New Roman",serif`;
+    const baseTw=ctx.measureText(baseStr||'x').width;
+    const baseW=Math.max(baseTw+6,18);
+    ctx.font=`${EFS}px "Times New Roman",serif`;
+    const expTw=ctx.measureText(expStr||'n').width;
+    const expW=Math.max(expTw+6,14);
+    el.w=baseW+expW; el.h=BFS*1.6;
+    const baselineY=el.y+el.h*0.78;
+    const expY=el.y+el.h*0.1;
+    el._rects={
+      base:{x:el.x,y:el.y+el.h*0.3,w:baseW,h:el.h*0.7},
+      exp:{x:el.x+baseW,y:el.y,w:expW,h:el.h*0.55},
+    };
+    // base
+    const isFreshBase=isActBase&&_eqMonoFreshField;
+    ctx.font=`${BFS}px "Times New Roman",serif`;
+    ctx.textBaseline='alphabetic';
+    if(isActBase&&baseStr){const tw=ctx.measureText(baseStr).width;ctx.fillStyle=isFreshBase?'rgba(108,99,255,0.35)':'rgba(108,99,255,0.18)';ctx.fillRect(el.x,baselineY-BFS*0.82,tw+4,BFS);}
+    ctx.fillStyle=baseStr?'#111':'#aaa';
+    ctx.fillText(baseStr||(isAct?'':'x'),el.x,baselineY);
+    if(isActBase&&!isFreshBase&&_eqFracBlink){const tw=ctx.measureText(baseStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(el.x+tw+2,baselineY-BFS*0.82,2,BFS);}
+    // exponent
+    const isFreshExp=isActExp&&_eqMonoFreshField;
+    ctx.font=`${EFS}px "Times New Roman",serif`;
+    ctx.textBaseline='alphabetic';
+    const expBaselineY=expY+EFS*0.85;
+    if(isActExp&&expStr){const tw=ctx.measureText(expStr).width;ctx.fillStyle=isFreshExp?'rgba(108,99,255,0.35)':'rgba(108,99,255,0.18)';ctx.fillRect(el.x+baseW,expY,tw+4,EFS);}
+    ctx.fillStyle=expStr?'#111':'#aaa';
+    ctx.fillText(expStr||(isAct?'':'n'),el.x+baseW,expBaselineY);
+    if(isActExp&&!isFreshExp&&_eqFracBlink){const tw=ctx.measureText(expStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(el.x+baseW+tw+2,expY,2,EFS);}
+    // post field — appears after the pow element at base baseline level
+    const postStr=el.post||'';
+    const isActPost=isAct&&_eqMonoActive.field==='post';
+    if(postStr||isActPost){
+      ctx.font=`${BFS}px "Times New Roman",serif`;
+      ctx.textBaseline='alphabetic';
+      const postX=el.x+el.w;
+      if(isActPost&&postStr){const tw=ctx.measureText(postStr).width;ctx.fillStyle='rgba(108,99,255,0.18)';ctx.fillRect(postX,baselineY-BFS*0.82,tw+4,BFS);}
+      ctx.fillStyle=postStr?'#111':'#aaa';
+      ctx.fillText(postStr,postX,baselineY);
+      if(isActPost&&_eqFracBlink){const tw=ctx.measureText(postStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(postX+tw+2,baselineY-BFS*0.82,2,BFS);}
+      el.w+=ctx.measureText(postStr).width+(isActPost?14:4);
+    }
+    ctx.restore();
+    return;
+  }
+
+  // ── Single-field template ──
+  const FS=22;
+  ctx.font=`${FS}px "Times New Roman",serif`;
+  ctx.textBaseline='middle';
+  const sym=el.sym||'', val=el.val||'', suf=el.suf||'';
+  const symW=sym?ctx.measureText(sym).width+2:0;
+  const valTw=ctx.measureText(val||'x').width;
+  const valW=Math.max(valTw+8,18);
+  const sufW=suf?ctx.measureText(suf).width+2:0;
+  el.w=symW+valW+sufW; el.h=FS*1.6;
+  el._rect={x:el.x+symW,y:el.y,w:valW,h:el.h};
+  const midY=el.y+el.h/2;
+  ctx.fillStyle='#111';
+  if(sym)ctx.fillText(sym,el.x,midY);
+  if(isAct&&val){
+    const tw=ctx.measureText(val).width;
+    ctx.fillStyle='rgba(108,99,255,0.18)';
+    ctx.fillRect(el.x+symW,el.y+2,tw+4,el.h-4);
+  }
+  ctx.fillStyle=val?'#111':'#aaa';
+  const _phld=el.template==='txt'?'abc':'□';
+  ctx.fillText(val||(isAct?'':_phld),el.x+symW,midY);
+  if(isAct&&_eqFracBlink){
+    const tw=ctx.measureText(val).width;
+    ctx.fillStyle='#6c63ff';
+    ctx.fillRect(el.x+symW+tw+2,el.y+3,2,el.h-6);
+  }
+  if(suf){
+    const tw=ctx.measureText(val||'x').width;
+    ctx.fillStyle='#111';
+    ctx.fillText(suf,el.x+symW+Math.max(tw,12)+4,midY);
+  }
+  ctx.restore();
+}
+
+document.addEventListener('keydown',function eqMonoKeyHandler(e){
+  if(!_eqMonoActive)return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const{el,field}=_eqMonoActive;
+  // POW: three fields (base / exp / post)
+  if(el.template==='pow'){
+    const getV=()=>field==='base'?(el.base||''):field==='exp'?(el.exp||''):(el.post||'');
+    const setV=v=>{if(field==='base')el.base=v;else if(field==='exp')el.exp=v;else el.post=v;};
+    if(e.key==='Escape'){deactivateEqMono();return;}
+    if(e.key==='Enter'||e.key==='Tab'){
+      _eqMonoFreshField=false;
+      if(field==='base')activateEqMono(el,'exp');
+      else if(field==='exp')activateEqMono(el,'post');
+      else deactivateEqMono();
+      return;
+    }
+    if(e.key==='Backspace'){_eqMonoFreshField=false;setV(getV().slice(0,-1));redraw();return;}
+    if(e.key==='Delete'){_eqMonoFreshField=false;setV('');redraw();return;}
+    if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){
+      if(_eqMonoFreshField){_eqMonoFreshField=false;setV(e.key);}else{setV(getV()+e.key);}
+      redraw();return;
+    }
+    return;
+  }
+  // Single-field
+  if(e.key==='Enter'||e.key==='Escape'){deactivateEqMono();return;}
+  if(e.key==='Backspace'){el.val=(el.val||'').slice(0,-1);redraw();return;}
+  if(e.key==='Delete'){el.val='';redraw();return;}
+  if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){el.val=(el.val||'')+e.key;redraw();return;}
+},true);
+
+// ===== EQFRAC INTERACTIVE STATE =====
+let _eqFracActive=null; // {el, part:'pre'|'n'|'d'|'post'}
+let _eqFracBlink=true;
+let _eqFracBlinkTimer=null;
+
+function activateEqBox(el,part){
+  if(_eqFracBlinkTimer){clearInterval(_eqFracBlinkTimer);_eqFracBlinkTimer=null;}
+  // Close any open MathLive overlay
+  const _ov=document.getElementById('mq-overlay');
+  if(_ov&&_ov.style.display==='flex')_ov.style.display='none';
+  _eqFracActive={el,part};
+  _eqFracBlink=true;
+  _eqFracBlinkTimer=setInterval(()=>{_eqFracBlink=!_eqFracBlink;redraw();},530);
+  selId=el.id;
+  cv.focus();
+  redraw();
+}
+
+function deactivateEqBox(andConvert){
+  if(!_eqFracActive)return;
+  if(_eqFracBlinkTimer){clearInterval(_eqFracBlinkTimer);_eqFracBlinkTimer=null;}
+  _eqFracActive=null;
+  // Keep the eqfrac element on canvas — same look as editing, no conversion to LaTeX image
+  redraw();
+}
+
+// Document-level keydown handler for eqfrac — capture phase so it fires first
+document.addEventListener('keydown',function eqFracKeyHandler(e){
+  if(!_eqFracActive)return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const {el,part}=_eqFracActive;
+  const _setVal=(v)=>{
+    if(part==='n')el.nVal=v;
+    else if(part==='d')el.dVal=v;
+    else if(part==='pre')el.pre=v;
+    else el.post=v;
+  };
+  const _getVal=()=>{
+    if(part==='n')return el.nVal||'';
+    if(part==='d')return el.dVal||'';
+    if(part==='pre')return el.pre||'';
+    return el.post||'';
+  };
+  // Enter: finish editing from any field
+  if(e.key==='Enter'){deactivateEqBox(false);return;}
+  // Tab: cycle pre→n→d→post
+  if(e.key==='Tab'){
+    const order=['pre','n','d','post'];
+    const i=order.indexOf(part);
+    if(i<order.length-1)activateEqBox(el,order[i+1]);
+    else deactivateEqBox(false);
+    return;
+  }
+  if(e.key==='Escape'){deactivateEqBox(false);return;}
+  if(e.key==='Backspace'){_setVal(_getVal().slice(0,-1));redraw();return;}
+  if(e.key==='Delete'){_setVal('');redraw();return;}
+  if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){_setVal(_getVal()+e.key);redraw();return;}
+},true);
+
 // ===== EQUATION RIBBON + MATHLIVE =====
 const EQ_CMDS={
-  frac:'\\frac{}{}', sqrt:'\\sqrt{}', nsqrt:'\\sqrt[n]{}',
-  pow:'^{}', sub:'_{}', abs:'\\left|\\right|',
-  fracpar:'\\left(\\frac{}{}\\right)', overline:'\\overline{}', vec:'\\vec{}',
-  binom:'\\binom{}{}', matrix22:'\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}',
-  int:'\\int', defint:'\\int_{}^{}', sum:'\\sum_{}^{}', prod:'\\prod_{}^{}',
-  lim:'\\lim_{}', deriv:'\\frac{d}{dx}', partial:'\\frac{\\partial}{\\partial x}',
+  frac:'\\frac{#?}{#?}', sqrt:'\\sqrt{#?}', nsqrt:'\\sqrt[#?]{#?}',
+  pow:'^{#?}', sub:'_{#?}', abs:'\\left|#?\\right|',
+  fracpar:'\\left(\\frac{#?}{#?}\\right)', overline:'\\overline{#?}', vec:'\\vec{#?}',
+  binom:'\\binom{#?}{#?}', matrix22:'\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}',
+  int:'\\int', defint:'\\int_{#?}^{#?}', sum:'\\sum_{#?}^{#?}', prod:'\\prod_{#?}^{#?}',
+  lim:'\\lim_{#?}', deriv:'\\frac{d}{dx}', partial:'\\frac{\\partial}{\\partial x}',
   deriv2:'\\frac{d^2}{dx^2}',
 };
-let _mfEditEl=null,_mfCanvasX=100,_mfCanvasY=100,_mfPendingCmd=null;
+// What to insert into eqfrac plain-text fields (visual Unicode, not LaTeX)
+const EQ_FRAC_INSERT={
+  sqrt:'√', nsqrt:'ⁿ√', pow:'^', sub:'_',
+  abs:'||', overline:'‾', vec:'⃗', int:'∫',
+  defint:'∫', sum:'∑', prod:'∏', lim:'lim',
+  deriv:'d/dx', partial:'∂/∂x', deriv2:'d²/dx²',
+  fracpar:'()', binom:'C',
+};
+// LaTeX command → Unicode for eqRibbonInsert (Greek + operators)
+const LATEX_TO_UC={
+  '\\alpha':'α','\\beta':'β','\\gamma':'γ','\\delta':'δ',
+  '\\varepsilon':'ε','\\zeta':'ζ','\\eta':'η','\\theta':'θ',
+  '\\iota':'ι','\\kappa':'κ','\\lambda':'λ','\\mu':'μ',
+  '\\nu':'ν','\\xi':'ξ','\\pi':'π','\\rho':'ρ',
+  '\\sigma':'σ','\\tau':'τ','\\upsilon':'υ','\\phi':'φ',
+  '\\chi':'χ','\\psi':'ψ','\\omega':'ω',
+  '\\Gamma':'Γ','\\Delta':'Δ','\\Theta':'Θ','\\Lambda':'Λ',
+  '\\Xi':'Ξ','\\Pi':'Π','\\Sigma':'Σ','\\Upsilon':'Υ',
+  '\\Phi':'Φ','\\Psi':'Ψ','\\Omega':'Ω',
+  '\\pm':'±','\\times':'×','\\div':'÷','\\cdot':'·',
+  '\\leq':'≤','\\geq':'≥','\\neq':'≠','\\approx':'≈',
+  '\\infty':'∞','\\in':'∈','\\notin':'∉','\\subset':'⊂',
+  '\\cup':'∪','\\cap':'∩','\\forall':'∀','\\exists':'∃',
+  '\\rightarrow':'→','\\leftarrow':'←','\\Rightarrow':'⇒',
+  '\\Leftrightarrow':'⟺','\\therefore':'∴','\\because':'∵',
+  '\\partial':'∂','\\nabla':'∇','\\perp':'⊥','\\parallel':'∥',
+  '\\angle':'∠','\\triangle':'△','\\circ':'°',
+  '\\ldots':'…','\\cdots':'⋯',
+};
+let _mfEditEl=null,_mfCanvasX=100,_mfCanvasY=100,_mfPendingCmd=null,_eqFracJustConverted=false;
 
 function isMFActive(){const ov=document.getElementById('mq-overlay');return ov&&ov.style.display==='flex';}
 
@@ -9607,11 +10158,10 @@ function openMFAt(canvasX,canvasY,initialCmd){
   const ov=document.getElementById('mq-overlay');
   ov.style.left=sx+'px';ov.style.top=sy+'px';ov.style.display='flex';
   const mf=document.getElementById('mf-main');
-  if(!_mfEditEl)mf.value='';
-  setTimeout(()=>{
-    mf.focus();
-    if(initialCmd){try{mf.insert(initialCmd);}catch(e){mf.value=initialCmd;}}
-  },60);
+  if(initialCmd){mf.value=initialCmd;}
+  else if(!_mfEditEl){mf.value='';}
+  mf.focus();
+  setTimeout(()=>{mf.focus();},30);
   // Wire Enter/Escape once
   if(!mf._mfWired){
     mf._mfWired=true;
@@ -9646,8 +10196,15 @@ function closeMF(){
 function mfInsert(cmd){
   if(!cmd)return;
   const mf=document.getElementById('mf-main');
-  try{mf.insert(cmd);}catch(e){mf.value=(mf.value||'')+cmd;}
   mf.focus();
+  requestAnimationFrame(()=>{
+    try{
+      mf.insert(cmd,{insertionMode:'replaceSelection',selectionMode:'placeholder',format:'latex'});
+    }catch(e){
+      mf.value=(mf.value||'')+'\\frac{a}{b}';
+    }
+    mf.focus();
+  });
 }
 
 function toggleEqRibbon(){
@@ -9665,14 +10222,197 @@ function switchEqRTab(btn,tabId){
   btn.classList.add('active');
   document.getElementById(tabId).classList.add('active');
 }
+function _eqFracInsertText(txt){
+  if(!_eqFracActive)return;
+  const {el,part}=_eqFracActive;
+  if(part==='n')el.nVal=(el.nVal||'')+txt;
+  else if(part==='d')el.dVal=(el.dVal||'')+txt;
+  else if(part==='pre')el.pre=(el.pre||'')+txt;
+  else el.post=(el.post||'')+txt;
+  cv.focus();redraw();
+}
+
+function _placeEqText(){
+  const FS=22;
+  let px=80,py=60;
+  if(_eqFracActive){
+    const{el}=_eqFracActive;
+    const pos=_getEqFracCursorPos();
+    px=pos.x;
+    const fracLineY=el.y+(el.h||80)/2;
+    py=fracLineY-FS*0.8;
+    if(!_eqGroupId){_eqGroupId='g'+Date.now();el.groupId=_eqGroupId;}
+    deactivateEqBox(false);
+  } else if(_eqMonoActive){
+    const mel=_eqMonoActive.el;
+    px=mel.x+(mel.w||50)+8;
+    py=mel.y;
+    if(!_eqGroupId){_eqGroupId='g'+Date.now();mel.groupId=_eqGroupId;}
+    deactivateEqMono();
+  } else {
+    const sel=getSel();
+    if(sel&&sel.type==='eqfrac'){
+      const fracLineY=sel.y+(sel.h||80)/2;
+      px=sel.x+(sel.w||120)+16;
+      py=fracLineY-FS*0.8;
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();sel.groupId=_eqGroupId;}
+    } else if(sel&&sel.type==='eqmono'){
+      px=sel.x+(sel.w||50)+8;
+      py=sel.y;
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();sel.groupId=_eqGroupId;}
+    }
+  }
+  if(_eqMonoActive)deactivateEqMono();
+  const newEl={type:'eqmono',template:'txt',x:px,y:py,sym:'',val:'',suf:'',color:'#111',fill:'none',sw:1};
+  if(_eqGroupId)newEl.groupId=_eqGroupId;
+  addEl(newEl);
+  const placed=els.find(e=>e.id===selId);
+  if(!placed)return;
+  _eqMonoParent=null;
+  activateEqMono(placed,'val');
+}
+
+function _placeEqMono(key){
+  // If eqfrac is active, place the new element at the cursor position within the field
+  let px=80,py=60,parentCtx=null;
+  if(_eqFracActive){
+    const pos=_getEqFracCursorPos();
+    px=pos.x;
+    if(key==='pow'){
+      // Align pow baseline with fraction center line
+      const fracEl=_eqFracActive.el;
+      const BFS=22,powH=BFS*1.6;
+      const fracLineY=fracEl.y+(fracEl.h||80)/2;
+      py=fracLineY-powH*0.78;
+    } else {
+      py=pos.y;
+    }
+    deactivateEqBox(false);
+  } else if(_eqMonoActive){
+    // Place after an active mono element
+    const mel=_eqMonoActive.el;
+    px=mel.x+(mel.w||50)+8;
+    py=mel.y;
+    deactivateEqMono();
+  } else {
+    // No active editor — place after selected eqfrac/eqmono if any
+    const sel=getSel();
+    if(sel&&sel.type==='eqfrac'){
+      const BFS=22,powH=BFS*1.6;
+      const fracLineY=sel.y+(sel.h||80)/2;
+      px=sel.x+(sel.w||120)+16;
+      py=(key==='pow')?(fracLineY-powH*0.78):(sel.y+(sel.h||80)/2-11);
+    } else if(sel&&sel.type==='eqmono'){
+      px=sel.x+(sel.w||50)+8;
+      py=sel.y;
+    }
+  }
+  if(_eqMonoActive)deactivateEqMono();
+  let newEl,field='val';
+  if(key==='pow'){
+    newEl={type:'eqmono',template:'pow',x:px,y:py,base:'x',exp:'n',post:'',w:50,h:36,color:'#111',fill:'none',sw:1};
+    field='base';
+  } else {
+    const tmpl=EQMONO_TEMPLATES[key];if(!tmpl)return;
+    newEl={type:'eqmono',x:px,y:py,sym:tmpl.sym,val:'',suf:tmpl.suf,color:'#111',fill:'none',sw:1};
+  }
+  if(_eqGroupId)newEl.groupId=_eqGroupId;
+  addEl(newEl);
+  const placed=els.find(e=>e.id===selId);
+  if(!placed)return;
+  _eqMonoParent=parentCtx;
+  activateEqMono(placed,field);
+}
+
 function eqRibbonBtn(key){
+  // If MathLive is active, always insert into it
+  if(isMFActive()){mfInsert(EQ_CMDS[key]||'');return;}
+  // Structural elements always create a new canvas element
+  if(key==='frac'){
+    if(_eqFracActive){
+      const {el}=_eqFracActive;
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();el.groupId=_eqGroupId;}
+      deactivateEqBox();
+      const newEl={type:'eqfrac',x:el.x+(el.w||120)+20,y:el.y,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:el.color||'#111',fill:'none',sw:1,groupId:_eqGroupId};
+      addEl(newEl);
+      const placed=els.find(e=>e.id===selId);
+      if(placed)activateEqBox(placed,'n');
+      return;
+    }
+    if(_eqMonoActive){
+      // Place fraction after active mono element, aligned vertically
+      const mel=_eqMonoActive.el;
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();mel.groupId=_eqGroupId;}
+      const fracH=80,BH=34,GAP=6;
+      const monoMidY=mel.y+(mel.h||35)/2;
+      const fracLineY=BH+GAP; // fraction's line y relative to its own top
+      const fy=monoMidY-fracLineY;
+      const fx=mel.x+(mel.w||50)+16;
+      deactivateEqMono();
+      const newEl={type:'eqfrac',x:fx,y:fy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1,groupId:_eqGroupId};
+      addEl(newEl);
+      const placed=els.find(e=>e.id===selId);
+      if(placed)activateEqBox(placed,'n');
+      return;
+    }
+    // Check if selected element is a mono — place fraction after it
+    const _selEl=getSel();
+    if(_selEl&&_selEl.type==='eqmono'){
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();_selEl.groupId=_eqGroupId;}
+      const fracH=80,BH=34,GAP=6;
+      const monoMidY=_selEl.y+(_selEl.h||35)/2;
+      const fy=monoMidY-(BH+GAP);
+      const fx=_selEl.x+(_selEl.w||50)+16;
+      const newEl={type:'eqfrac',x:fx,y:fy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1,groupId:_eqGroupId};
+      addEl(newEl);
+      const placed=els.find(e=>e.id===selId);
+      if(placed)activateEqBox(placed,'n');
+      return;
+    }
+    _eqGroupId=null;
+    const newEl={type:'eqfrac',x:80,y:60,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1};
+    addEl(newEl);const placed=els.find(e=>e.id===selId);
+    if(placed)activateEqBox(placed,'n');
+    return;
+  }
+  if(key==='txt'){
+    _placeEqText();return;
+  }
+  if(key==='pow'||key==='sqrt'||key==='nsqrt'){
+    if(_eqFracActive){
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqFracActive.el.groupId=_eqGroupId;}
+    } else if(_eqMonoActive){
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqMonoActive.el.groupId=_eqGroupId;}
+    } else {
+      const sel=getSel();
+      if(sel&&(sel.type==='eqfrac'||sel.type==='eqmono')){
+        if(!_eqGroupId){_eqGroupId='g'+Date.now();sel.groupId=_eqGroupId;}
+      } else {_eqGroupId=null;}
+    }
+    _placeEqMono(key);return;
+  }
+  // Other keys: insert into active element, or open MathLive
   const cmd=EQ_CMDS[key]||'';
-  if(isMFActive()){mfInsert(cmd);}
-  else{_mfPendingCmd=cmd;cv.style.cursor='crosshair';_showPlacementHint();}
+  if(_eqFracActive){_eqFracInsertText(EQ_FRAC_INSERT[key]||cmd);return;}
+  if(_eqMonoActive){_eqMonoActive.el.val=(_eqMonoActive.el.val||'')+(EQ_FRAC_INSERT[key]||cmd);redraw();return;}
+  if(isMFActive()){mfInsert(cmd);return;}
+  const tmpl=EQMONO_TEMPLATES[key];
+  if(tmpl){
+    const newEl={type:'eqmono',x:80,y:60,sym:tmpl.sym,val:'',suf:tmpl.suf,color:'#111',fill:'none',sw:1};
+    addEl(newEl);const placed=els.find(e=>e.id===selId);
+    if(placed)activateEqMono(placed);
+  }
 }
 function eqRibbonInsert(latex){
-  if(isMFActive()){mfInsert(latex);}
-  else{_mfPendingCmd=latex;cv.style.cursor='crosshair';_showPlacementHint();}
+  const uc=LATEX_TO_UC[latex]||latex;
+  if(_eqFracActive){_eqFracInsertText(uc);return;}
+  if(_eqMonoActive){_eqMonoActive.el.val=(_eqMonoActive.el.val||'')+uc;redraw();return;}
+  if(isMFActive()){mfInsert(latex);return;}
+  // Place as standalone eqmono with the symbol as its value
+  const newEl={type:'eqmono',x:80,y:60,sym:'',val:uc,suf:'',color:'#111',fill:'none',sw:1};
+  addEl(newEl);
+  const placed=els.find(e=>e.id===selId);
+  if(placed)activateEqMono(placed);
 }
 function _showPlacementHint(){
   const h=document.getElementById('mq-hint');
