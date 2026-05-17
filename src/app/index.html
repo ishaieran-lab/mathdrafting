@@ -1282,7 +1282,7 @@ body.new-ui #sub-bar { display: none !important; }
   height: 28px;
   background: #242424;
   border: 1px solid #363636;
-  border-radius: 6px;
+  border-radius: 0;
   color: #ccc;
   font-size: 12px;
   padding: 0 8px;
@@ -1357,7 +1357,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <!-- קבוצה 1: עיצוב טקסט -->
   <div class="nui-group" id="nui-textfmt">
     <select class="nui-select" id="nui-font" onchange="_nuiFontChange(this.value)"></select>
-    <select class="nui-select nui-select-sm" id="nui-size" onchange="_nuiSizeChange(this.value)"></select>
+    <select class="nui-select nui-select-sm" id="nui-size" onchange="_nuiSizeChange(this.value)" style="margin-right:6px;"></select>
     <div class="nui-sep"></div>
 
     <!-- 1. B / I / U — גופן מודרני system-ui -->
