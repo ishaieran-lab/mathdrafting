@@ -233,7 +233,7 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
 /* disable CSS ::after for translated buttons — JS tooltip handles them */
 .btn[data-tip-key]::after,.tbtn[data-tip-key]::after{display:none!important;}
 /* JS floating tooltip — VS Code style */
-#js-tip{position:fixed;background:#1f1f1f;color:#cccccc;font-size:12px;font-family:'Segoe UI',system-ui,sans-serif;white-space:nowrap;padding:4px 8px;border-radius:4px;pointer-events:none;z-index:9999;display:none;border:1px solid #454545;box-shadow:0 2px 8px rgba(0,0,0,0.36);}
+#js-tip{position:fixed;background:#1f1f1f;color:#cccccc;font-size:12px;font-family:'Segoe UI',system-ui,sans-serif;white-space:nowrap;padding:4px 8px;border-radius:0;pointer-events:none;z-index:9999;display:none;border:1px solid #454545;box-shadow:0 2px 8px rgba(0,0,0,0.36);}
 
 /* LANGUAGE SWITCHER */
 .lang-wrap{display:flex;background:transparent;border-radius:0;padding:0;gap:0;}
@@ -288,7 +288,7 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
   transform:translateY(-50%);
   background:#1f1f1f;color:#cccccc;
   font-size:12px;font-family:'Segoe UI',system-ui,sans-serif;white-space:nowrap;
-  padding:4px 8px;border-radius:4px;pointer-events:none;opacity:0;
+  padding:4px 8px;border-radius:0;pointer-events:none;opacity:0;
   transition:opacity 0.1s;
   border:1px solid #454545;box-shadow:0 2px 8px rgba(0,0,0,0.36);
 }
