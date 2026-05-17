@@ -916,11 +916,12 @@ body.light-theme #numlines-panel{border-color:rgba(108,99,255,0.5);box-shadow:0 
 /* ===== THEME / ACCENT ===== */
 body.light-theme{
   --bg:#eeeef6;--surface:#ffffff;--surface2:#f2f2fa;
-  --border:#d0d0e4;--text:#1a1a2e;--text2:#4a4a80;
+  --border:#d0d0e4;--text:#1a1a2e;--text2:#555;
   --glass:rgba(255,255,255,0.9);
-  background-image:
-    radial-gradient(ellipse at 15% 40%,rgba(108,99,255,0.04) 0%,transparent 55%),
-    radial-gradient(ellipse at 85% 10%,rgba(167,139,250,0.03) 0%,transparent 45%);
+  --accent:#333;--accent2:#555;--accent3:#444;
+  --grad:linear-gradient(135deg,#444 0%,#666 100%);
+  --grad-h:linear-gradient(135deg,#333 0%,#555 100%);
+  --glow:rgba(0,0,0,0.08);
 }
 /* canvas-area bg handled in base CSS above */
 body.light-theme{background:#ebebf2;}
@@ -928,7 +929,7 @@ body.light-theme header{background:#ffffff;border-bottom:1px solid rgba(0,0,0,0.
 body.light-theme #sub-bar{background:#ffffff;border-bottom:1px solid rgba(0,0,0,0.07);margin-top:10px;}
 body.light-theme #sub-bar-sep{background:rgba(0,0,0,0.1);}
 body.light-theme .toolbar{background:rgba(255,255,255,0.94);border:1px solid rgba(0,0,0,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.1);}
-body.light-theme .props{background:rgba(255,255,255,0.94);border:1px solid rgba(0,0,0,0.1);box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+body.light-theme .props{background:rgba(255,255,255,0.97);border-right:1px solid rgba(0,0,0,0.1);box-shadow:2px 0 12px rgba(0,0,0,0.06);}
 body.light-theme .props-title{background:transparent;}
 body.light-theme .pages-bar{background:transparent;}
 body.light-theme .statusbar{display:none;}
@@ -2076,9 +2077,9 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         pointer-events:none;opacity:0;transition:opacity 0.4s;
       ">
         <div style="display:flex;flex-direction:column;align-items:center;gap:14px;transform:translateY(-20px)">
-          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" style="opacity:0.18">
-            <rect x="4" y="4" width="48" height="48" rx="10" stroke="#7c6fff" stroke-width="2" stroke-dasharray="6 4"/>
-            <path d="M28 18v20M18 28h20" stroke="#7c6fff" stroke-width="2.5" stroke-linecap="round"/>
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none" style="opacity:0.35">
+            <rect x="4" y="4" width="48" height="48" rx="10" stroke="#333" stroke-width="2" stroke-dasharray="6 4"/>
+            <path d="M28 18v20M18 28h20" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>
           </svg>
           <p id="canvas-hint-main" style="font-family:'Assistant',sans-serif;font-size:15px;color:#aaa;font-weight:500;margin:0">בחר כלי מהסרגל כדי להתחיל</p>
           <p id="canvas-hint-sub" style="font-family:'Assistant',sans-serif;font-size:12px;color:#888;margin:0">צורות · משוואות · טבלאות · גרפים</p>
