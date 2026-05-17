@@ -1132,15 +1132,20 @@ body.new-ui #nui-header { display: flex !important; }
 /* Logo */
 #nui-logo { display: none; }
 #nui-logo-right {
-  position: absolute;
-  left: 12px;
   font-size: 13px;
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.2px;
-  pointer-events: none;
+  padding: 0 8px;
+  flex-shrink: 0;
 }
 #nui-logo-right span { color: #555; }
+.nui-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
 
 /* Divider */
 .nui-sep {
@@ -1226,64 +1231,48 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
 
 <!-- NEW UI HEADER (Figma style) -->
 <header id="nui-header">
-  <!-- Menu -->
-  <button class="nui-btn nui-icon-btn" id="nui-menu-btn" onclick="toggleMainMenu()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-  </button>
 
-  <div class="nui-sep"></div>
-
-  <!-- Undo / Redo -->
-  <button class="nui-btn nui-icon-btn" id="nui-undo" onclick="undo()" disabled title="Undo (Ctrl+Z)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h13a5 5 0 0 1 0 10H7"/><polyline points="7 5 3 9 7 13"/></svg>
-  </button>
-  <button class="nui-btn nui-icon-btn" id="nui-redo" onclick="redo()" disabled title="Redo (Ctrl+Y)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9H8a5 5 0 0 0 0 10h9"/><polyline points="17 5 21 9 17 13"/></svg>
-  </button>
-
-  <div class="nui-sep"></div>
-
-  <!-- Zoom -->
-  <div id="nui-zoom-group">
-    <button class="nui-btn nui-icon-btn" onclick="zoomOut()" title="Zoom out">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  <!-- RIGHT: Logo + Menu -->
+  <div class="nui-group">
+    <button class="nui-btn nui-icon-btn" id="nui-menu-btn" onclick="toggleMainMenu()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
     </button>
-    <span id="nui-zoom-pct" onclick="zoomReset()" title="Reset zoom">100%</span>
-    <button class="nui-btn nui-icon-btn" onclick="zoomIn()" title="Zoom in">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <div class="nui-sep"></div>
+    <button class="nui-btn nui-icon-btn" id="nui-undo" onclick="undo()" disabled title="Undo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h13a5 5 0 0 1 0 10H7"/><polyline points="7 5 3 9 7 13"/></svg>
+    </button>
+    <button class="nui-btn nui-icon-btn" id="nui-redo" onclick="redo()" disabled title="Redo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9H8a5 5 0 0 0 0 10h9"/><polyline points="17 5 21 9 17 13"/></svg>
+    </button>
+    <div class="nui-sep"></div>
+    <button class="nui-btn nui-icon-btn" onclick="zoomOut()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    <span id="nui-zoom-pct" onclick="zoomReset()" style="font-size:12px;color:#888;min-width:38px;text-align:center;cursor:pointer;padding:0 2px;" title="Reset">100%</span>
+    <button class="nui-btn nui-icon-btn" onclick="zoomIn()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+    <div class="nui-sep"></div>
+    <button class="nui-btn" onclick="togglePagePicker()" id="nui-pages-btn" style="gap:5px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      <span id="nui-pages-label">דף 1 מתוך 1</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
   </div>
 
-  <div class="nui-sep"></div>
-
-  <!-- Pages -->
-  <button class="nui-btn" onclick="togglePagePicker()" id="nui-pages-btn">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
-    <span id="nui-pages-label">דף 1 מתוך 1</span>
-    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
-  </button>
-
-  <!-- Spacer -->
+  <!-- SPACER -->
   <div class="nui-spacer"></div>
 
-  <!-- Logo — left edge -->
-  <div id="nui-logo-right">Math<span>Drafting</span></div>
-
-  <!-- Language -->
-  <button class="nui-btn" onclick="toggleLangDropdown(this)" id="nui-lang-btn">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-    <span id="nui-lang-label">עברית</span>
-  </button>
-
-  <!-- Theme -->
-  <button class="nui-btn nui-icon-btn" onclick="toggleTheme()" title="Toggle theme">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-  </button>
-
-  <div class="nui-sep"></div>
-
-  <!-- Back to classic -->
-  <button class="nui-btn" id="nui-toggle-btn" onclick="toggleNewUI()">Classic UI</button>
+  <!-- LEFT: Lang + Theme + Toggle + Logo -->
+  <div class="nui-group">
+    <button class="nui-btn" onclick="toggleLangDropdown(this)" id="nui-lang-btn" style="gap:5px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      <span id="nui-lang-label">עברית</span>
+    </button>
+    <button class="nui-btn nui-icon-btn" onclick="toggleTheme()" title="Toggle theme">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <div class="nui-sep"></div>
+    <button class="nui-btn" id="nui-toggle-btn" onclick="toggleNewUI()">Classic UI</button>
+    <div class="nui-sep"></div>
+    <div id="nui-logo-right">Math<span>Drafting</span></div>
+  </div>
 </header>
 
 <header style="position:relative;">
