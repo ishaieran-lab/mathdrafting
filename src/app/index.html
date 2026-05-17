@@ -1384,17 +1384,22 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </button>
     <div class="nui-sep"></div>
 
-    <!-- כיוון LTR / RTL — אות A עם חץ -->
+    <!-- כיוון LTR — ¶ + חץ ימינה -->
     <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-ltr').click()" title="כיוון שמאל-ימין (אנגלית)">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 6h8M4 12h6" stroke-width="2"/><path d="M9 3v18" stroke-width="2"/>
-        <path d="M16 8l4 4-4 4M20 12h-6" stroke-width="1.8"/>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <!-- גוף ¶ -->
+        <path d="M13 4v16h-2V4h-1v16H8V4H6a4 4 0 0 0 0 8h1v8h6V4h1z"/>
+        <!-- חץ ימינה -->
+        <path d="M18 8l4 4-4 4V8z"/>
       </svg>
     </button>
+    <!-- כיוון RTL — ¶ + חץ שמאלה -->
     <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-rtl').click()" title="כיוון ימין-שמאל (עברית)">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 6h8M14 12h6" stroke-width="2"/><path d="M15 3v18" stroke-width="2"/>
-        <path d="M8 8L4 12l4 4M4 12h6" stroke-width="1.8"/>
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <!-- גוף ¶ -->
+        <path d="M11 4v16H9V4H8v16H6V4H5a4 4 0 0 0 0 8h1v8h6V4h1z"/>
+        <!-- חץ שמאלה -->
+        <path d="M6 8L2 12l4 4V8z"/>
       </svg>
     </button>
     <div class="nui-sep"></div>
