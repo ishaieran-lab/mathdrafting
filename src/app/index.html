@@ -453,26 +453,26 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 .props-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;margin-bottom:10px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .pg{
   margin-bottom:5px;padding:6px 8px;
-  background:rgba(255,255,255,0.025);
-  border:1px solid rgba(108,99,255,0.09);
-  border-radius:10px;
+  background:#f0f0f0;
+  border:1px solid #ddd;
+  border-radius:0;
   transition:border-color 0.15s, background 0.15s;
 }
-.pg:hover{border-color:rgba(108,99,255,0.16);background:rgba(255,255,255,0.035);}
+.pg:hover{background:#eaeaea;border-color:#ccc;}
 .pg:last-child{margin-bottom:0;}
-.pl{font-size:10px;color:var(--text2);margin-bottom:3px;display:block;font-weight:500;letter-spacing:0.2px;}
+.pl{font-size:10px;color:#444;margin-bottom:3px;display:block;font-weight:600;letter-spacing:0.2px;}
 .pi{
   width:100%;
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(108,99,255,0.15);
-  color:var(--text);border-radius:6px;padding:4px 7px;font-size:12px;
+  background:#fff;
+  border:1px solid #ccc;
+  color:#111;border-radius:0;padding:4px 7px;font-size:12px;
   font-family:'Assistant',sans-serif;outline:none;
-  transition:border-color 0.15s,box-shadow 0.15s,background 0.15s;
+  transition:border-color 0.15s;
 }
 .pi:focus{
-  border-color:rgba(108,99,255,0.65);
-  box-shadow:0 0 0 3px rgba(108,99,255,0.14), 0 0 12px rgba(108,99,255,0.1);
-  background:rgba(108,99,255,0.08);
+  border-color:#888;
+  box-shadow:none;
+  background:#fff;
 }
 .pr{display:flex;gap:6px;}
 .pr .pi{flex:1;}
@@ -486,8 +486,8 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 .pi-sm{font-size:11px!important;padding:4px 7px!important;}
 .pg-sm{padding:7px 10px;}
 .color-btn-pair{display:flex;gap:8px;margin-top:4px;}
-.color-btn{flex:1;display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:8px;border:1px solid rgba(108,99,255,0.18);background:rgba(255,255,255,0.04);color:var(--text);cursor:pointer;font-size:12px;font-family:'Assistant',sans-serif;transition:all 0.15s;}
-.color-btn:hover{background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.38);}
+.color-btn{flex:1;display:flex;align-items:center;gap:7px;padding:6px 8px;border-radius:0;border:1px solid #ccc;background:#fff;color:#111;cursor:pointer;font-size:12px;font-family:'Assistant',sans-serif;transition:all 0.15s;}
+.color-btn:hover{background:#f0f0f0;border-color:#aaa;}
 .color-dot{width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.22);flex-shrink:0;transition:background 0.15s;}
 .clr-picker{background:rgba(20,20,36,0.98);border:1px solid rgba(108,99,255,0.25);border-radius:12px;padding:12px;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.6);backdrop-filter:blur(8px);}
 .clr-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:10px;}
@@ -931,8 +931,7 @@ body.light-theme .props{background:rgba(255,255,255,0.97);border-right:1px solid
 body.light-theme .props-title{background:transparent;}
 body.light-theme .pages-bar{background:transparent;}
 body.light-theme .statusbar{display:none;}
-body.light-theme .pg{background:rgba(108,99,255,0.04);border-color:rgba(108,99,255,0.12);}
-body.light-theme .pg:hover{background:rgba(108,99,255,0.07);border-color:rgba(108,99,255,0.2);}
+
 
 body.light-theme .modal-card{background:rgba(255,255,255,0.97);border:1px solid rgba(0,0,0,0.1);color:#1a1a3e;}
 body.light-theme .modal-title{color:#1a1a3e;}
@@ -996,9 +995,9 @@ body.light-theme .no-sel{color:#222;}
 
 /* === LIGHT THEME — props panel === */
 body.light-theme .props-title{color:#5555a0;}
-body.light-theme .pl{color:#5555a0;}
-body.light-theme .pi{background:white;border-color:#c8c8e0;color:#1a1a2e;}
-body.light-theme .pi:focus{border-color:rgba(108,99,255,0.5);box-shadow:0 0 0 3px rgba(108,99,255,0.1);}
+body.light-theme .pl{color:#444;}
+body.light-theme .pi{background:#fff;border-color:#ccc;color:#111;}
+body.light-theme .pi:focus{border-color:#888;box-shadow:none;}
 
 /* === POP-ITEM — always white text (popup is always dark) + nicer active === */
 .pop-item{color:#e8e8f8;}
