@@ -1225,6 +1225,61 @@ body.light-theme #zoom-pill{background:rgba(235,233,255,0.95);border-color:rgba(
 body.light-theme .zoom-pill-btn{color:#2a2060;}
 body.light-theme .zoom-pill-btn:hover{background:rgba(108,99,255,0.15);color:#3b33b0;}
 body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
+
+/* ── New UI Toolbar ── */
+#nui-toolbar {
+  display: none;
+  align-items: center;
+  gap: 2px;
+  height: 40px;
+  padding: 0 10px;
+  background: #181818;
+  border-bottom: 1px solid #2c2c2c;
+  flex-shrink: 0;
+}
+body.new-ui #nui-toolbar { display: flex !important; }
+body.new-ui .toolbar { display: none !important; }
+body.new-ui #sub-bar { display: none !important; }
+
+.nui-tbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: #999;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.1s, color 0.1s;
+  padding: 0;
+}
+.nui-tbtn:hover { background: rgba(255,255,255,0.07); color: #e0e0e0; }
+.nui-tbtn:active { background: rgba(255,255,255,0.12); }
+.nui-tbtn.active { background: rgba(255,255,255,0.1); color: #fff; }
+
+.nui-select {
+  height: 26px;
+  background: #252525;
+  border: 1px solid #383838;
+  border-radius: 5px;
+  color: #ccc;
+  font-size: 12px;
+  padding: 0 6px;
+  cursor: pointer;
+  outline: none;
+  min-width: 80px;
+}
+.nui-select:hover { border-color: #555; }
+.nui-select-sm { min-width: 48px; }
+
+body.light-theme #nui-toolbar { background: #f2f2f2; border-bottom-color: #ddd; }
+body.light-theme .nui-tbtn { color: #555; }
+body.light-theme .nui-tbtn:hover { background: rgba(0,0,0,0.07); color: #111; }
+body.light-theme .nui-tbtn.active { background: rgba(0,0,0,0.1); color: #111; }
+body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111; }
 </style>
 </head>
 <body>
@@ -1259,21 +1314,80 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
   <!-- SPACER -->
   <div class="nui-spacer"></div>
 
-  <!-- LEFT: Lang + Theme + Toggle + Logo -->
+  <!-- LEFT: Accent + Lang + Theme + Toggle + Logo -->
   <div class="nui-group">
+    <button class="nui-btn nui-icon-btn" onclick="cycleAccent()" title="Accent color">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/></svg>
+    </button>
     <button class="nui-btn" onclick="toggleLangDropdown(this)" id="nui-lang-btn" style="gap:5px;">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       <span id="nui-lang-label">עברית</span>
     </button>
     <button class="nui-btn nui-icon-btn" onclick="toggleTheme()" title="Toggle theme">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
     <div class="nui-sep"></div>
-    <button class="nui-btn" id="nui-toggle-btn" onclick="toggleNewUI()">Classic UI</button>
+    <button class="nui-btn" id="nui-toggle-btn" onclick="toggleNewUI()">Classic</button>
     <div class="nui-sep"></div>
     <div id="nui-logo-right">Math<span>Drafting</span></div>
   </div>
 </header>
+
+<!-- NEW UI TOOLBAR -->
+<div id="nui-toolbar">
+  <!-- כלי עבודה -->
+  <div class="nui-group">
+    <button class="nui-tbtn active" id="ntbtn-select" onclick="setTool('select')" title="בחירה">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m1.26 2.5 7.98 19.39c.26.63 1.07.79 1.55.31l4.36-4.36 4.7 4.7c.37.37.97.37 1.34 0l1.34-1.34c.37-.37.37-.97 0-1.34l-4.7-4.7 4.36-4.36c.48-.48.32-1.29-.31-1.55L2.5 1.26c-.68-.28-1.4.28-1.3 1z"/></svg>
+    </button>
+    <button class="nui-tbtn" id="ntbtn-freehand" onclick="setTool('freehand')" title="עפרון">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="openPopup('shapes')" title="צורות">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><circle cx="17.5" cy="6.5" r="3.5"/><path d="M12 21 3 9h18z"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="openPopup('text')" title="טקסט">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="openPopup('equations')" title="משוואות">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="setTool('fill')" id="ntbtn-fill" title="מילוי">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m19 11-8-8-8.5 8.5a5.5 5.5 0 0 0 7.78 7.78L19 11z"/><path d="m19 11 2 2a2 2 0 0 1 0 3h-3l-3-3"/><line x1="3" y1="22" x2="21" y2="22" stroke-width="1.2"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="setTool('delete')" id="ntbtn-delete" title="מחיקה">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+    </button>
+  </div>
+
+  <div class="nui-sep"></div>
+
+  <!-- פורמט טקסט (קונטקסטואלי) -->
+  <div class="nui-group" id="nui-textfmt">
+    <select class="nui-select" id="nui-font" onchange="_nuiFontChange(this.value)"></select>
+    <select class="nui-select nui-select-sm" id="nui-size" onchange="_nuiSizeChange(this.value)"></select>
+    <div class="nui-sep"></div>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-bold').click()" title="Bold"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 4h8a4 4 0 0 1 0 8H6zM6 12h9a4 4 0 0 1 0 8H6z"/></svg></button>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-italic').click()" title="Italic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg></button>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-underline').click()" title="Underline"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg></button>
+    <div class="nui-sep"></div>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-right').click()" title="ימין"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-center').click()" title="מרכז"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="17" y1="12" x2="7" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-left').click()" title="שמאל"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg></button>
+  </div>
+
+  <div class="nui-spacer"></div>
+
+  <!-- הגדרות דף -->
+  <div class="nui-group">
+    <button class="nui-tbtn" onclick="toggleBgPanel()" title="רקע">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="toggleNlPanel()" title="מספור שורות">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    </button>
+  </div>
+</div>
 
 <header style="position:relative;">
   <!-- לוגו -->
@@ -3702,6 +3816,11 @@ function setTool(t){
   if(clearFillBtn) clearFillBtn.classList.toggle('active',t==='clearfill');
   const delBtn=document.getElementById('tbtn-delete');
   if(delBtn) delBtn.classList.toggle('active',t==='delete');
+  // Sync new-UI toolbar active states
+  ['select','freehand','fill','delete'].forEach(function(id){
+    const nb=document.getElementById('ntbtn-'+id);
+    if(nb) nb.classList.toggle('active',t===id);
+  });
   cv.style.cursor=t==='fill'?_cursors.fill:t==='clearfill'?_cursors.clearFill:t==='delete'?_cursors.eraser:t==='fheraser'?'none':t==='select'?'default':t==='text'?'text':t==='freehand'?_makeFhCursor(_fhSw):'crosshair';
   // Aa button — active when text tool is selected
   const tfbBtn=document.getElementById('tfb-toggle-btn');
@@ -7987,6 +8106,7 @@ function renamePage(i,span){
 
 // init tabs on load
 renderPageTabs();
+_nuiToolbarInit();
 
 // Normalize an element after resize: convert negative w/h to proper top-left + positive dims.
 // The live flip (via ctx.scale in draw) is committed by storing it in flipH/flipV.
@@ -8964,6 +9084,26 @@ function _tfbFont(v){
   if(lbl)lbl.textContent=v;
   _tfbApplyToTa();
   _tfbFocusActive();
+}
+
+// ── New UI Toolbar helpers ──
+function _nuiToolbarInit(){
+  const fs=document.getElementById('nui-font');
+  if(fs&&fs.children.length===0){
+    _TFB_FONTS.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;fs.appendChild(o);});
+  }
+  const ss=document.getElementById('nui-size');
+  if(ss&&ss.children.length===0){
+    _SIZE_PRESETS.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;ss.appendChild(o);});
+  }
+}
+function _nuiFontChange(v){_tfbFont(v);}
+function _nuiSizeChange(v){_tfbFsNum(parseInt(v));}
+function _nuiToolbarSync(){
+  const fs=document.getElementById('nui-font');
+  if(fs) fs.value=_taState.fontFamily||'Heebo';
+  const ss=document.getElementById('nui-size');
+  if(ss) ss.value=_taState.fs||18;
 }
 
 function confirmInlineText(){
