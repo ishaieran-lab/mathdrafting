@@ -1130,15 +1130,16 @@ body.new-ui #nui-header { display: flex !important; }
 }
 
 /* Logo */
-#nui-logo {
+#nui-logo { display: none; }
+#nui-logo-right {
   font-size: 13px;
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.2px;
-  padding: 0 10px;
+  padding: 0 12px;
   flex-shrink: 0;
 }
-#nui-logo span { color: #666; }
+#nui-logo-right span { color: #555; }
 
 /* Divider */
 .nui-sep {
@@ -1224,10 +1225,6 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
 
 <!-- NEW UI HEADER (Figma style) -->
 <header id="nui-header">
-  <!-- Logo -->
-  <div id="nui-logo">Math<span>Drafting</span></div>
-  <div class="nui-sep"></div>
-
   <!-- Menu -->
   <button class="nui-btn nui-icon-btn" id="nui-menu-btn" onclick="toggleMainMenu()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -1267,6 +1264,9 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
 
   <!-- Spacer -->
   <div class="nui-spacer"></div>
+
+  <!-- Logo — left edge -->
+  <div id="nui-logo-right">Math<span>Drafting</span></div>
 
   <!-- Language -->
   <button class="nui-btn" onclick="toggleLangDropdown(this)" id="nui-lang-btn">
