@@ -248,7 +248,7 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
   background:rgba(22,22,34,0.96);
   backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   border:1px solid rgba(255,255,255,0.08);
-  border-radius:999px;
+  border-radius:12px;
   box-shadow:0 8px 36px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.08);
   display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:2px;
   z-index:20;
@@ -257,7 +257,7 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
 [dir=ltr] .toolbar{right:auto;left:16px;}
 .tsep{display:none;}
 .tbtn{
-  width:50px;height:50px;border-radius:50%;border:none;
+  width:50px;height:50px;border-radius:10px;border:none;
   background:rgba(255,255,255,0.05);color:rgba(180,175,220,0.75);cursor:pointer;
   display:flex;align-items:center;justify-content:center;position:relative;
   transition:all 0.17s cubic-bezier(.34,1.4,.64,1);
@@ -271,9 +271,9 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
 }
 .tbtn:hover svg{transform:scale(1.1);}
 .tbtn.active{
-  background:linear-gradient(135deg,rgba(108,99,255,0.9),rgba(139,109,255,0.9));
-  color:white;border-color:rgba(108,99,255,0.5);
-  box-shadow:0 4px 20px rgba(108,99,255,0.55), 0 0 0 1px rgba(255,255,255,0.1) inset;
+  background:rgba(32,178,170,0.28);
+  color:#20b2aa;border-color:rgba(32,178,170,0.4);
+  box-shadow:none;
 }
 .tbtn.active svg{transform:scale(1.05);}
 .tbtn::after{
@@ -1369,11 +1369,30 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <button class="nui-tbtn" onclick="document.getElementById('tfb-align-left').click()" title="יישור שמאל">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
     </button>
+    <div class="nui-sep"></div>
+    <!-- כיוון LTR / RTL -->
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-ltr').click()" title="כיוון שמאל-ימין (אנגלית)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="15" y1="6" y2="6"/><line x1="3" x2="13" y1="12" y2="12"/><line x1="3" x2="15" y1="18" y2="18"/><polyline points="19 9 22 12 19 15"/><line x1="22" x2="16" y1="12" y2="12"/></svg>
+    </button>
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-rtl').click()" title="כיוון ימין-שמאל (עברית)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="9" x2="21" y1="6" y2="6"/><line x1="11" x2="21" y1="12" y2="12"/><line x1="9" x2="21" y1="18" y2="18"/><polyline points="5 9 2 12 5 15"/><line x1="2" x2="8" y1="12" y2="12"/></svg>
+    </button>
+    <div class="nui-sep"></div>
+    <!-- צבע טקסט -->
+    <button class="nui-tbtn" id="nui-color-btn" title="צבע טקסט" style="position:relative;overflow:hidden;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 3h6l3 9H6L9 3z"/><line x1="12" y1="12" x2="12" y2="19"/><line x1="9" y1="19" x2="15" y2="19"/></svg>
+      <input type="color" value="#000000" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;" onmousedown="event.stopPropagation()" oninput="document.getElementById('tfb-color').value=this.value;_tfbColor(this.value)" onchange="document.getElementById('tfb-color').value=this.value;_tfbColor(this.value)">
+    </button>
+    <div class="nui-sep"></div>
+    <!-- סגנון רשימה -->
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-list-btn').click()" title="סגנון רשימה">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="6" y2="6"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="12" y2="12"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="18" y2="18"/></svg>
+    </button>
   </div>
 
   <div class="nui-sep"></div>
 
-  <!-- קבוצה 3: הגדרות דף -->
+  <!-- קבוצה 2: הגדרות דף -->
   <div class="nui-group">
     <button class="nui-tbtn" onclick="toggleBgPanel()" title="רקע דף">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -12880,7 +12899,7 @@ function setAccent(name, color, grad, gradH){
   let s=document.getElementById('_dyn-accent');
   if(!s){s=document.createElement('style');s.id='_dyn-accent';document.head.appendChild(s);}
   s.textContent=[
-    `.tbtn.active{background:${grad}!important;box-shadow:0 4px 20px rgba(${rgb},0.55),0 0 0 1px rgba(255,255,255,0.1) inset!important;}`,
+    `.tbtn.active{background:rgba(32,178,170,0.28)!important;color:#20b2aa!important;box-shadow:none!important;}`,
     `.tbtn:hover{background:rgba(${rgb},0.16)!important;border-color:rgba(${rgb},0.32)!important;box-shadow:0 0 0 1px rgba(${rgb},0.15) inset,0 4px 18px rgba(${rgb},0.25)!important;}`,
     `.page-tab.active{background:${grad}!important;border-color:rgba(${rgb},0.4)!important;box-shadow:0 2px 12px rgba(${rgb},0.4),inset 0 1px 0 rgba(255,255,255,0.12)!important;}`,
     `#text-fmt-bar button.tfb-on{background:rgba(${rgb},0.35)!important;}`,
@@ -12890,7 +12909,7 @@ function setAccent(name, color, grad, gradH){
     `.toggle-wrap button.active{background:${grad}!important;}`,
     `.lang-btn.active{background:${grad}!important;}`,
     `.pop-item:hover{background:${grad}!important;}`,
-    `body.light-theme .tbtn.active{background:${grad}!important;}`,
+    `body.light-theme .tbtn.active{background:rgba(32,178,170,0.18)!important;color:#0d9488!important;box-shadow:none!important;}`,
     `body.light-theme .tbtn:hover{background:rgba(${rgb},0.12)!important;}`,
   ].join('');
   const dot=document.getElementById('accent-dot');
