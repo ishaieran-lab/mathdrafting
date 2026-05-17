@@ -3196,25 +3196,36 @@ let _nlOn=false,_nlType='num',_nlSide='right',_nlStart=1,_nlSpacing=0,_nlSize=30
 const _undoStack=[], _redoStack=[];
 const MAX_HISTORY=60;
 function _cloneEls(){return JSON.parse(JSON.stringify(els));}
+function _cloneFill(){return fillLayerData?new ImageData(new Uint8ClampedArray(fillLayerData.data),fillLayerData.width,fillLayerData.height):null;}
+function _snapshot(){return{els:_cloneEls(),fill:_cloneFill()};}
+function _restoreSnapshot(s){
+  els.length=0; s.els.forEach(e=>els.push(e));
+  fillLayerData=s.fill||null;
+  fillOffscreen=null;
+  if(fillLayerData){
+    fillOffscreen=document.createElement('canvas');
+    fillOffscreen.width=fillLayerData.width;
+    fillOffscreen.height=fillLayerData.height;
+    fillOffscreen.getContext('2d').putImageData(fillLayerData,0,0);
+  }
+}
 function saveHistory(){
-  _undoStack.push(_cloneEls());
+  _undoStack.push(_snapshot());
   if(_undoStack.length>MAX_HISTORY) _undoStack.shift();
   _redoStack.length=0;
   _updUndoButtons();
 }
 function undo(){
   if(!_undoStack.length) return;
-  _redoStack.push(_cloneEls());
-  const snapshot=_undoStack.pop();
-  els.length=0; snapshot.forEach(e=>els.push(e));
+  _redoStack.push(_snapshot());
+  _restoreSnapshot(_undoStack.pop());
   selId=null; multiSel=[]; updProps(); redraw(); _updUndoButtons();
   showToast('↩ בוטל','info',1400);
 }
 function redo(){
   if(!_redoStack.length) return;
-  _undoStack.push(_cloneEls());
-  const snapshot=_redoStack.pop();
-  els.length=0; snapshot.forEach(e=>els.push(e));
+  _undoStack.push(_snapshot());
+  _restoreSnapshot(_redoStack.pop());
   selId=null; multiSel=[]; updProps(); redraw(); _updUndoButtons();
   showToast('↪ בוצע שוב','info',1400);
 }
