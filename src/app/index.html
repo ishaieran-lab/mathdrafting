@@ -45,13 +45,9 @@ body{
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--accent);}
 
-/* canvas scroller — scrollbar flush to the worksheet edges */
-.canvas-scroller{overflow-x:hidden;overflow-y:auto;max-height:100%;max-width:100%;flex-shrink:0;}
-.canvas-scroller::-webkit-scrollbar{width:10px;height:10px;}
-.canvas-scroller::-webkit-scrollbar-track{background:#888;border-radius:0;}
-.canvas-scroller::-webkit-scrollbar-thumb{background:#aaa;border-radius:0;border:none;}
-.canvas-scroller::-webkit-scrollbar-thumb:hover{background:#bbb;}
-.canvas-scroller::-webkit-scrollbar-corner{background:#888;}
+/* canvas scroller — no visible scrollbar, scroll via wheel/trackpad */
+.canvas-scroller{overflow-x:hidden;overflow-y:auto;max-height:100%;max-width:100%;flex-shrink:0;scrollbar-width:none;}
+.canvas-scroller::-webkit-scrollbar{display:none;}
 
 /* HEADER */
 header{
