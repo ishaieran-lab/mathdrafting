@@ -1230,6 +1230,7 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
 #nui-toolbar {
   display: none;
   align-items: center;
+  justify-content: center;
   gap: 3px;
   height: 48px;
   padding: 0 14px;
@@ -1341,31 +1342,31 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   </div>
 </header>
 
-<!-- NEW UI TOOLBAR — direction:rtl → כלים בימין, הגדרות בשמאל -->
+<!-- NEW UI TOOLBAR — justify-content:center, direction:rtl -->
 <div id="nui-toolbar">
 
-  <!-- קבוצה 1: כלי עבודה (ימין) -->
+  <!-- קבוצה 1: כלי עבודה -->
   <div class="nui-group">
     <button class="nui-tbtn active" id="ntbtn-select" onclick="setTool('select')" title="בחירה">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m1.26 2.5 7.98 19.39c.26.63 1.07.79 1.55.31l4.36-4.36 4.7 4.7c.37.37.97.37 1.34 0l1.34-1.34c.37-.37.37-.97 0-1.34l-4.7-4.7 4.36-4.36c.48-.48.32-1.29-.31-1.55L2.5 1.26c-.68-.28-1.4.28-1.3 1z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m1.26 2.5 7.98 19.39c.26.63 1.07.79 1.55.31l4.36-4.36 4.7 4.7c.37.37.97.37 1.34 0l1.34-1.34c.37-.37.37-.97 0-1.34l-4.7-4.7 4.36-4.36c.48-.48.32-1.29-.31-1.55L2.5 1.26c-.68-.28-1.4.28-1.3 1z"/></svg>
     </button>
     <button class="nui-tbtn" id="ntbtn-freehand" onclick="setTool('freehand')" title="עפרון">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
     </button>
     <button class="nui-tbtn" onclick="openPopup('shapes')" title="צורות">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><circle cx="17.5" cy="6.5" r="3.5"/><path d="M12 21 3 9h18z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><circle cx="17.5" cy="6.5" r="3.5"/><path d="M12 21 3 9h18z"/></svg>
     </button>
     <button class="nui-tbtn" onclick="openPopup('text')" title="טקסט">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
     </button>
     <button class="nui-tbtn" onclick="openPopup('equations')" title="משוואות">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
     </button>
     <button class="nui-tbtn" onclick="setTool('fill')" id="ntbtn-fill" title="מילוי">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m19 11-8-8-8.5 8.5a5.5 5.5 0 0 0 7.78 7.78L19 11z"/><path d="m19 11 2 2a2 2 0 0 1 0 3h-3l-3-3"/><line x1="3" y1="22" x2="21" y2="22" stroke-width="1.2"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m19 11-8-8-8.5 8.5a5.5 5.5 0 0 0 7.78 7.78L19 11z"/><path d="m19 11 2 2a2 2 0 0 1 0 3h-3l-3-3"/><line x1="3" y1="22" x2="21" y2="22" stroke-width="1.2"/></svg>
     </button>
     <button class="nui-tbtn" onclick="setTool('delete')" id="ntbtn-delete" title="מחיקה">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
     </button>
   </div>
 
@@ -1377,37 +1378,36 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <select class="nui-select nui-select-sm" id="nui-size" onchange="_nuiSizeChange(this.value)"></select>
     <div class="nui-sep"></div>
     <button class="nui-tbtn" onclick="document.getElementById('tfb-bold').click()" title="מודגש">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 4h8a4 4 0 0 1 0 8H6zM6 12h9a4 4 0 0 1 0 8H6z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 4h8a4 4 0 0 1 0 8H6zM6 12h9a4 4 0 0 1 0 8H6z"/></svg>
     </button>
     <button class="nui-tbtn" onclick="document.getElementById('tfb-italic').click()" title="נטוי">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="4" x2="10" y2="4"/><line x1="14" y1="20" x2="5" y2="20"/><line x1="15" y1="4" x2="9" y2="20"/></svg>
     </button>
     <button class="nui-tbtn" onclick="document.getElementById('tfb-underline').click()" title="קו תחתון">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="4" y1="20" x2="20" y2="20"/></svg>
     </button>
     <div class="nui-sep"></div>
     <!-- יישור: ימין → מרכז → שמאל (סדר RTL הגיוני) -->
     <button class="nui-tbtn" onclick="document.getElementById('tfb-align-right').click()" title="יישור ימין">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="12" x2="9" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
     </button>
     <button class="nui-tbtn" onclick="document.getElementById('tfb-align-center').click()" title="מרכז">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="17" y1="12" x2="7" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="17" y1="12" x2="7" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
     </button>
     <button class="nui-tbtn" onclick="document.getElementById('tfb-align-left').click()" title="יישור שמאל">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="21" y1="18" x2="3" y2="18"/></svg>
     </button>
   </div>
 
-  <!-- spacer דוחף הגדרות דף שמאלה -->
-  <div class="nui-spacer"></div>
+  <div class="nui-sep"></div>
 
-  <!-- קבוצה 3: הגדרות דף (שמאל) -->
+  <!-- קבוצה 3: הגדרות דף -->
   <div class="nui-group">
     <button class="nui-tbtn" onclick="toggleBgPanel()" title="רקע דף">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
     </button>
     <button class="nui-tbtn" onclick="toggleNlPanel()" title="מספור שורות">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
     </button>
   </div>
 
@@ -1524,11 +1524,11 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
     <div id="zoom-pill">
       <button class="zoom-pill-btn" onclick="zoomOut()" title="הקטן תצוגה">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
       <span id="zoom-label" onclick="zoomReset()" title="איפוס זום">100%</span>
       <button class="zoom-pill-btn" onclick="zoomIn()" title="הגדל תצוגה">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       </button>
     </div>
   </div>
@@ -1712,7 +1712,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div id="about-modal" class="modal-overlay" onclick="if(event.target===this)closeAboutModal()">
   <div class="modal-card">
     <button class="modal-close" onclick="closeAboutModal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="modal-logo">Math<span>Drafting</span>.com</div>
     <h2 class="modal-title" data-lang-key="aboutTitle">אודות MathDrafting</h2>
@@ -1725,7 +1725,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div id="contact-modal" class="modal-overlay" onclick="if(event.target===this)closeContactModal()">
   <div class="modal-card" style="max-width:460px">
     <button class="modal-close" onclick="closeContactModal()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
     <div class="modal-logo">Math<span>Drafting</span>.com</div>
     <h2 class="modal-title" data-lang-key="contactTitle">צור קשר</h2>
@@ -1759,19 +1759,19 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         <!-- קבוצה 2: עיצוב B / I / U -->
         <div class="tfb-group">
           <button id="tfb-bold" title="מודגש" data-title-key="tipBold" onmousedown="event.preventDefault();_tfbToggle('bold')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8"/>
             </svg>
           </button>
           <button id="tfb-italic" title="נטוי" data-title-key="tipItalic" onmousedown="event.preventDefault();_tfbToggle('italic')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="19" x2="10" y1="4" y2="4"/>
               <line x1="14" x2="5" y1="20" y2="20"/>
               <line x1="15" x2="9" y1="4" y2="20"/>
             </svg>
           </button>
           <button id="tfb-under" title="קו תחתי" data-title-key="tipUnderline" onmousedown="event.preventDefault();_tfbToggle('underline')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 4v6a6 6 0 0 0 12 0V4"/>
               <line x1="4" x2="20" y1="20" y2="20"/>
             </svg>
@@ -1781,21 +1781,21 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         <!-- קבוצה 3: יישור -->
         <div class="tfb-group">
           <button id="tfb-left" title="יישור שמאל" data-title-key="tipAlignLeft" onmousedown="event.preventDefault();_tfbAlign('left')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="21" x2="3" y1="6" y2="6"/>
               <line x1="15" x2="3" y1="12" y2="12"/>
               <line x1="17" x2="3" y1="18" y2="18"/>
             </svg>
           </button>
           <button id="tfb-center" title="מרכז" data-title-key="tipAlignCenter" onmousedown="event.preventDefault();_tfbAlign('center')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="21" x2="3" y1="6" y2="6"/>
               <line x1="17" x2="7" y1="12" y2="12"/>
               <line x1="19" x2="5" y1="18" y2="18"/>
             </svg>
           </button>
           <button id="tfb-right" title="יישור ימין" data-title-key="tipAlignRight" onmousedown="event.preventDefault();_tfbAlign('right')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="21" x2="3" y1="6" y2="6"/>
               <line x1="21" x2="9" y1="12" y2="12"/>
               <line x1="21" x2="7" y1="18" y2="18"/>
@@ -1806,7 +1806,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         <!-- קבוצה 4: כיוון LTR / RTL -->
         <div class="tfb-group">
           <button id="tfb-dir-ltr" title="כיוון שמאל לימין (אנגלית)" data-title-key="tipDirLTR" onmousedown="event.preventDefault();_tfbDir('ltr')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" x2="15" y1="6" y2="6"/>
               <line x1="3" x2="13" y1="12" y2="12"/>
               <line x1="3" x2="15" y1="18" y2="18"/>
@@ -1815,7 +1815,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
             </svg>
           </button>
           <button id="tfb-dir-rtl" title="כיוון ימין לשמאל (עברית)" data-title-key="tipDirRTL" onmousedown="event.preventDefault();_tfbDir('rtl')">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="9" x2="21" y1="6" y2="6"/>
               <line x1="11" x2="21" y1="12" y2="12"/>
               <line x1="9" x2="21" y1="18" y2="18"/>
@@ -1838,7 +1838,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         <div class="tfb-group">
           <button id="tfb-list-btn" title="סגנון רשימה" data-title-key="tipListStyle" onmousedown="event.preventDefault();_tfbListToggle(this)" style="gap:3px">
             <span id="tfb-list-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="6" y2="6"/>
                 <circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="12" y2="12"/>
                 <circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="18" y2="18"/>
@@ -1854,7 +1854,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="pages-bar" id="pages-bar">
     <div id="page-picker-wrap">
       <button id="page-picker-btn" onclick="togglePagePicker()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
         <span id="page-picker-label">דף 1 מתוך 1</span>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
@@ -8796,7 +8796,7 @@ function _tfbListType(type){
   _tfbListUpdateBtn(cur);
 }
 
-const _TFB_LIST_SVG=`width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
+const _TFB_LIST_SVG=`width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`;
 const _TFB_LIST_ICONS={
   bullet:`<svg ${_TFB_LIST_SVG}><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="6" y2="6"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="12" y2="12"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/><line x1="8" x2="20" y1="18" y2="18"/></svg>`,
   number:`<svg ${_TFB_LIST_SVG}><line x1="10" x2="21" y1="6" y2="6"/><line x1="10" x2="21" y1="12" y2="12"/><line x1="10" x2="21" y1="18" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>`,
@@ -9115,10 +9115,12 @@ function _nuiToolbarInit(){
   const fs=document.getElementById('nui-font');
   if(fs&&fs.children.length===0){
     _TFB_FONTS.forEach(f=>{const o=document.createElement('option');o.value=f;o.textContent=f;fs.appendChild(o);});
+    fs.value='Heebo';
   }
   const ss=document.getElementById('nui-size');
   if(ss&&ss.children.length===0){
     _SIZE_PRESETS.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;ss.appendChild(o);});
+    ss.value=18;
   }
 }
 function _nuiFontChange(v){_tfbFont(v);}
