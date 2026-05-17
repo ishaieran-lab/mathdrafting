@@ -1110,8 +1110,110 @@ body.light-theme .history-pill-btn:first-child{border-right:1px solid rgba(108,9
 body.new-ui #ui-toggle-btn{background:linear-gradient(135deg,#6c63ff,#a78bfa);color:#fff;box-shadow:0 0 20px rgba(108,99,255,0.5);}
 body.new-ui #ui-toggle-label::before{content:'✦ ';}
 /* ===== NEW UI LAYER ===== */
-/* כל עיצוב חדש יהיה תחת body.new-ui */
-body.new-ui-placeholder{opacity:1;} /* placeholder */
+/* Hide old header, show new one */
+body.new-ui header { display: none !important; }
+body.new-ui #nui-header { display: flex !important; }
+
+/* NEW HEADER — Figma style */
+#nui-header {
+  display: none;
+  align-items: center;
+  height: 44px;
+  background: #1e1e1e;
+  border-bottom: 1px solid #2c2c2c;
+  padding: 0 8px;
+  gap: 2px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 30;
+  font-family: 'Inter', 'Heebo', sans-serif;
+}
+
+/* Logo */
+#nui-logo {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.2px;
+  padding: 0 10px;
+  flex-shrink: 0;
+}
+#nui-logo span { color: #666; }
+
+/* Divider */
+.nui-sep {
+  width: 1px;
+  height: 20px;
+  background: #333;
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+/* Base button */
+.nui-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  color: #b3b3b3;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background 0.1s, color 0.1s;
+  flex-shrink: 0;
+}
+.nui-btn:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.nui-btn:active { background: rgba(255,255,255,0.12); }
+.nui-btn.active { background: rgba(255,255,255,0.1); color: #fff; }
+.nui-btn:disabled { opacity: 0.3; cursor: default; }
+.nui-btn svg { flex-shrink: 0; }
+
+/* Icon-only button */
+.nui-icon-btn {
+  width: 30px;
+  padding: 0;
+}
+
+/* Menu button */
+#nui-menu-btn { padding: 0 10px; gap: 6px; }
+
+/* Zoom group */
+#nui-zoom-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+#nui-zoom-pct {
+  font-size: 12px;
+  font-weight: 500;
+  color: #b3b3b3;
+  min-width: 42px;
+  text-align: center;
+  cursor: pointer;
+  padding: 0 4px;
+}
+#nui-zoom-pct:hover { color: #fff; }
+
+/* Spacer */
+.nui-spacer { flex: 1; }
+
+/* UI toggle inside new bar */
+#nui-toggle-btn {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  padding: 0 10px;
+  border-radius: 6px;
+  letter-spacing: 0.2px;
+}
+#nui-toggle-btn:hover { color: #fff; background: rgba(255,255,255,0.07); }
 body.light-theme #zoom-pill{background:rgba(235,233,255,0.95);border-color:rgba(108,99,255,0.25);box-shadow:0 2px 10px rgba(0,0,0,0.1);}
 body.light-theme .zoom-pill-btn{color:#2a2060;}
 body.light-theme .zoom-pill-btn:hover{background:rgba(108,99,255,0.15);color:#3b33b0;}
@@ -1119,6 +1221,70 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
 </style>
 </head>
 <body>
+
+<!-- NEW UI HEADER (Figma style) -->
+<header id="nui-header">
+  <!-- Logo -->
+  <div id="nui-logo">Math<span>Drafting</span></div>
+  <div class="nui-sep"></div>
+
+  <!-- Menu -->
+  <button class="nui-btn" id="nui-menu-btn" onclick="toggleMainMenu()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <span>File</span>
+  </button>
+
+  <div class="nui-sep"></div>
+
+  <!-- Undo / Redo -->
+  <button class="nui-btn nui-icon-btn" id="nui-undo" onclick="undo()" disabled title="Undo (Ctrl+Z)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h13a5 5 0 0 1 0 10H7"/><polyline points="7 5 3 9 7 13"/></svg>
+  </button>
+  <button class="nui-btn nui-icon-btn" id="nui-redo" onclick="redo()" disabled title="Redo (Ctrl+Y)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 9H8a5 5 0 0 0 0 10h9"/><polyline points="17 5 21 9 17 13"/></svg>
+  </button>
+
+  <div class="nui-sep"></div>
+
+  <!-- Zoom -->
+  <div id="nui-zoom-group">
+    <button class="nui-btn nui-icon-btn" onclick="zoomOut()" title="Zoom out">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <span id="nui-zoom-pct" onclick="zoomReset()" title="Reset zoom">100%</span>
+    <button class="nui-btn nui-icon-btn" onclick="zoomIn()" title="Zoom in">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </div>
+
+  <div class="nui-sep"></div>
+
+  <!-- Pages -->
+  <button class="nui-btn" onclick="togglePagePicker()" id="nui-pages-btn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+    <span id="nui-pages-label">דף 1 מתוך 1</span>
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+
+  <!-- Spacer -->
+  <div class="nui-spacer"></div>
+
+  <!-- Language -->
+  <button class="nui-btn" onclick="toggleLangDropdown(this)" id="nui-lang-btn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span id="nui-lang-label">עברית</span>
+  </button>
+
+  <!-- Theme -->
+  <button class="nui-btn nui-icon-btn" onclick="toggleTheme()" title="Toggle theme">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </button>
+
+  <div class="nui-sep"></div>
+
+  <!-- Back to classic -->
+  <button class="nui-btn" id="nui-toggle-btn" onclick="toggleNewUI()">Classic UI</button>
+</header>
 
 <header style="position:relative;">
   <!-- לוגו -->
@@ -3259,6 +3425,10 @@ function _updUndoButtons(){
   const br=document.getElementById('btn-redo');
   if(bu) bu.disabled=!_undoStack.length;
   if(br) br.disabled=!_redoStack.length;
+  const nu=document.getElementById('nui-undo');
+  const nr=document.getElementById('nui-redo');
+  if(nu) nu.disabled=!_undoStack.length;
+  if(nr) nr.disabled=!_redoStack.length;
 }
 
 // ===== PAGES =====
@@ -7724,6 +7894,8 @@ function clearAll(){if(!confirm('למחוק הכל?'))return;saveHistory();els.l
 function renderPageTabs(){
   const label=document.getElementById('page-picker-label');
   if(label) label.textContent=`דף ${activePage+1} מתוך ${pages.length}`;
+  const nuiLabel=document.getElementById('nui-pages-label');
+  if(nuiLabel) nuiLabel.textContent=`דף ${activePage+1} מתוך ${pages.length}`;
   _buildPagePickerDropdown();
 }
 function _buildPagePickerDropdown(){
@@ -11804,6 +11976,7 @@ function setCanvasZoom(z){
   const pct=Math.round(canvasZoom*100)+'%';
   const lbl=document.getElementById('zoom-label');if(lbl)lbl.textContent=pct;
   const fab=document.getElementById('zoom-fab-label');if(fab)fab.textContent=pct;
+  const nui=document.getElementById('nui-zoom-pct');if(nui)nui.textContent=pct;
 }
 function zoomIn(){setCanvasZoom(canvasZoom+0.1);}
 function zoomOut(){setCanvasZoom(canvasZoom-0.1);}
