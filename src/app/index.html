@@ -512,6 +512,52 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 .rot-wrap input[type=range]{flex:1;accent-color:var(--accent);}
 .rot-val{font-family:monospace;font-size:11px;color:var(--accent3);min-width:34px;text-align:left;}
 
+/* PAGE PICKER DROPDOWN */
+#page-picker-wrap{position:relative;display:inline-flex;align-items:center;}
+#page-picker-btn{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(22,22,34,0.96);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
+  padding:0 14px;height:30px;
+  color:#fff;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(0,0,0,0.3);
+  transition:background 0.15s;
+}
+#page-picker-btn:hover{background:rgba(108,99,255,0.25);}
+#page-picker-btn svg{opacity:0.7;flex-shrink:0;}
+#page-picker-dropdown{
+  display:none;position:absolute;top:calc(100% + 6px);left:0;
+  background:rgba(255,255,255,0.97);
+  border:1px solid rgba(0,0,0,0.1);
+  border-radius:14px;padding:6px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.18);
+  z-index:900;min-width:180px;
+  animation:menuPop 0.18s cubic-bezier(.34,1.3,.64,1);
+}
+#page-picker-dropdown.open{display:block;}
+.pp-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 12px;border-radius:8px;cursor:pointer;
+  font-family:'Heebo',sans-serif;font-size:13px;color:#1a1a3e;
+  transition:background 0.12s;
+}
+.pp-item:hover{background:rgba(108,99,255,0.1);}
+.pp-item.active{background:rgba(108,99,255,0.15);font-weight:700;color:#3b33b0;}
+.pp-item-del{border:none;background:transparent;color:#aaa;cursor:pointer;font-size:15px;padding:0 2px;line-height:1;border-radius:4px;}
+.pp-item-del:hover{color:#e55;background:rgba(255,0,0,0.08);}
+.pp-add-btn{
+  display:flex;align-items:center;gap:6px;
+  width:100%;padding:7px 12px;border-radius:8px;
+  border:1px dashed rgba(108,99,255,0.35);background:transparent;
+  color:#6c63ff;font-family:'Heebo',sans-serif;font-size:13px;
+  cursor:pointer;margin-top:4px;transition:background 0.12s;
+}
+.pp-add-btn:hover{background:rgba(108,99,255,0.08);}
+body.light-theme #page-picker-btn{background:rgba(235,233,255,0.95);border-color:rgba(108,99,255,0.25);color:#2a2060;box-shadow:0 2px 10px rgba(0,0,0,0.1);}
+body.light-theme #page-picker-btn:hover{background:rgba(108,99,255,0.15);}
 /* PAGES TAB BAR */
 .pages-bar{
   background:transparent;
@@ -1491,7 +1537,14 @@ body.light-theme #zoom-label{color:#2a2060;border-color:rgba(108,99,255,0.2);}
         </div>
   </div>
   <div class="pages-bar" id="pages-bar">
-    <button class="page-add-btn" data-lang-key="pageNew" onclick="addPage()">+ דף חדש</button>
+    <div id="page-picker-wrap">
+      <button id="page-picker-btn" onclick="togglePagePicker()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+        <span id="page-picker-label">דף 1 מתוך 1</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div id="page-picker-dropdown"></div>
+    </div>
   </div>
 </div>
 
@@ -7633,33 +7686,55 @@ function clearAll(){if(!confirm('למחוק הכל?'))return;saveHistory();els.l
 
 // ===== PAGE MANAGEMENT =====
 function renderPageTabs(){
-  const bar=document.getElementById('pages-bar');
-  bar.innerHTML='';
+  const label=document.getElementById('page-picker-label');
+  if(label) label.textContent=`דף ${activePage+1} מתוך ${pages.length}`;
+  _buildPagePickerDropdown();
+}
+function _buildPagePickerDropdown(){
+  const dd=document.getElementById('page-picker-dropdown');
+  if(!dd)return;
+  dd.innerHTML='';
   pages.forEach((pg,i)=>{
-    const tab=document.createElement('button');
-    tab.className='page-tab'+(i===activePage?' active':'');
-    tab.onclick=()=>switchPage(i);
-    const nameSpan=document.createElement('span');
-    nameSpan.textContent=pg.name;
-    nameSpan.ondblclick=(e)=>{e.stopPropagation();renamePage(i,nameSpan);};
-    tab.appendChild(nameSpan);
+    const item=document.createElement('div');
+    item.className='pp-item'+(i===activePage?' active':'');
+    const name=document.createElement('span');
+    name.textContent=pg.name;
+    name.ondblclick=(e)=>{e.stopPropagation();renamePage(i,name);};
+    item.appendChild(name);
+    item.onclick=(e)=>{if(e.target.classList.contains('pp-item-del'))return;switchPage(i);closePagePicker();};
     if(pages.length>1){
-      const x=document.createElement('button');
-      x.className='page-tab-close';
-      x.textContent='×';
-      const _lu=LANGS&&LANGS[currentLang]?LANGS[currentLang].ui:null;
-      x.title=(_lu&&_lu.pageDelete)||'מחק דף';
-      x.onclick=(e)=>{e.stopPropagation();deletePage(i);};
-      tab.appendChild(x);
+      const del=document.createElement('button');
+      del.className='pp-item-del';
+      del.textContent='×';
+      del.title='מחק דף';
+      del.onclick=(e)=>{e.stopPropagation();deletePage(i);};
+      item.appendChild(del);
     }
-    bar.appendChild(tab);
+    dd.appendChild(item);
   });
   const addBtn=document.createElement('button');
-  addBtn.className='page-add-btn';
-  const _lu2=LANGS&&LANGS[currentLang]?LANGS[currentLang].ui:null;
-  addBtn.textContent=(_lu2&&_lu2.pageNew)||'+ דף חדש';
-  addBtn.onclick=addPage;
-  bar.appendChild(addBtn);
+  addBtn.className='pp-add-btn';
+  addBtn.textContent='+ דף חדש';
+  addBtn.onclick=()=>{addPage();closePagePicker();};
+  dd.appendChild(addBtn);
+}
+function togglePagePicker(){
+  const dd=document.getElementById('page-picker-dropdown');
+  if(!dd)return;
+  const isOpen=dd.classList.contains('open');
+  if(isOpen){closePagePicker();return;}
+  _buildPagePickerDropdown();
+  dd.classList.add('open');
+  setTimeout(()=>{
+    document.addEventListener('click',function close(e){
+      const wrap=document.getElementById('page-picker-wrap');
+      if(wrap&&!wrap.contains(e.target)){closePagePicker();document.removeEventListener('click',close);}
+    });
+  },10);
+}
+function closePagePicker(){
+  const dd=document.getElementById('page-picker-dropdown');
+  if(dd)dd.classList.remove('open');
 }
 
 function switchPage(i){
