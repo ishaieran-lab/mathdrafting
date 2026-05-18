@@ -1935,7 +1935,6 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
     <div class="eq-rtabs">
       <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')">מבנים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-calc')">חשבון</button>
       <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')">יוונית</button>
       <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-sym')">סמלים</button>
     </div>
@@ -1950,9 +1949,6 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       <button class="eq-rb" onclick="eqRibbonBtn('nsqrt')" title="שורש n"><span class="eq-rb-icon" style="font-size:20px">ⁿ√x</span><span class="eq-rb-label">שורש n</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('pow')" title="חזקה"><span class="eq-rb-icon">x<sup style="font-size:15px">n</sup></span><span class="eq-rb-label">חזקה</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('txt')" title="טקסט חופשי"><span class="eq-rb-icon" style="font-family:'Times New Roman',serif;font-size:18px">abc</span><span class="eq-rb-label">טקסט</span></button>
-    </div>
-    <!-- Calculus -->
-    <div id="eqr-calc" class="eqr-section">
       <button class="eq-rb" onclick="eqRibbonBtn('int')" title="אינטגרל"><span class="eq-rb-icon" style="font-size:30px">∫</span><span class="eq-rb-label">אינטגרל</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('defint')" title="אינטגרל מסוים"><span class="eq-rb-icon" style="font-size:20px">∫ₐᵇ</span><span class="eq-rb-label">א. מסוים</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('sum')" title="סכום"><span class="eq-rb-icon" style="font-size:28px">∑</span><span class="eq-rb-label">סכום</span></button>
@@ -2002,6 +1998,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\geq')"><span class="eq-rb-icon">≥</span><span class="eq-rb-label">גדול-שווה</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pm')"><span class="eq-rb-icon">±</span><span class="eq-rb-label">פלוס-מינוס</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\times')"><span class="eq-rb-icon">×</span><span class="eq-rb-label">כפל</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cdot')"><span class="eq-rb-icon">·</span><span class="eq-rb-label">כפל נקודה</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\div')"><span class="eq-rb-icon">÷</span><span class="eq-rb-label">חילוק</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\approx')"><span class="eq-rb-icon">≈</span><span class="eq-rb-label">בערך</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\in')"><span class="eq-rb-icon">∈</span><span class="eq-rb-label">שייך</span></button>
