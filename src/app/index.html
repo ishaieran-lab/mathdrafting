@@ -3005,7 +3005,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="modal-bg" id="stat-bar-modal">
 <div class="stat-modal">
   <h3 data-lang-key="statBarTitle">📊 תרשים עמודות</h3>
-  <p class="msub">הזן קטגוריות וערכים — התרשים מתעדכן בזמן אמת</p>
+  <p class="msub" data-lang-key="statBarSub">הזן קטגוריות וערכים — התרשים מתעדכן בזמן אמת</p>
 
   <div class="stat-section">
     <label data-lang-key="statChartTitle">כותרת התרשים</label>
@@ -3048,7 +3048,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="modal-bg" id="stat-pie-modal">
 <div class="stat-modal">
   <h3 data-lang-key="statPieTitle">🥧 תרשים עוגה / עיגול</h3>
-  <p class="msub">הזן קטגוריות וערכים — האחוזים מחושבים אוטומטית</p>
+  <p class="msub" data-lang-key="statPieSub">הזן קטגוריות וערכים — האחוזים מחושבים אוטומטית</p>
 
   <div class="stat-section">
     <label data-lang-key="statChartTitle">כותרת התרשים</label>
@@ -3091,7 +3091,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="modal-bg" id="stat-freq-modal">
 <div class="stat-modal">
   <h3 data-lang-key="statFreqTitle">📉 פוליגון שכיחויות</h3>
-  <p class="msub">הזן מחלקות ושכיחויות — נוצרים היסטוגרמה ופוליגון</p>
+  <p class="msub" data-lang-key="statFreqSub">הזן מחלקות ושכיחויות — נוצרים היסטוגרמה ופוליגון</p>
 
   <div class="stat-section">
     <label data-lang-key="statChartTitle">כותרת התרשים</label>
@@ -3130,7 +3130,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="modal-bg" id="stat-measures-modal">
 <div class="stat-modal" style="width:540px">
   <h3 data-lang-key="statMeasTitle">📐 מדדי מרכז ופיזור</h3>
-  <p class="msub">הזן נתונים — המדדים מחושבים אוטומטית ומוכנים להדפסה</p>
+  <p class="msub" data-lang-key="statMeasSub">הזן נתונים — המדדים מחושבים אוטומטית ומוכנים להדפסה</p>
 
   <div class="stat-section">
     <label data-lang-key="statEnterData">הזן נתונים (מופרדים בפסיק או רווח)</label>
@@ -3163,7 +3163,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="modal-bg" id="stat-freegraph-modal">
 <div class="stat-modal" style="width:700px">
   <h3 data-lang-key="statFGTitle">📈 גרף נתונים חופשי</h3>
-  <p class="msub">הכנס נקודות, הגדר ציר X וY — הגרף מתעדכן בזמן אמת</p>
+  <p class="msub" data-lang-key="statFGSub">הכנס נקודות, הגדר ציר X וY — הגרף מתעדכן בזמן אמת</p>
 
   <div class="stat-section">
     <label data-lang-key="statGraphTitle">כותרת הגרף</label>
@@ -3214,7 +3214,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="modal-bg" id="table-modal">
 <div class="stat-modal" style="width:560px">
   <h3>📋 הוסף טבלה</h3>
-  <p class="msub">בחר גודל טבלה — לחץ על תא להתחלת עריכה בקנבס</p>
+  <p class="msub" data-lang-key="statTableSub">בחר גודל טבלה — לחץ על תא להתחלת עריכה בקנבס</p>
 
   <div class="stat-section">
     <label>בחר גודל (רחף מעל לבחור)</label>
@@ -13452,7 +13452,9 @@ function insertPowers(){
 
 // ----- BAR CHART -----
 function openStatBarModal(){
-  const bb=document.getElementById('bar-insert-btn');if(bb)bb.textContent='הוסף לקנבס';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
+  const bb=document.getElementById('bar-insert-btn');if(bb)bb.textContent=(_u&&_u.graphAdd)||'Add to canvas';
+  const bt=document.getElementById('bar-title');if(bt&&!bt.value)bt.value=(_u&&_u.statBarTitle&&_u.statBarTitle.replace(/^📊\s*/,''))||'Bar Chart';}
   if(!document.getElementById('bar-rows').children.length){
     statBarAddRow('ינואר','30');statBarAddRow('פברואר','45');statBarAddRow('מרץ','28');statBarAddRow('אפריל','52');
   }
@@ -13509,7 +13511,7 @@ function statBarInsert(){
 
 // ----- PIE CHART -----
 function openStatPieModal(){
-  const pb=document.getElementById('pie-insert-btn');if(pb)pb.textContent='הוסף לקנבס';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const pb=document.getElementById('pie-insert-btn');if(pb)pb.textContent=(_u&&_u.graphAdd)||'Add to canvas';}
   if(!document.getElementById('pie-rows').children.length){
     statPieAddRow('קטגוריה א','40');statPieAddRow('קטגוריה ב','30');statPieAddRow('קטגוריה ג','20');statPieAddRow('קטגוריה ד','10');
   }
@@ -13566,7 +13568,7 @@ function statPieInsert(){
 
 // ----- FREQUENCY POLYGON -----
 function openStatFreqModal(){
-  const fb=document.getElementById('freq-insert-btn');if(fb)fb.textContent='הוסף לקנבס';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const fb=document.getElementById('freq-insert-btn');if(fb)fb.textContent=(_u&&_u.graphAdd)||'Add to canvas';}
   if(!document.getElementById('freq-rows').children.length){
     statFreqAddRow('10–20','15','3');statFreqAddRow('20–30','25','7');statFreqAddRow('30–40','35','12');
     statFreqAddRow('40–50','45','8');statFreqAddRow('50–60','55','4');
@@ -14606,6 +14608,13 @@ var LANGS = {
       marginsLabel:'שוליים:',
       // quadratic equation
       eqQuadTitle:'🔲 משוואה ריבועית  ax²+bx+c=0', eqQuadA:'a (מקדם x²)', eqQuadB:'b (מקדם x)', eqQuadC:'c (קבוע)', eqQuadShowSol:'הצג פתרון מתחת לתרגיל',
+      // stat modal subtitles
+      statBarSub:'הזן קטגוריות וערכים — התרשים מתעדכן בזמן אמת',
+      statPieSub:'הזן קטגוריות וערכים — האחוזים מחושבים אוטומטית',
+      statFreqSub:'הזן מחלקות ושכיחויות — נוצרים היסטוגרמה ופוליגון',
+      statMeasSub:'הזן נתונים — המדדים מחושבים אוטומטית ומוכנים להדפסה',
+      statFGSub:'הכנס נקודות, הגדר ציר X וY — הגרף מתעדכן בזמן אמת',
+      statTableSub:'בחר גודל טבלה — לחץ על תא להתחלת עריכה בקנבס',
       // stat bar chart
       statBarTitle:'📊 תרשים עמודות', statChartTitle:'כותרת התרשים', statDataLabel:'נתונים',
       statCategory:'קטגוריה', statValue:'ערך', statColor:'צבע', statAddRow:'+ הוסף שורה',
@@ -14825,6 +14834,13 @@ var LANGS = {
       marginsLabel:'Margins:',
       // quadratic equation
       eqQuadTitle:'🔲 Quadratic  ax²+bx+c=0', eqQuadA:'a (x² coeff.)', eqQuadB:'b (x coeff.)', eqQuadC:'c (constant)', eqQuadShowSol:'Show solution below',
+      // stat modal subtitles
+      statBarSub:'Enter categories and values — chart updates in real time',
+      statPieSub:'Enter categories and values — percentages calculated automatically',
+      statFreqSub:'Enter classes and frequencies — histogram and polygon generated',
+      statMeasSub:'Enter data — measures calculated automatically and ready to print',
+      statFGSub:'Add data points, define X and Y axes — graph updates in real time',
+      statTableSub:'Choose table size — click a cell to start editing on canvas',
       // stat bar chart
       statBarTitle:'📊 Bar Chart', statChartTitle:'Chart title', statDataLabel:'Data',
       statCategory:'Category', statValue:'Value', statColor:'Color', statAddRow:'+ Add row',
