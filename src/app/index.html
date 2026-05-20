@@ -10030,7 +10030,7 @@ function updProps(){
   // angles panel — for rect, triangles, poly
   const hasAngles=['rect','triangle','righttriangle','poly','parallelogram','trapezoid','rhombus'].includes(s.type);
   document.getElementById('pg-angles').style.display=hasAngles?'block':'none';
-  document.getElementById('btn-angles').textContent=s.showAngles?'הסתר זוויות':'הצג זוויות';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;document.getElementById('btn-angles').textContent=s.showAngles?(_u&&_u.pgAnglesHide||'Hide Angles'):(_u&&_u.pgAnglesBtn||'Show Angles');}
   const angOpts=document.getElementById('pg-angles-opts');
   if(angOpts) angOpts.style.display=s.showAngles?'block':'none';
   if(s.showAngles){
@@ -14704,7 +14704,7 @@ var LANGS = {
       // freehand
       tipFreehand:'עפרון חופשי',
       // angles panel
-      pgAnglesTitle:'הצגת זוויות', pgAnglesBtn:'הצג זוויות', pgAnglesType:'סוג הצגה',
+      pgAnglesTitle:'הצגת זוויות', pgAnglesBtn:'הצג זוויות', pgAnglesHide:'הסתר זוויות', pgAnglesType:'סוג הצגה',
       pgAnglesArc:'〜 קשת בלבד', pgAnglesDeg:'〜° קשת + מעלות', pgAnglesSelected:'הצגה בזוויות נבחרות',
       // internal line panel
       pgILineTitle:'קו פנימי', pgILineDraw:'✏️ צייר קו פנימי',
@@ -14921,7 +14921,7 @@ var LANGS = {
       // freehand
       tipFreehand:'Freehand Pencil',
       // angles panel
-      pgAnglesTitle:'Show Angles', pgAnglesBtn:'Show Angles', pgAnglesType:'Display type',
+      pgAnglesTitle:'Show Angles', pgAnglesBtn:'Show Angles', pgAnglesHide:'Hide Angles', pgAnglesType:'Display type',
       pgAnglesArc:'〜 Arc only', pgAnglesDeg:'〜° Arc + degrees', pgAnglesSelected:'Selected angles',
       // internal line panel
       pgILineTitle:'Internal Line', pgILineDraw:'✏️ Draw internal line',
