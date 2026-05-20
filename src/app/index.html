@@ -2093,13 +2093,13 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <!-- Freehand tool HUD -->
     <div id="fh-hud" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 14px;z-index:50;flex-direction:row;gap:12px;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;">
       <span style="font-size:13px;">✏️</span>
-      <label style="font-size:11px;color:var(--text2);">צבע:</label>
+      <label style="font-size:11px;color:var(--text2);" data-lang-key="fhHudColor">צבע:</label>
       <input type="color" id="fh-color-pick" value="#000000" title="צבע עפרון" style="width:28px;height:28px;border:1px solid var(--border);border-radius:5px;cursor:pointer;padding:1px;background:none;" oninput="_fhColor=this.value">
-      <label style="font-size:11px;color:var(--text2);">עובי:</label>
+      <label style="font-size:11px;color:var(--text2);" data-lang-key="fhHudThick">עובי:</label>
       <input type="range" id="fh-sw-range" min="1" max="20" value="2" style="width:80px;accent-color:var(--accent);" oninput="_fhSw=parseInt(this.value);document.getElementById('fh-sw-val').textContent=this.value+'px';_updFhCursor()">
       <span id="fh-sw-val" style="font-size:11px;font-family:monospace;color:var(--accent3);min-width:28px">2px</span>
       <div style="width:1px;height:18px;background:var(--border);"></div>
-      <span style="font-size:10px;color:var(--text2);opacity:0.7;">Esc לסיום</span>
+      <span style="font-size:10px;color:var(--text2);opacity:0.7;" data-lang-key="fhHudEsc">Esc לסיום</span>
     </div>
     <!-- Margin HUD -->
     <div id="margin-hud" style="display:none;position:absolute;top:10px;left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:7px 14px;z-index:50;flex-direction:row;gap:10px;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.5);white-space:nowrap;">
@@ -14701,6 +14701,8 @@ var LANGS = {
       tipArccos:'ארק-קוסינוס',
       tipArctan:'ארק-טנגנס',
       cfName:'שם', cfEmail:'אימייל', cfMsg:'הודעה', cfSend:'שלח', cfSuccess:'ההודעה נשלחה! נחזור אליך בקרוב.',
+      // freehand HUD
+      fhHudColor:'צבע:', fhHudThick:'עובי:', fhHudEsc:'Esc לסיום',
       // freehand
       tipFreehand:'עפרון חופשי',
       // eq ribbon tabs
@@ -14885,6 +14887,8 @@ var LANGS = {
       tipArccos:'Arc cosine (arccos)',
       tipArctan:'Arc tangent (arctan)',
       cfName:'Name', cfEmail:'Email', cfMsg:'Message', cfSend:'Send', cfSuccess:'Message sent! We\'ll get back to you soon.',
+      // freehand HUD
+      fhHudColor:'Color:', fhHudThick:'Thickness:', fhHudEsc:'Esc to exit',
       // freehand
       tipFreehand:'Freehand Pencil',
       // eq ribbon tabs
