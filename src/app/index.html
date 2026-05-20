@@ -15035,18 +15035,30 @@ const LANG_META = {
 function toggleLangDropdown(btn){
   const dd=document.getElementById('lang-dropdown');
   const isOpen=dd.style.display!=='none';
-  dd.style.display=isOpen?'none':'block';
-  if(!isOpen){
-    // close on outside click
-    setTimeout(()=>{
-      document.addEventListener('click',function close(e){
-        if(!document.getElementById('lang-dropdown').contains(e.target)&&e.target!==btn){
-          closeLangDropdown();
-        }
-        document.removeEventListener('click',close);
-      });
-    },10);
+  if(isOpen){closeLangDropdown();return;}
+  // Move to body so it's not clipped by hidden parent
+  if(dd.parentElement!==document.body){
+    dd.style.position='fixed';
+    dd.style.zIndex='99999';
+    document.body.appendChild(dd);
   }
+  // Position near trigger button
+  const r=btn.getBoundingClientRect();
+  const ddW=160;
+  let leftPos=r.right-ddW;
+  if(leftPos<6)leftPos=r.left;
+  if(leftPos+ddW>window.innerWidth-6)leftPos=window.innerWidth-ddW-6;
+  dd.style.top=(r.bottom+4)+'px';
+  dd.style.left=leftPos+'px';
+  dd.style.display='block';
+  setTimeout(()=>{
+    document.addEventListener('click',function close(e){
+      if(!document.getElementById('lang-dropdown').contains(e.target)&&e.target!==btn){
+        closeLangDropdown();
+        document.removeEventListener('click',close);
+      }
+    });
+  },10);
 }
 function closeLangDropdown(){
   const dd=document.getElementById('lang-dropdown');
@@ -15230,6 +15242,9 @@ function setLang(lang) {
   const nameEl=document.getElementById('lang-name');
   if(flagEl)flagEl.textContent=meta.flag;
   if(nameEl)nameEl.textContent=meta.name;
+  // update nui-header label
+  const nuiLangLabel=document.getElementById('nui-lang-label');
+  if(nuiLangLabel)nuiLangLabel.textContent=meta.name;
 
   // mark active in dropdown
   ['he','en','de'].forEach(l => {
