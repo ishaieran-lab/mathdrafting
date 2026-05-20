@@ -7897,7 +7897,7 @@ function startShapePoint(){
   cv.style.cursor='none';
   const btn=document.getElementById('btn-shape-addpt');
   const hint=document.getElementById('shape-pt-hint');
-  if(btn){btn.style.background='var(--accent)';btn.style.color='white';btn.textContent='✕ בטל';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='var(--accent)';btn.style.color='white';btn.textContent=(_u&&_u.pgBtnCancel)||'✕ Cancel';}}
   if(hint) hint.style.display='block';
 }
 
@@ -7906,7 +7906,7 @@ function cancelShapePoint(){
   cv.style.cursor='default';
   const btn=document.getElementById('btn-shape-addpt');
   const hint=document.getElementById('shape-pt-hint');
-  if(btn){btn.style.background='';btn.style.color='';btn.textContent='⊙ הוסף נקודה';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='';btn.style.color='';btn.textContent=(_u&&_u.pgShapePtsClick)||'⊙ Add by click';}}
   if(hint) hint.style.display='none';
   redraw();
 }
@@ -8010,7 +8010,7 @@ function startInternalLine(){
   document.getElementById('iline-hint').style.display='block';
   document.getElementById('btn-iline-draw').style.background='var(--accent2)';
   document.getElementById('btn-iline-draw').style.color='white';
-  document.getElementById('btn-iline-draw').textContent='✕ בטל';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;document.getElementById('btn-iline-draw').textContent=(_u&&_u.pgBtnCancel)||'✕ Cancel';}
 }
 
 function cancelInternalLine(){
@@ -8019,7 +8019,7 @@ function cancelInternalLine(){
   const hint=document.getElementById('iline-hint');
   const btn=document.getElementById('btn-iline-draw');
   if(hint)hint.style.display='none';
-  if(btn){btn.style.background='';btn.style.color='';btn.textContent='✏️ צייר קו פנימי';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='';btn.style.color='';btn.textContent=(_u&&_u.pgILineDraw)||'✏️ Draw internal line';}}
   redraw();
 }
 
@@ -10020,10 +10020,10 @@ function updProps(){
     const btn=document.getElementById('btn-editpts');
     const hint=document.getElementById('editpts-hint');
     if(editingPoints&&selId===s.id){
-      btn.textContent='✅ סיים עריכה';btn.style.background='var(--accent3)';btn.style.color='#000';
+      {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;btn.textContent=(_u&&_u.pgBtnDoneEdit)||'✅ Done';btn.style.background='var(--accent3)';btn.style.color='#000';}
       hint.style.display='block';
     } else {
-      btn.textContent='✏️ ערוך פינות';btn.style.background='var(--accent)';btn.style.color='white';
+      {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;btn.textContent=(_u&&_u.pgEditPtsBtn)||'✏️ Edit corners';btn.style.background='var(--accent)';btn.style.color='white';}
       hint.style.display='none';
     }
   }
@@ -12021,14 +12021,14 @@ function startTangentClick(){
   tangentClickMode=true; tangentElId=s.id;
   cv.style.cursor='crosshair';
   const btn=document.getElementById('btn-tangent-click');
-  if(btn){btn.style.background='var(--accent)';btn.style.color='white';btn.textContent='✕ בטל';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='var(--accent)';btn.style.color='white';btn.textContent=(_u&&_u.pgBtnCancel)||'✕ Cancel';}}
 }
 
 function cancelTangentClick(){
   tangentClickMode=false; tangentElId=null;
   cv.style.cursor='default';
   const btn=document.getElementById('btn-tangent-click');
-  if(btn){btn.style.background='';btn.style.color='';btn.textContent='📍 לחץ על הגרף';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='';btn.style.color='';btn.textContent=(_u&&_u.pgClickGraph)||'📍 Click on graph';}}
 }
 
 function numericalDerivative(fn,x){
@@ -12273,14 +12273,14 @@ function startAddPoint(){
   slAddingElId=s.id;
   cv.style.cursor='none';
   const btn=document.getElementById('btn-sl-addpt');
-  if(btn){btn.style.background='var(--accent)';btn.style.color='white';btn.textContent='✕ בטל';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='var(--accent)';btn.style.color='white';btn.textContent=(_u&&_u.pgBtnCancel)||'✕ Cancel';}}
 }
 
 function cancelAddPoint(){
   slAddingPoint=false;slAddingElId=null;
   cv.style.cursor='default';
   const btn=document.getElementById('btn-sl-addpt');
-  if(btn){btn.style.background='';btn.style.color='';btn.textContent='הוסף נקודה חופשית';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(btn){btn.style.background='';btn.style.color='';btn.textContent=(_u&&_u.pgAddPoint)||'Add free point';}}
 }
 
 function buildSLPointsList(el){
@@ -12753,7 +12753,7 @@ function openEqModal(type){
   document.getElementById('eq-modal-title').textContent=def.title;
   document.getElementById('eq-modal-body').innerHTML=`<div class="eq-fields">${def.fields}</div>`;
   const cb=document.getElementById('eq-modal-confirm-btn');
-  if(cb)cb.textContent='הוסף לקנבס';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(cb)cb.textContent=(_u&&_u.graphAdd)||'Add to canvas';}
   openModal('eq-modal');
 }
 
@@ -12765,7 +12765,7 @@ function editEqEl(el){
   document.getElementById('eq-modal-title').textContent=def.title+' — עריכה';
   document.getElementById('eq-modal-body').innerHTML=`<div class="eq-fields">${def.fields}</div>`;
   const cb=document.getElementById('eq-modal-confirm-btn');
-  if(cb)cb.textContent='✓ עדכן';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;if(cb)cb.textContent=(_u&&_u.pgUpdate)||'✓ Update';}
   // Fill in existing values
   const p=el.eqParams||{};
   Object.keys(p).forEach(k=>{
@@ -14703,6 +14703,8 @@ var LANGS = {
       fhHudColor:'צבע:', fhHudThick:'עובי:', fhHudEsc:'Esc לסיום',
       // freehand
       tipFreehand:'עפרון חופשי',
+      // shared action buttons
+      pgBtnCancel:'✕ בטל', pgBtnDoneEdit:'✅ סיים עריכה',
       // angles panel
       pgAnglesTitle:'הצגת זוויות', pgAnglesBtn:'הצג זוויות', pgAnglesHide:'הסתר זוויות', pgAnglesType:'סוג הצגה',
       pgAnglesArc:'〜 קשת בלבד', pgAnglesDeg:'〜° קשת + מעלות', pgAnglesSelected:'הצגה בזוויות נבחרות',
@@ -14920,6 +14922,8 @@ var LANGS = {
       fhHudColor:'Color:', fhHudThick:'Thickness:', fhHudEsc:'Esc to exit',
       // freehand
       tipFreehand:'Freehand Pencil',
+      // shared action buttons
+      pgBtnCancel:'✕ Cancel', pgBtnDoneEdit:'✅ Done editing',
       // angles panel
       pgAnglesTitle:'Show Angles', pgAnglesBtn:'Show Angles', pgAnglesHide:'Hide Angles', pgAnglesType:'Display type',
       pgAnglesArc:'〜 Arc only', pgAnglesDeg:'〜° Arc + degrees', pgAnglesSelected:'Selected angles',
