@@ -14035,7 +14035,10 @@ function openTablePicker(btn){
   requestAnimationFrame(()=>{
     const r=btn.getBoundingClientRect();
     const pw=picker.offsetWidth||196;
-    picker.style.left=(r.left-pw-6)+'px';
+    let leftPos=r.left-pw-6;
+    if(leftPos<6) leftPos=r.right+6;
+    if(leftPos+pw>window.innerWidth-6) leftPos=window.innerWidth-pw-6;
+    picker.style.left=Math.max(4,leftPos)+'px';
     picker.style.top=r.top+'px';
   });
   // Click outside to close
