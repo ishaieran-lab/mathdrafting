@@ -2030,8 +2030,8 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
     </div><!-- end flex:1 overflow -->
     <div class="eq-rtabs" style="flex-shrink:0">
-      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')">מבנים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')">יוונית</button>
+      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-lang-key="eqRibbonStruct">מבנים</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-lang-key="eqRibbonGreek">יוונית</button>
     </div>
   </div><!-- end main row -->
   <!-- Edit mode bar (appears when a template is selected) -->
@@ -2055,7 +2055,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" d="m1.26039 2.49882 7.984 19.39008c0.2582 0.6259 1.07001 0.7878 1.54851 0.3087l4.3608 -4.3608 4.696 4.6973c0.3712 0.3694 0.9711 0.3694 1.3423 0l1.341 -1.3423c0.3708 -0.3706 0.3708 -0.9717 0 -1.3422l-4.6961 -4.6961 4.3608 -4.3608c0.479 -0.4788 0.3164 -1.29078 -0.3099 -1.54848L2.49889 1.26032c-0.6754 -0.277999 -1.3985 0.2794 -1.3015 1.0033 0.0108 0.0808 0.032 0.1598 0.063 0.2352Z" stroke-width="1.5"/>
       </svg>
     </button>
-    <button class="tbtn" id="tbtn-freehand" onclick="setTool('freehand')" data-tip="עפרון חופשי">
+    <button class="tbtn" id="tbtn-freehand" onclick="setTool('freehand')" data-tip="עפרון חופשי" data-tip-key="tipFreehand">
       <img src="../assets/icons/toolbar/עפרון.jpg" width="32" height="32" style="object-fit:contain;" id="tbtn-freehand-img">
     </button>
     <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
@@ -2370,35 +2370,35 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- CUBIC EDIT — for simple-cubic -->
       <div class="pg" id="pg-cubic-edit" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">✏️ ערוך X³</label>
+        <label class="pl" data-lang-key="pgCubicTitle" style="color:var(--accent);font-weight:600">✏️ ערוך X³</label>
         <div style="margin-top:6px">
-          <label class="pl">a (עומק)</label>
+          <label class="pl" data-lang-key="pgCubicDepth">a (עומק)</label>
           <input class="pi" type="number" id="pg-cubic-a" step="0.1" oninput="applyCubicEdit()">
         </div>
         <div style="margin-top:6px">
-          <label class="pl">כיוון</label>
+          <label class="pl" data-lang-key="pgCubicDir">כיוון</label>
           <div class="flip-row">
-            <button class="flip-btn" id="pg-cubic-pos" onclick="setSimpleCubicDir(1)">↗ עולה</button>
-            <button class="flip-btn" id="pg-cubic-neg" onclick="setSimpleCubicDir(-1)">↘ יורד</button>
+            <button class="flip-btn" id="pg-cubic-pos" data-lang-key="pgCubicUp" onclick="setSimpleCubicDir(1)">↗ עולה</button>
+            <button class="flip-btn" id="pg-cubic-neg" data-lang-key="pgCubicDown" onclick="setSimpleCubicDir(-1)">↘ יורד</button>
           </div>
         </div>
       </div>
       <!-- FREEHAND EDIT -->
       <div class="pg" id="pg-freehand-edit" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">✏️ עפרון חופשי</label>
+        <label class="pl" data-lang-key="pgFreehandTitle" style="color:var(--accent);font-weight:600">✏️ עפרון חופשי</label>
         <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
-          <label class="pl" style="margin:0;min-width:32px">צבע</label>
+          <label class="pl" data-lang-key="pgFreehandColor" style="margin:0;min-width:32px">צבע</label>
           <input type="color" id="fh-el-color" style="width:40px;height:28px;padding:0;border-radius:4px;cursor:pointer;border:1px solid var(--border);" oninput="updFhEl('color',this.value)">
         </div>
         <div style="margin-top:6px;display:flex;align-items:center;gap:8px">
-          <label class="pl" style="margin:0;min-width:32px">עובי</label>
+          <label class="pl" data-lang-key="pgFreehandThick" style="margin:0;min-width:32px">עובי</label>
           <input type="range" min="1" max="20" id="fh-el-sw" style="flex:1;accent-color:var(--accent)" oninput="updFhEl('sw',parseInt(this.value));document.getElementById('fh-el-sw-lbl').textContent=this.value+'px'">
           <span id="fh-el-sw-lbl" style="font-size:11px;font-family:monospace;color:var(--accent3);min-width:28px">2px</span>
         </div>
       </div>
       <!-- 3D SHAPE PROPS -->
       <div class="pg" id="pg-3d-props" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">📦 צורה תלת-מימד</label>
+        <label class="pl" data-lang-key="pg3dTitle" style="color:var(--accent);font-weight:600">📦 צורה תלת-מימד</label>
         <div style="margin-top:8px;display:flex;align-items:center;gap:8px;font-size:12px">
           <span style="color:var(--text2);min-width:36px" data-lang-key="td3Lines">קווים</span>
           <button id="btn-3d-solid" class="flip-btn" onclick="set3dLine('solid')" style="flex:1;padding:4px 6px;font-size:11px" data-lang-key="td3Solid">ישר</button>
@@ -2630,12 +2630,12 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <div class="popup" id="pop-shapes3d" style="display:none">
   <div class="popup-title" data-lang-key="shapes3dTitle">📦 צורות תלת-מימד</div>
   <div style="padding:6px 10px 4px;display:flex;align-items:center;gap:8px;font-size:12px;color:#555">
-    <span>קווים:</span>
+    <span data-lang-key="td3Lines">קווים</span>:
     <label style="display:flex;align-items:center;gap:3px;cursor:pointer">
-      <input type="radio" name="s3d-line" value="solid" checked onchange="_s3dSetLine(this.value)" style="accent-color:var(--accent)"> ישר
+      <input type="radio" name="s3d-line" value="solid" checked onchange="_s3dSetLine(this.value)" style="accent-color:var(--accent)"> <span data-lang-key="td3Solid">ישר</span>
     </label>
     <label style="display:flex;align-items:center;gap:3px;cursor:pointer">
-      <input type="radio" name="s3d-line" value="dashed" onchange="_s3dSetLine(this.value)" style="accent-color:var(--accent)"> מקווקו
+      <input type="radio" name="s3d-line" value="dashed" onchange="_s3dSetLine(this.value)" style="accent-color:var(--accent)"> <span data-lang-key="td3Dashed">מקווקו</span>
     </label>
   </div>
   <button class="pop-item" onclick="pickShape3d('box3d')">
@@ -2882,10 +2882,10 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="popup-title">🔢 משוואות</div>
   <!-- Tabs -->
   <div class="eq-tmpl-tabs">
-    <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'peq-struct')">מבנים</button>
-    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-calc')">חשבון</button>
-    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-greek')">יוונית</button>
-    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-sym')">סמלים</button>
+    <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'peq-struct')" data-lang-key="eqTabStruct">מבנים</button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-calc')" data-lang-key="eqTabCalc">חשבון</button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-greek')" data-lang-key="eqTabGreek">יוונית</button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-sym')" data-lang-key="eqTabSym">סמלים</button>
   </div>
   <!-- Template grid -->
   <div class="eq-tmpl-grid" style="margin-top:8px">
@@ -2993,7 +2993,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="9" width="3" height="12" rx="0.5"/><rect x="7" y="5" width="3" height="16" rx="0.5"/><rect x="11" y="2" width="3" height="19" rx="0.5"/><rect x="15" y="7" width="3" height="14" rx="0.5"/><rect x="19" y="12" width="3" height="9" rx="0.5"/><line x1="2" y1="21" x2="22" y2="21"/></svg>
     <span data-lang-key="statFreq">פוליגון שכיחויות</span>
   </button>
-  <button class="pop-item" onclick="closePopup();openModal('stat-measures-modal');const _mb=document.getElementById('measures-insert-btn');if(_mb)_mb.textContent='הוסף לקנבס';statMeasuresCalc()">
+  <button class="pop-item" onclick="closePopup();openModal('stat-measures-modal');statMeasuresCalc()">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21"/><line x1="3" y1="12" x2="21" y2="12" stroke-dasharray="3,2"/><circle cx="12" cy="12" r="3" fill="currentColor" opacity="0.4"/><text x="4" y="9" font-size="5" fill="currentColor" stroke="none">x̄</text><text x="15" y="9" font-size="5" fill="currentColor" stroke="none">σ</text></svg>
     <span data-lang-key="statMeasures">מדדי מרכז ופיזור</span>
   </button>
@@ -3037,7 +3037,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
   </div>
 
-  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">תצוגה מקדימה</label>
+  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px" data-lang-key="statPreviewLabel">תצוגה מקדימה</label>
   <div class="stat-preview"><canvas id="bar-preview-canvas"></canvas></div>
 
   <div class="mactions">
@@ -3080,7 +3080,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
   </div>
 
-  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">תצוגה מקדימה</label>
+  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px" data-lang-key="statPreviewLabel">תצוגה מקדימה</label>
   <div class="stat-preview"><canvas id="pie-preview-canvas"></canvas></div>
 
   <div class="mactions">
@@ -3119,7 +3119,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
   </div>
 
-  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">תצוגה מקדימה</label>
+  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px" data-lang-key="statPreviewLabel">תצוגה מקדימה</label>
   <div class="stat-preview"><canvas id="freq-preview-canvas"></canvas></div>
 
   <div class="mactions">
@@ -3203,7 +3203,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <div id="fg-series-container"></div>
   </div>
 
-  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">תצוגה מקדימה</label>
+  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px" data-lang-key="statPreviewLabel">תצוגה מקדימה</label>
   <div class="stat-preview"><canvas id="fg-preview-canvas" height="300"></canvas></div>
 
   <div class="mactions">
@@ -3244,7 +3244,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
   </div>
 
-  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px">תצוגה מקדימה</label>
+  <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:4px" data-lang-key="statPreviewLabel">תצוגה מקדימה</label>
   <div class="stat-preview"><canvas id="table-preview-canvas"></canvas></div>
 
   <div class="mactions">
@@ -4096,7 +4096,8 @@ function _drawMargins(){
 function _marginAdj(delta){
   _marginMm=Math.max(5,Math.min(50,_marginMm+delta));
   const v=document.getElementById('margin-val');
-  if(v) v.textContent=_marginMm+' מ"מ';
+  const _mu=(LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui.mmUnit)||'מ"מ';
+  if(v) v.textContent=_marginMm+' '+_mu;
   redraw();
 }
 
@@ -11216,7 +11217,7 @@ function buildParEditFields(el){
     document.getElementById('pg-par-info').innerHTML=info?
       `קודקוד: (${info.hx}, ${info.hy})<br>${info.roots}`:'';
   } else {
-    document.getElementById('pg-par-a-lbl').textContent='a (עומק)';
+    document.getElementById('pg-par-a-lbl').textContent=(LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui.pgDepth)||'a (depth)';
     aInp.value=Math.abs(el.a||1);
     const isDown=(el.a||1)<0;
     document.getElementById('pg-par-up').style.background=!isDown?'var(--accent)':'';
@@ -14697,6 +14698,25 @@ var LANGS = {
       tipArccos:'ארק-קוסינוס',
       tipArctan:'ארק-טנגנס',
       cfName:'שם', cfEmail:'אימייל', cfMsg:'הודעה', cfSend:'שלח', cfSuccess:'ההודעה נשלחה! נחזור אליך בקרוב.',
+      // freehand
+      tipFreehand:'עפרון חופשי',
+      // eq ribbon tabs
+      eqRibbonStruct:'מבנים', eqRibbonGreek:'יוונית',
+      // eq popup tabs
+      eqTabStruct:'מבנים', eqTabCalc:'חשבון', eqTabGreek:'יוונית', eqTabSym:'סמלים',
+      // stats preview
+      statPreviewLabel:'תצוגה מקדימה',
+      // cubic edit panel
+      pgCubicTitle:'✏️ ערוך X³', pgCubicDepth:'a (עומק)', pgCubicDir:'כיוון',
+      pgCubicUp:'↗ עולה', pgCubicDown:'↘ יורד',
+      // freehand edit panel
+      pgFreehandTitle:'✏️ עפרון חופשי', pgFreehandColor:'צבע', pgFreehandThick:'עובי',
+      // 3D props title
+      pg3dTitle:'📦 צורה תלת-מימד',
+      // parabola a label (simple-parabola)
+      pgDepth:'a (עומק)',
+      // margin unit
+      mmUnit:'מ"מ',
     }
   },
   en: {
@@ -14862,6 +14882,25 @@ var LANGS = {
       tipArccos:'Arc cosine (arccos)',
       tipArctan:'Arc tangent (arctan)',
       cfName:'Name', cfEmail:'Email', cfMsg:'Message', cfSend:'Send', cfSuccess:'Message sent! We\'ll get back to you soon.',
+      // freehand
+      tipFreehand:'Freehand Pencil',
+      // eq ribbon tabs
+      eqRibbonStruct:'Structures', eqRibbonGreek:'Greek',
+      // eq popup tabs
+      eqTabStruct:'Structures', eqTabCalc:'Arithmetic', eqTabGreek:'Greek', eqTabSym:'Symbols',
+      // stats preview
+      statPreviewLabel:'Preview',
+      // cubic edit panel
+      pgCubicTitle:'✏️ Edit X³', pgCubicDepth:'a (depth)', pgCubicDir:'Direction',
+      pgCubicUp:'↗ Rising', pgCubicDown:'↘ Falling',
+      // freehand edit panel
+      pgFreehandTitle:'✏️ Freehand', pgFreehandColor:'Color', pgFreehandThick:'Thickness',
+      // 3D props title
+      pg3dTitle:'📦 3D Shape',
+      // parabola a label (simple-parabola)
+      pgDepth:'a (depth)',
+      // margin unit
+      mmUnit:'mm',
     }
   },
   de: {
@@ -15341,6 +15380,10 @@ function setLang(lang) {
     const k = el.getAttribute('data-tip-key');
     if(u[k]) el.setAttribute('data-tip', u[k]);
   });
+
+  // margin unit
+  const _mvEl=document.getElementById('margin-val');
+  if(_mvEl&&typeof _marginMm!=='undefined')_mvEl.textContent=_marginMm+' '+(u.mmUnit||'mm');
 
   // update current tool label in statusbar
   const curToolLabel = u.toolLabel[tool] || tool;
