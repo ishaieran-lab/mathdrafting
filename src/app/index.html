@@ -15064,9 +15064,14 @@ function toggleMainMenu(){
   // Position near the trigger button
   if(btn){
     const r=btn.getBoundingClientRect();
+    const ddW=260; // min-width of dropdown
     dd.style.top=(r.bottom+4)+'px';
-    dd.style.right=(window.innerWidth-r.right)+'px';
-    dd.style.left='auto';
+    // Prefer aligning to button's right edge; clamp so dropdown stays on screen
+    let leftPos=r.right-ddW;
+    if(leftPos<6)leftPos=Math.min(r.left,window.innerWidth-ddW-6);
+    if(leftPos<6)leftPos=6;
+    dd.style.left=leftPos+'px';
+    dd.style.right='auto';
   }
   dd.classList.add('open');
   if(btn)btn.style.background='rgba(255,255,255,0.1)';
