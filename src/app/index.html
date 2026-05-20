@@ -15056,7 +15056,10 @@ function closeLangDropdown(){
 // ===== UNIFIED MAIN MENU =====
 function toggleMainMenu(){
   const dd=document.getElementById('main-menu-dropdown');
-  const btn=document.getElementById('nui-menu-btn')||document.getElementById('main-menu-btn');
+  const isNewUI=document.body.classList.contains('new-ui');
+  const btn=isNewUI
+    ? document.getElementById('nui-menu-btn')
+    : (document.getElementById('main-menu-btn')||document.getElementById('nui-menu-btn'));
   const isOpen=dd.classList.contains('open');
   if(isOpen){closeMainMenu();return;}
   // Move dropdown to body so it's not hidden by parent display:none
@@ -15086,7 +15089,10 @@ function toggleMainMenu(){
 }
 function closeMainMenu(){
   const dd=document.getElementById('main-menu-dropdown');
-  const btn=document.getElementById('nui-menu-btn')||document.getElementById('main-menu-btn');
+  const isNewUI=document.body.classList.contains('new-ui');
+  const btn=isNewUI
+    ? document.getElementById('nui-menu-btn')
+    : document.getElementById('main-menu-btn');
   if(dd)dd.classList.remove('open');
   if(btn)btn.style.background='';
 }
