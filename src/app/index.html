@@ -2164,25 +2164,25 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- ANGLES — for shapes -->
       <div class="pg" id="pg-angles" style="display:none">
-        <label class="pl">הצגת זוויות</label>
+        <label class="pl" data-lang-key="pgAnglesTitle">הצגת זוויות</label>
         <div class="flip-row">
-          <button class="flip-btn" id="btn-angles" onclick="toggleAngles()">הצג זוויות</button>
+          <button class="flip-btn" id="btn-angles" data-lang-key="pgAnglesBtn" onclick="toggleAngles()">הצג זוויות</button>
         </div>
         <div id="pg-angles-opts" style="display:none;margin-top:8px">
-          <label class="pl" style="margin-bottom:4px">סוג הצגה</label>
+          <label class="pl" data-lang-key="pgAnglesType" style="margin-bottom:4px">סוג הצגה</label>
           <div style="display:flex;flex-direction:column;gap:4px">
-            <button class="flip-btn" id="abtn-arc" onclick="setAngleMode('arc')" title="קשת בלבד">〜 קשת בלבד</button>
-            <button class="flip-btn" id="abtn-deg" onclick="setAngleMode('deg')" title="קשת + מעלות">〜° קשת + מעלות</button>
+            <button class="flip-btn" id="abtn-arc" data-lang-key="pgAnglesArc" onclick="setAngleMode('arc')" title="קשת בלבד">〜 קשת בלבד</button>
+            <button class="flip-btn" id="abtn-deg" data-lang-key="pgAnglesDeg" onclick="setAngleMode('deg')" title="קשת + מעלות">〜° קשת + מעלות</button>
           </div>
-          <label class="pl" style="margin-top:8px;margin-bottom:4px">הצגה בזוויות נבחרות</label>
+          <label class="pl" data-lang-key="pgAnglesSelected" style="margin-top:8px;margin-bottom:4px">הצגה בזוויות נבחרות</label>
           <div id="pg-angle-sel" style="display:flex;flex-wrap:wrap;gap:4px"></div>
         </div>
       </div>
       <!-- INTERNAL LINE — draw between 2 points on shape -->
       <div class="pg" id="pg-iline" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">קו פנימי</label>
+        <label class="pl" data-lang-key="pgILineTitle" style="color:var(--accent);font-weight:600">קו פנימי</label>
         <div style="margin-top:6px">
-          <button class="flip-btn" id="btn-iline-draw" onclick="startInternalLine()" style="width:100%;padding:7px">
+          <button class="flip-btn" id="btn-iline-draw" data-lang-key="pgILineDraw" onclick="startInternalLine()" style="width:100%;padding:7px">
             ✏️ צייר קו פנימי
           </button>
           <div id="iline-hint" style="display:none;font-size:10px;color:var(--accent3);margin-top:6px;line-height:1.6">
@@ -2193,13 +2193,13 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- SHAPE POINTS -->
       <div class="pg" id="pg-shape-pts" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">נקודות על הצורה</label>
+        <label class="pl" data-lang-key="pgShapePtsTitle" style="color:var(--accent);font-weight:600">נקודות על הצורה</label>
         <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
           <div style="display:flex;gap:4px">
-            <button class="flip-btn" onclick="addAllCorners()" style="flex:1;font-size:11px;padding:6px">⬡ הוסף לכל הפינות</button>
-            <button class="flip-btn" id="btn-shape-addpt" onclick="startShapePoint()" style="flex:1;font-size:11px;padding:6px">⊙ הוסף לפי בחירה</button>
+            <button class="flip-btn" data-lang-key="pgShapePtsAll" onclick="addAllCorners()" style="flex:1;font-size:11px;padding:6px">⬡ הוסף לכל הפינות</button>
+            <button class="flip-btn" id="btn-shape-addpt" data-lang-key="pgShapePtsClick" onclick="startShapePoint()" style="flex:1;font-size:11px;padding:6px">⊙ הוסף לפי בחירה</button>
           </div>
-          <button class="flip-btn" onclick="autoLabelPts()" style="width:100%;font-size:11px;padding:6px">ABC תן שמות</button>
+          <button class="flip-btn" data-lang-key="pgShapePtsABC" onclick="autoLabelPts()" style="width:100%;font-size:11px;padding:6px">ABC תן שמות</button>
           <div id="shape-pt-hint" style="display:none;font-size:10px;color:var(--accent3);line-height:1.6">
             לחץ על קצה הצורה. Esc לביטול.
           </div>
@@ -2208,9 +2208,9 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- EDIT POINTS — triangle & trapezoid -->
       <div class="pg" id="pg-editpts" style="display:none">
-        <label class="pl">עריכת נקודות</label>
+        <label class="pl" data-lang-key="pgEditPtsTitle">עריכת נקודות</label>
         <div class="flip-row">
-          <button class="flip-btn" id="btn-editpts" onclick="toggleEditPoints()" style="background:var(--accent);color:white;border-color:var(--accent)">✏️ ערוך פינות</button>
+          <button class="flip-btn" id="btn-editpts" data-lang-key="pgEditPtsBtn" onclick="toggleEditPoints()" style="background:var(--accent);color:white;border-color:var(--accent)">✏️ ערוך פינות</button>
         </div>
         <div id="editpts-hint" style="display:none;font-size:10px;color:var(--accent3);margin-top:6px;line-height:1.6">
           גרור כל אחת מ-4 הפינות.<br>שנה גובה ע"י הזזת הפינות למעלה/מטה.<br>Esc לסיום.
@@ -2218,7 +2218,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- TRAPEZOID OFFSET -->
       <div class="pg" id="pg-trap" style="display:none">
-        <label class="pl">הסטת הבסיס העליון</label>
+        <label class="pl" data-lang-key="pgTrapOffset">הסטת הבסיס העליון</label>
         <div style="display:flex;align-items:center;gap:8px">
           <input type="range" min="0" max="45" value="25" id="prop-trap-offset"
             style="flex:1;accent-color:var(--accent)"
@@ -2228,7 +2228,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- PARALLELOGRAM SKEW -->
       <div class="pg" id="pg-skew" style="display:none">
-        <label class="pl">הטיית המקבילית</label>
+        <label class="pl" data-lang-key="pgSkewTitle">הטיית המקבילית</label>
         <div style="display:flex;align-items:center;gap:8px">
           <input type="range" min="5" max="45" value="25" id="prop-skew"
             style="flex:1;accent-color:var(--accent)"
@@ -2253,38 +2253,38 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
             style="width:44px;height:28px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);text-align:center;font-size:13px;padding:0 4px"
             oninput="setCenterLabel(this.value)">
         </div>
-        <div style="font-size:10px;color:var(--text2);margin-top:3px;text-align:right">שם נקודת המרכז (A, B, O…)</div>
+        <div style="font-size:10px;color:var(--text2);margin-top:3px;text-align:right" data-lang-key="pgCenterNameHint">שם נקודת המרכז (A, B, O…)</div>
         <div id="pg-circle-info" style="margin-top:8px;display:none">
           <div style="background:var(--surface2);border-radius:6px;padding:8px 10px;font-size:12px;font-family:monospace;line-height:2">
-            <div style="color:var(--text2)">רדיוס (r):</div>
+            <div style="color:var(--text2)" data-lang-key="pgRadiusLabel">רדיוס (r):</div>
             <div style="color:var(--accent3)" id="circle-radius-val">—</div>
-            <div style="color:var(--text2)">קוטר (d):</div>
+            <div style="color:var(--text2)" data-lang-key="pgDiameterLabel">קוטר (d):</div>
             <div style="color:var(--accent3)" id="circle-diam-val">—</div>
-            <div style="color:var(--text2)">מרכז (x,y):</div>
+            <div style="color:var(--text2)" data-lang-key="pgCenterLabel">מרכז (x,y):</div>
             <div style="color:var(--accent3)" id="circle-center-val">—</div>
           </div>
-          <label class="pl" style="margin-top:8px">הצג תוויות על הקנבס</label>
+          <label class="pl" data-lang-key="pgShowLabels" style="margin-top:8px">הצג תוויות על הקנבס</label>
           <div class="flip-row">
             <button class="flip-btn" data-key="radius" id="btn-show-radius" onclick="toggleCircleLabel('radius')">רדיוס</button>
             <button class="flip-btn" data-key="diameter" id="btn-show-diam" onclick="toggleCircleLabel('diameter')">קוטר</button>
           </div>
           <!-- Radius/Diameter line -->
-          <label class="pl" style="margin-top:10px">קו רדיוס / קוטר</label>
+          <label class="pl" data-lang-key="pgRadiusDiamLine" style="margin-top:10px">קו רדיוס / קוטר</label>
           <div class="flip-row" style="margin-top:4px">
-            <button class="flip-btn" id="btn-show-radline" onclick="toggleCircleLine('radius')" style="flex:1;font-size:11px">— רדיוס</button>
-            <button class="flip-btn" id="btn-show-diamline" onclick="toggleCircleLine('diameter')" style="flex:1;font-size:11px">— קוטר</button>
+            <button class="flip-btn" id="btn-show-radline" data-lang-key="pgShowRadiusLine" onclick="toggleCircleLine('radius')" style="flex:1;font-size:11px">— רדיוס</button>
+            <button class="flip-btn" id="btn-show-diamline" data-lang-key="pgShowDiamLine" onclick="toggleCircleLine('diameter')" style="flex:1;font-size:11px">— קוטר</button>
           </div>
           <div id="pg-circle-line-opts" style="display:none;margin-top:8px">
-            <label class="pl" style="font-size:11px">זווית (°)</label>
+            <label class="pl" data-lang-key="pgAngle" style="font-size:11px">זווית (°)</label>
             <div style="display:flex;align-items:center;gap:6px;margin-top:4px">
               <input type="range" id="circle-line-angle" min="0" max="360" value="0"
                 style="flex:1;accent-color:var(--accent)" oninput="setCircleLineAngle(this.value)">
               <span id="circle-line-angle-val" style="font-size:11px;min-width:30px">0°</span>
             </div>
-            <label class="pl" style="font-size:11px;margin-top:6px">סגנון קו</label>
+            <label class="pl" data-lang-key="pgLineStyle" style="font-size:11px;margin-top:6px">סגנון קו</label>
             <div class="flip-row" style="margin-top:4px">
-              <button class="flip-btn" id="btn-line-solid" onclick="setCircleLineStyle('solid')" style="flex:1;font-size:11px">—— חלק</button>
-              <button class="flip-btn" id="btn-line-dashed" onclick="setCircleLineStyle('dashed')" style="flex:1;font-size:11px">- - מקווקוו</button>
+              <button class="flip-btn" id="btn-line-solid" data-lang-key="pgLineSolid" onclick="setCircleLineStyle('solid')" style="flex:1;font-size:11px">—— חלק</button>
+              <button class="flip-btn" id="btn-line-dashed" data-lang-key="pgLineDashed" onclick="setCircleLineStyle('dashed')" style="flex:1;font-size:11px">- - מקווקוו</button>
             </div>
           </div>
         </div>
@@ -2427,37 +2427,37 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
             <div id="s3d-pyr-only" style="display:none;flex-wrap:wrap;gap:4px">
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showHeight" onchange="set3dOpt('showHeight',this.checked)" style="accent-color:var(--accent)">
-                <span>גובה</span>
+                <span data-lang-key="td3ShowHeight">גובה</span>
               </label>
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showDiag" onchange="set3dOpt('showDiag',this.checked)" style="accent-color:var(--accent)">
-                <span>אלכסון</span>
+                <span data-lang-key="td3ShowDiag">אלכסון</span>
               </label>
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showRightAngle" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
-                <span>זווית ישרה</span>
+                <span data-lang-key="td3ShowRightAngle">זווית ישרה</span>
               </label>
             </div>
             <!-- Box/Cube-only options -->
             <div id="s3d-box-only" style="display:none;flex-wrap:wrap;gap:4px">
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showSpaceDiag" onchange="set3dOpt('showSpaceDiag',this.checked)" style="accent-color:var(--accent)">
-                <span>אלכסון מרחבי</span>
+                <span data-lang-key="td3ShowSpaceDiag">אלכסון מרחבי</span>
               </label>
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showRightAngleBox" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
-                <span>זווית ישרה</span>
+                <span data-lang-key="td3ShowRightAngle">זווית ישרה</span>
               </label>
             </div>
             <!-- Prism-only options -->
             <div id="s3d-prism-only" style="display:none;flex-wrap:wrap;gap:4px">
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showPrismHeight" onchange="set3dOpt('showHeight',this.checked)" style="accent-color:var(--accent)">
-                <span>גובה</span>
+                <span data-lang-key="td3ShowHeight">גובה</span>
               </label>
               <label style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer">
                 <input type="checkbox" id="s3d-showRightAnglePrism" onchange="set3dOpt('showRightAngle',this.checked)" style="accent-color:var(--accent)">
-                <span>זווית ישרה</span>
+                <span data-lang-key="td3ShowRightAngle">זווית ישרה</span>
               </label>
             </div>
           </div>
@@ -2467,17 +2467,15 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </div>
       <!-- CURVE EDIT -->
       <div class="pg" id="pg-curve-edit" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">〜 קו מעוגל</label>
-        <div style="margin-top:6px;font-size:11px;color:var(--text2);line-height:1.7">
-          גרור את נקודת השליטה (●)<br>לשינוי עקמומיות הקו.
-        </div>
+        <label class="pl" data-lang-key="pgCurveTitle" style="color:var(--accent);font-weight:600">〜 קו מעוגל</label>
+        <div style="margin-top:6px;font-size:11px;color:var(--text2);line-height:1.7" data-lang-key="pgCurveHint">גרור את נקודת השליטה (●) לשינוי עקמומיות הקו.</div>
       </div>
       <!-- TEXT props panel -->
       <div class="pg" id="pg-text-props" style="display:none">
-        <label class="pl" style="color:var(--accent);font-weight:600">טקסט</label>
+        <label class="pl" data-lang-key="pgTextTitle" style="color:var(--accent);font-weight:600">טקסט</label>
         <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
           <div style="display:flex;align-items:center;gap:6px">
-            <label class="pl" style="min-width:36px;margin:0">גודל</label>
+            <label class="pl" data-lang-key="pgTextSize" style="min-width:36px;margin:0">גודל</label>
             <select id="tp-fs" class="pi" style="flex:1" onchange="applyTextProp('fs',parseInt(this.value))">
               <option value="12">12</option><option value="14">14</option><option value="16">16</option>
               <option value="18">18</option><option value="22">22</option><option value="26">26</option>
@@ -2485,22 +2483,22 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
             </select>
           </div>
           <div style="display:flex;gap:4px">
-            <button class="flip-btn" id="tp-bold" onclick="applyTextProp('bold')" style="flex:1;font-weight:bold">B מודגש</button>
-            <button class="flip-btn" id="tp-italic" onclick="applyTextProp('italic')" style="flex:1;font-style:italic">I נטוי</button>
+            <button class="flip-btn" id="tp-bold" data-lang-key="pgTextBold" onclick="applyTextProp('bold')" style="flex:1;font-weight:bold">B מודגש</button>
+            <button class="flip-btn" id="tp-italic" data-lang-key="pgTextItalic" onclick="applyTextProp('italic')" style="flex:1;font-style:italic">I נטוי</button>
           </div>
           <div style="display:flex;align-items:center;gap:6px">
-            <label class="pl" style="min-width:36px;margin:0">צבע</label>
+            <label class="pl" data-lang-key="pgTextColor" style="min-width:36px;margin:0">צבע</label>
             <input type="color" id="tp-color" style="width:40px;height:28px;padding:0;border-radius:4px;cursor:pointer" onchange="applyTextProp('color',this.value)">
           </div>
           <div>
-            <label class="pl" style="margin-bottom:4px">יישור</label>
+            <label class="pl" data-lang-key="pgTextAlign" style="margin-bottom:4px">יישור</label>
             <div style="display:flex;gap:4px">
-              <button class="flip-btn" id="tp-align-right" onclick="applyTextProp('align','right')" style="flex:1;font-size:11px">ימין ≡</button>
-              <button class="flip-btn" id="tp-align-center" onclick="applyTextProp('align','center')" style="flex:1;font-size:11px">מרכז ≡</button>
-              <button class="flip-btn" id="tp-align-left" onclick="applyTextProp('align','left')" style="flex:1;font-size:11px">≡ שמאל</button>
+              <button class="flip-btn" id="tp-align-right" data-lang-key="pgTextRight" onclick="applyTextProp('align','right')" style="flex:1;font-size:11px">ימין ≡</button>
+              <button class="flip-btn" id="tp-align-center" data-lang-key="pgTextCenter" onclick="applyTextProp('align','center')" style="flex:1;font-size:11px">מרכז ≡</button>
+              <button class="flip-btn" id="tp-align-left" data-lang-key="pgTextLeft" onclick="applyTextProp('align','left')" style="flex:1;font-size:11px">≡ שמאל</button>
             </div>
           </div>
-          <button class="flip-btn" onclick="editSelectedText()" style="width:100%;padding:6px;margin-top:2px">✏️ ערוך טקסט</button>
+          <button class="flip-btn" data-lang-key="pgTextEdit" onclick="editSelectedText()" style="width:100%;padding:6px;margin-top:2px">✏️ ערוך טקסט</button>
         </div>
       </div>
       <!-- AXES panel -->
@@ -14705,6 +14703,37 @@ var LANGS = {
       fhHudColor:'צבע:', fhHudThick:'עובי:', fhHudEsc:'Esc לסיום',
       // freehand
       tipFreehand:'עפרון חופשי',
+      // angles panel
+      pgAnglesTitle:'הצגת זוויות', pgAnglesBtn:'הצג זוויות', pgAnglesType:'סוג הצגה',
+      pgAnglesArc:'〜 קשת בלבד', pgAnglesDeg:'〜° קשת + מעלות', pgAnglesSelected:'הצגה בזוויות נבחרות',
+      // internal line panel
+      pgILineTitle:'קו פנימי', pgILineDraw:'✏️ צייר קו פנימי',
+      // shape points panel
+      pgShapePtsTitle:'נקודות על הצורה', pgShapePtsAll:'⬡ הוסף לכל הפינות',
+      pgShapePtsClick:'⊙ הוסף לפי בחירה', pgShapePtsABC:'ABC תן שמות',
+      // edit points panel
+      pgEditPtsTitle:'עריכת נקודות', pgEditPtsBtn:'✏️ ערוך פינות',
+      // trapezoid offset
+      pgTrapOffset:'הסטת הבסיס העליון',
+      // parallelogram skew
+      pgSkewTitle:'הטיית המקבילית',
+      // circle info
+      pgCenterNameHint:'שם נקודת המרכז (A, B, O…)',
+      pgRadiusLabel:'רדיוס (r):', pgDiameterLabel:'קוטר (d):', pgCenterLabel:'מרכז (x,y):',
+      pgShowLabels:'הצג תוויות על הקנבס',
+      pgRadiusDiamLine:'קו רדיוס / קוטר',
+      pgShowRadiusLine:'— רדיוס', pgShowDiamLine:'— קוטר',
+      pgAngle:'זווית (°)', pgLineStyle:'סגנון קו',
+      pgLineSolid:'—— חלק', pgLineDashed:'- - מקווקו',
+      // 3D checkboxes
+      td3ShowHeight:'גובה', td3ShowDiag:'אלכסון', td3ShowRightAngle:'זווית ישרה', td3ShowSpaceDiag:'אלכסון מרחבי',
+      // curve panel
+      pgCurveTitle:'〜 קו מעוגל', pgCurveHint:'גרור את נקודת השליטה (●) לשינוי עקמומיות הקו.',
+      // text props panel
+      pgTextTitle:'טקסט', pgTextSize:'גודל', pgTextBold:'B מודגש', pgTextItalic:'I נטוי',
+      pgTextColor:'צבע', pgTextAlign:'יישור',
+      pgTextRight:'ימין ≡', pgTextCenter:'מרכז ≡', pgTextLeft:'≡ שמאל',
+      pgTextEdit:'✏️ ערוך טקסט',
       // eq ribbon tabs
       eqRibbonStruct:'מבנים', eqRibbonGreek:'יוונית',
       // eq popup tabs
@@ -14891,6 +14920,37 @@ var LANGS = {
       fhHudColor:'Color:', fhHudThick:'Thickness:', fhHudEsc:'Esc to exit',
       // freehand
       tipFreehand:'Freehand Pencil',
+      // angles panel
+      pgAnglesTitle:'Show Angles', pgAnglesBtn:'Show Angles', pgAnglesType:'Display type',
+      pgAnglesArc:'〜 Arc only', pgAnglesDeg:'〜° Arc + degrees', pgAnglesSelected:'Selected angles',
+      // internal line panel
+      pgILineTitle:'Internal Line', pgILineDraw:'✏️ Draw internal line',
+      // shape points panel
+      pgShapePtsTitle:'Points on shape', pgShapePtsAll:'⬡ Add to all corners',
+      pgShapePtsClick:'⊙ Add by click', pgShapePtsABC:'ABC Label points',
+      // edit points panel
+      pgEditPtsTitle:'Edit Points', pgEditPtsBtn:'✏️ Edit corners',
+      // trapezoid offset
+      pgTrapOffset:'Top base offset',
+      // parallelogram skew
+      pgSkewTitle:'Parallelogram skew',
+      // circle info
+      pgCenterNameHint:'Centre point name (A, B, O…)',
+      pgRadiusLabel:'Radius (r):', pgDiameterLabel:'Diameter (d):', pgCenterLabel:'Centre (x,y):',
+      pgShowLabels:'Show labels on canvas',
+      pgRadiusDiamLine:'Radius / Diameter line',
+      pgShowRadiusLine:'— Radius', pgShowDiamLine:'— Diameter',
+      pgAngle:'Angle (°)', pgLineStyle:'Line style',
+      pgLineSolid:'—— Solid', pgLineDashed:'- - Dashed',
+      // 3D checkboxes
+      td3ShowHeight:'Height', td3ShowDiag:'Diagonal', td3ShowRightAngle:'Right angle', td3ShowSpaceDiag:'Space diagonal',
+      // curve panel
+      pgCurveTitle:'〜 Curved line', pgCurveHint:'Drag the control point (●) to change the curve.',
+      // text props panel
+      pgTextTitle:'Text', pgTextSize:'Size', pgTextBold:'B Bold', pgTextItalic:'I Italic',
+      pgTextColor:'Color', pgTextAlign:'Alignment',
+      pgTextRight:'Right ≡', pgTextCenter:'Center ≡', pgTextLeft:'≡ Left',
+      pgTextEdit:'✏️ Edit text',
       // eq ribbon tabs
       eqRibbonStruct:'Structures', eqRibbonGreek:'Greek',
       // eq popup tabs
