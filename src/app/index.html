@@ -3166,14 +3166,14 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="stat-section">
     <label data-lang-key="statGraphTitle">כותרת הגרף</label>
     <div class="stat-row">
-      <input type="text" class="wide" id="fg-title" value="" oninput="freeGraphPreview()" placeholder="לדוגמא: מחיר לפי שטח" style="width:280px">
+      <input type="text" class="wide" id="fg-title" value="" oninput="freeGraphPreview()" placeholder="" style="width:280px">
     </div>
   </div>
 
   <div class="stat-section">
     <label data-lang-key="statXAxisH">ציר X (אופקי)</label>
     <div class="stat-row" style="gap:14px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statAxisLabel">תווית:</span><input type="text" id="fg-xlabel" value="" style="width:110px;font-size:12px" oninput="freeGraphPreview()" placeholder="לדוגמא: שעה"></div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statAxisLabel">תווית:</span><input type="text" id="fg-xlabel" value="" style="width:110px;font-size:12px" oninput="freeGraphPreview()" placeholder=""></div>
       <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statMin">מינ׳:</span><input type="number" id="fg-xmin" value="0" style="width:56px;font-size:12px" oninput="freeGraphPreview()"></div>
       <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statMax">מקס׳:</span><input type="number" id="fg-xmax" value="10" style="width:56px;font-size:12px" oninput="freeGraphPreview()"></div>
       <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statStep">צעד:</span><input type="number" id="fg-xstep" value="1" style="width:50px;font-size:12px" oninput="freeGraphPreview()"></div>
@@ -3184,7 +3184,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="stat-section">
     <label data-lang-key="statYAxisV">ציר Y (אנכי)</label>
     <div class="stat-row" style="gap:14px;flex-wrap:wrap">
-      <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statAxisLabel">תווית:</span><input type="text" id="fg-ylabel" value="" style="width:110px;font-size:12px" oninput="freeGraphPreview()" placeholder="לדוגמא: מרחק (ק״מ)"></div>
+      <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statAxisLabel">תווית:</span><input type="text" id="fg-ylabel" value="" style="width:110px;font-size:12px" oninput="freeGraphPreview()" placeholder=""></div>
       <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statMin">מינ׳:</span><input type="number" id="fg-ymin" value="0" style="width:56px;font-size:12px" oninput="freeGraphPreview()"></div>
       <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statMax">מקס׳:</span><input type="number" id="fg-ymax" value="10" style="width:56px;font-size:12px" oninput="freeGraphPreview()"></div>
       <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;color:var(--text2)" data-lang-key="statStep">צעד:</span><input type="number" id="fg-ystep" value="1" style="width:50px;font-size:12px" oninput="freeGraphPreview()"></div>
@@ -13669,26 +13669,27 @@ function statMeasuresCalc(){
   const q3=sorted[Math.floor(3*n/4)];
   const showSorted=document.getElementById('meas-show-sorted')?.checked;
   const showFreq=document.getElementById('meas-show-freq')?.checked;
+  const _um=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
   const rows=[
-    {label:'n (מספר ערכים)',value:n},
-    {label:'ממוצע (x̄)',value:fmt(mean)},
-    {label:'חציון (Me)',value:fmt(mid)},
-    {label:'שכיח (Mo)',value:modes.map(fmt).join(', ')+(maxF2>1?` (×${maxF2})`:'')},
-    {label:'טווח (R)',value:fmt(range2)},
-    {label:'שונות (σ²)',value:fmt(variance)},
-    {label:'סטיית תקן (σ)',value:fmt(stdev)},
-    {label:'רבעון ראשון (Q₁)',value:fmt(q1)},
-    {label:'רבעון שלישי (Q₃)',value:fmt(q3)},
-    {label:'טווח בין-רבעוני',value:fmt(q3-q1)},
-    {label:'מינימום',value:fmt(sorted[0])},
-    {label:'מקסימום',value:fmt(sorted[n-1])},
+    {label:(_um&&_um.statMeasN)||'n (Count)',value:n},
+    {label:(_um&&_um.statMeasMean)||'Mean (x̄)',value:fmt(mean)},
+    {label:(_um&&_um.statMeasMedian)||'Median (Me)',value:fmt(mid)},
+    {label:(_um&&_um.statMeasMode)||'Mode (Mo)',value:modes.map(fmt).join(', ')+(maxF2>1?` (×${maxF2})`:'')},
+    {label:(_um&&_um.statMeasRange)||'Range (R)',value:fmt(range2)},
+    {label:(_um&&_um.statMeasVar)||'Variance (σ²)',value:fmt(variance)},
+    {label:(_um&&_um.statMeasStd)||'Std. Dev. (σ)',value:fmt(stdev)},
+    {label:(_um&&_um.statMeasQ1)||'Q1 (Q₁)',value:fmt(q1)},
+    {label:(_um&&_um.statMeasQ3)||'Q3 (Q₃)',value:fmt(q3)},
+    {label:(_um&&_um.statMeasIQR)||'IQR',value:fmt(q3-q1)},
+    {label:(_um&&_um.statMeasMin)||'Minimum',value:fmt(sorted[0])},
+    {label:(_um&&_um.statMeasMax)||'Maximum',value:fmt(sorted[n-1])},
   ];
-  let html=`<div class="sm-title">מדדי מרכז ופיזור — n = ${n}</div><table>`;
+  let html=`<div class="sm-title">${(_um&&_um.statMeasHeader)||'Central & Spread Measures — n = '}${n}</div><table>`;
   rows.forEach(r=>{html+=`<tr><td>${r.label}</td><td>${r.value}</td></tr>`;});
   html+='</table>';
-  if(showSorted){html+=`<div style="margin-top:8px;font-size:12px;color:#555"><b>סדרה ממוינת:</b> ${sorted.join(', ')}</div>`;}
+  if(showSorted){html+=`<div style="margin-top:8px;font-size:12px;color:#555"><b>${(_um&&_um.statMeasSortedLabel)||'Sorted series:'}</b> ${sorted.join(', ')}</div>`;}
   if(showFreq){
-    html+='<div style="margin-top:8px;font-size:12px;color:#555"><b>טבלת שכיחויות:</b><br>';
+    html+=`<div style="margin-top:8px;font-size:12px;color:#555"><b>${(_um&&_um.statMeasFreqLabel)||'Frequency table:'}</b><br>`;
     const uniq=[...new Set(sorted)];
     uniq.forEach(v=>{html+=`${v}: ${freq[v]}&nbsp;&nbsp;`;});
     html+='</div>';
@@ -13712,7 +13713,8 @@ function statMeasuresInsert(){
     if(el){saveHistory();Object.assign(el,{rows,sortedRow,w:pw,h:ph});selId=el.id;redraw();return;}
   }
   const cx=canvas2PageX(cv.width/2-pw/2), cy=canvas2PageY(80);
-  addEl({type:'statmeasures',x:cx,y:cy,w:pw,h:ph,title:'מדדי מרכז ופיזור',rows,sortedRow});
+  {const _ut=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
+  addEl({type:'statmeasures',x:cx,y:cy,w:pw,h:ph,title:(_ut&&_ut.statMeasTitle)||'Central & Spread Measures',rows,sortedRow});}
 }
 
 function canvas2PageX(x){return Math.max(10,Math.min(x,cv.width-10));}
@@ -13732,7 +13734,11 @@ function openFreeGraphModal(){
   document.getElementById('fg-ystep').value='1';
   document.getElementById('fg-xtime').checked=false;
   document.getElementById('fg-series-container').innerHTML='';
-  const btn=document.getElementById('fg-insert-btn');if(btn)btn.textContent='הוסף לקנבס';
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
+  const btn=document.getElementById('fg-insert-btn');if(btn)btn.textContent=(_u&&_u.graphAdd)||'Add to canvas';
+  const fgt=document.getElementById('fg-title');if(fgt)fgt.placeholder=(_u&&_u.statFGTitlePh)||'e.g. Price by Year';
+  const fgx=document.getElementById('fg-xlabel');if(fgx)fgx.placeholder=(_u&&_u.statFGXPh)||'e.g. Year';
+  const fgy=document.getElementById('fg-ylabel');if(fgy)fgy.placeholder=(_u&&_u.statFGYPh)||'e.g. Distance (km)';}
   _fgAppendSeriesBlock('I',STAT_COLORS[0],true,[{x:0,y:0},{x:5,y:5},{x:10,y:8}]);
   freeGraphPreview();
 }
@@ -13741,17 +13747,22 @@ function _fgAppendSeriesBlock(name,color,showDots,points){
   const container=document.getElementById('fg-series-container');
   const idx=container.children.length;
   const col=color||STAT_COLORS[idx%STAT_COLORS.length];
+  const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
   const names=['I','II','III','IV','V'];
-  const nm=name||(names[idx]||('סדרה '+(idx+1)));
+  const nm=name||(names[idx]||('I'));
   const canRemove=idx>0;
+  const _pts=(_u&&_u.statFGPoints)||'Points';
+  const _addPt=(_u&&_u.statFGAddPoint)||'+ Point';
+  const _snPh=(_u&&_u.statFGSeriesName)||'Series name';
+  const _rem=(_u&&_u.statFGRemoveSeries)||'✕ Remove series';
   const div=document.createElement('div');
   div.className='fg-series-block';
   div.style.cssText='background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px';
   div.innerHTML=`<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
     <input type="color" value="${col}" oninput="freeGraphPreview()" style="width:28px;height:24px;border:none;padding:0;cursor:pointer;background:none;border-radius:3px;flex-shrink:0">
-    <input type="text" value="${nm}" placeholder="שם הסדרה" style="width:60px;font-weight:600;font-size:13px" oninput="freeGraphPreview()">
-    <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2)"><input type="checkbox" ${showDots?'checked':''} onchange="freeGraphPreview()"> נקודות</label>
-    ${canRemove?`<button class="alg-remove-frac" style="margin-right:auto" onclick="this.closest('.fg-series-block').remove();freeGraphPreview()">✕ הסר סדרה</button>`:''}
+    <input type="text" value="${nm}" placeholder="${_snPh}" style="width:60px;font-weight:600;font-size:13px" oninput="freeGraphPreview()">
+    <label style="display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2)"><input type="checkbox" ${showDots?'checked':''} onchange="freeGraphPreview()"> ${_pts}</label>
+    ${canRemove?`<button class="alg-remove-frac" style="margin-right:auto" onclick="this.closest('.fg-series-block').remove();freeGraphPreview()">${_rem}</button>`:''}
   </div>
   <table style="border-collapse:collapse;width:100%;margin-bottom:6px">
     <thead><tr>
@@ -13761,7 +13772,7 @@ function _fgAppendSeriesBlock(name,color,showDots,points){
     </tr></thead>
     <tbody class="fg-pts-tbody"></tbody>
   </table>
-  <button class="stat-add-row" onclick="_fgAddPointRowBtn(this)">+ נקודה</button>`;
+  <button class="stat-add-row" onclick="_fgAddPointRowBtn(this)">${_addPt}</button>`;
   container.appendChild(div);
   const tbody=div.querySelector('tbody');
   (points&&points.length?points:[{x:0,y:0},{x:5,y:5}]).forEach(p=>_fgAddPointRow(tbody,p.x,p.y));
@@ -14627,6 +14638,13 @@ var LANGS = {
       statTableSub:'בחר גודל טבלה — לחץ על תא להתחלת עריכה בקנבס',
       statDefaultMonths:['ינואר','פברואר','מרץ','אפריל'],
       statDefaultCats:['קטגוריה א','קטגוריה ב','קטגוריה ג','קטגוריה ד'],
+      statFGTitlePh:'לדוגמא: מחיר לפי שנה', statFGXPh:'לדוגמא: שעה', statFGYPh:'לדוגמא: מרחק (ק"מ)',
+      statFGPoints:'נקודות', statFGAddPoint:'+ נקודה', statFGSeriesName:'שם הסדרה', statFGRemoveSeries:'✕ הסר סדרה',
+      statMeasHeader:'מדדי מרכז ופיזור — n = ', statMeasN:'n (מספר ערכים)', statMeasMean:'ממוצע (x̄)',
+      statMeasMedian:'חציון (Me)', statMeasMode:'שכיח (Mo)', statMeasRange:'טווח (R)',
+      statMeasVar:'שונות (σ²)', statMeasStd:'סטיית תקן (σ)', statMeasQ1:'רבעון ראשון (Q₁)',
+      statMeasQ3:'רבעון שלישי (Q₃)', statMeasIQR:'טווח בין-רבעוני', statMeasMin:'מינימום', statMeasMax:'מקסימום',
+      statMeasSortedLabel:'סדרה ממוינת:', statMeasFreqLabel:'טבלת שכיחויות:', statMeasTitle:'מדדי מרכז ופיזור',
       // stat bar chart
       statBarTitle:'📊 תרשים עמודות', statChartTitle:'כותרת התרשים', statDataLabel:'נתונים',
       statCategory:'קטגוריה', statValue:'ערך', statColor:'צבע', statAddRow:'+ הוסף שורה',
@@ -14855,6 +14873,13 @@ var LANGS = {
       statTableSub:'Choose table size — click a cell to start editing on canvas',
       statDefaultMonths:['January','February','March','April'],
       statDefaultCats:['Category A','Category B','Category C','Category D'],
+      statFGTitlePh:'e.g. Price by Year', statFGXPh:'e.g. Year', statFGYPh:'e.g. Distance (km)',
+      statFGPoints:'Points', statFGAddPoint:'+ Point', statFGSeriesName:'Series name', statFGRemoveSeries:'✕ Remove series',
+      statMeasHeader:'Central & Spread Measures — n = ', statMeasN:'n (Count)', statMeasMean:'Mean (x̄)',
+      statMeasMedian:'Median (Me)', statMeasMode:'Mode (Mo)', statMeasRange:'Range (R)',
+      statMeasVar:'Variance (σ²)', statMeasStd:'Std. Dev. (σ)', statMeasQ1:'Q1 (Q₁)',
+      statMeasQ3:'Q3 (Q₃)', statMeasIQR:'IQR', statMeasMin:'Minimum', statMeasMax:'Maximum',
+      statMeasSortedLabel:'Sorted series:', statMeasFreqLabel:'Frequency table:', statMeasTitle:'Central & Spread Measures',
       // stat bar chart
       statBarTitle:'📊 Bar Chart', statChartTitle:'Chart title', statDataLabel:'Data',
       statCategory:'Category', statValue:'Value', statColor:'Color', statAddRow:'+ Add row',
@@ -15082,6 +15107,13 @@ var LANGS = {
       statPieTitle:'🥧 Kreisdiagramm', statShowPct:'Prozentzahlen anzeigen', statShowLabels:'Beschriftungen anzeigen', statSize:'Größe:',
       statDefaultMonths:['Januar','Februar','März','April'],
       statDefaultCats:['Kategorie A','Kategorie B','Kategorie C','Kategorie D'],
+      statFGTitlePh:'z.B. Preis nach Jahr', statFGXPh:'z.B. Jahr', statFGYPh:'z.B. Entfernung (km)',
+      statFGPoints:'Punkte', statFGAddPoint:'+ Punkt', statFGSeriesName:'Serienname', statFGRemoveSeries:'✕ Serie entfernen',
+      statMeasHeader:'Lage- und Streuungsmaße — n = ', statMeasN:'n (Anzahl)', statMeasMean:'Mittelwert (x̄)',
+      statMeasMedian:'Median (Me)', statMeasMode:'Modus (Mo)', statMeasRange:'Spannweite (R)',
+      statMeasVar:'Varianz (σ²)', statMeasStd:'Standardabw. (σ)', statMeasQ1:'Q1 (Q₁)',
+      statMeasQ3:'Q3 (Q₃)', statMeasIQR:'IQR', statMeasMin:'Minimum', statMeasMax:'Maximum',
+      statMeasSortedLabel:'Sortierte Reihe:', statMeasFreqLabel:'Häufigkeitstabelle:', statMeasTitle:'Lage- und Streuungsmaße',
       // stat frequency polygon
       statFreqTitle:'📉 Häufigkeitspolygon', statXAxis:'X-Achse:', statXValues:'Werte', statXClasses:'Klassen',
       statClass:'Klasse (von–bis)', statMidpoint:'Klassenmitte', statFreq:'Häufigkeit', statCumFreq:'Kumulierte Häufigk.',
