@@ -3008,7 +3008,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="stat-section">
     <label data-lang-key="statChartTitle">כותרת התרשים</label>
     <div class="stat-row">
-      <input type="text" class="wide" id="bar-title" value="תרשים עמודות" oninput="statBarPreview()" style="width:200px">
+      <input type="text" class="wide" id="bar-title" value="" oninput="statBarPreview()" style="width:200px">
     </div>
     <label style="margin-top:8px" data-lang-key="statDataLabel">נתונים</label>
     <table class="stat-data-table">
@@ -3051,7 +3051,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="stat-section">
     <label data-lang-key="statChartTitle">כותרת התרשים</label>
     <div class="stat-row">
-      <input type="text" class="wide" id="pie-title" value="תרשים עיגול" oninput="statPiePreview()" style="width:200px">
+      <input type="text" class="wide" id="pie-title" value="" oninput="statPiePreview()" style="width:200px">
     </div>
     <label style="margin-top:8px" data-lang-key="statDataLabel">נתונים</label>
     <table class="stat-data-table">
@@ -3094,7 +3094,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <div class="stat-section">
     <label data-lang-key="statChartTitle">כותרת התרשים</label>
     <div class="stat-row">
-      <input type="text" id="freq-title" value="פוליגון שכיחויות" oninput="statFreqPreview()" style="width:200px">
+      <input type="text" id="freq-title" value="" oninput="statFreqPreview()" style="width:200px">
       <label style="font-size:12px;color:var(--text2);margin-right:12px" data-lang-key="statXAxis">ציר X:</label>
       <input type="text" id="freq-xlabel" value="ערכים" oninput="statFreqPreview()" style="width:100px">
     </div>
@@ -13517,7 +13517,8 @@ function statBarInsert(){
 
 // ----- PIE CHART -----
 function openStatPieModal(){
-  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const pb=document.getElementById('pie-insert-btn');if(pb)pb.textContent=(_u&&_u.graphAdd)||'Add to canvas';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const pb=document.getElementById('pie-insert-btn');if(pb)pb.textContent=(_u&&_u.graphAdd)||'Add to canvas';
+  const pt=document.getElementById('pie-title');if(pt&&!pt.value)pt.value=(_u&&_u.statPieTitle&&_u.statPieTitle.replace(/^🥧\s*/,''))||'Pie Chart';}
   if(!document.getElementById('pie-rows').children.length){
     const _u2=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
     const _c=_u2&&_u2.statDefaultCats||['קטגוריה א','קטגוריה ב','קטגוריה ג','קטגוריה ד'];
@@ -13576,7 +13577,8 @@ function statPieInsert(){
 
 // ----- FREQUENCY POLYGON -----
 function openStatFreqModal(){
-  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const fb=document.getElementById('freq-insert-btn');if(fb)fb.textContent=(_u&&_u.graphAdd)||'Add to canvas';}
+  {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const fb=document.getElementById('freq-insert-btn');if(fb)fb.textContent=(_u&&_u.graphAdd)||'Add to canvas';
+  const ft=document.getElementById('freq-title');if(ft&&!ft.value)ft.value=(_u&&_u.statFreqTitle&&_u.statFreqTitle.replace(/^📉\s*/,''))||'Frequency Polygon';}
   if(!document.getElementById('freq-rows').children.length){
     statFreqAddRow('10–20','15','3');statFreqAddRow('20–30','25','7');statFreqAddRow('30–40','35','12');
     statFreqAddRow('40–50','45','8');statFreqAddRow('50–60','55','4');
@@ -13847,7 +13849,7 @@ function statEditEl(el){
     openModal('stat-bar-modal');
     document.getElementById('bar-rows').innerHTML='';
     (el.data||[]).forEach(d=>statBarAddRowData(d.label,d.val,d.color));
-    document.getElementById('bar-title').value=el.title||'תרשים עמודות';
+    {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;document.getElementById('bar-title').value=el.title||((_u&&_u.statBarTitle&&_u.statBarTitle.replace(/^📊\s*/,''))||'Bar Chart');}
     document.getElementById('bar-show-vals').checked=!!el.showVals;
     document.getElementById('bar-show-grid').checked=el.showGrid!==false;
     document.getElementById('bar-show-legend').checked=!!el.showLegend;
@@ -13857,7 +13859,7 @@ function statEditEl(el){
     openModal('stat-pie-modal');
     document.getElementById('pie-rows').innerHTML='';
     (el.data||[]).forEach(d=>statPieAddRowData(d.label,d.val,d.color));
-    document.getElementById('pie-title').value=el.title||'תרשים עיגול';
+    {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;document.getElementById('pie-title').value=el.title||((_u&&_u.statPieTitle&&_u.statPieTitle.replace(/^🥧\s*/,''))||'Pie Chart');}
     document.getElementById('pie-show-pct').checked=el.showPct!==false;
     document.getElementById('pie-show-labels').checked=el.showLabels!==false;
     document.getElementById('pie-show-legend').checked=!!el.showLegend;
@@ -13867,7 +13869,7 @@ function statEditEl(el){
     openModal('stat-freq-modal');
     document.getElementById('freq-rows').innerHTML='';
     (el.data||[]).forEach(d=>statFreqAddRowData(d.label,d.mid,d.freq));
-    document.getElementById('freq-title').value=el.title||'פוליגון שכיחויות';
+    {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;document.getElementById('freq-title').value=el.title||((_u&&_u.statFreqTitle&&_u.statFreqTitle.replace(/^📉\s*/,''))||'Frequency Polygon');}
     document.getElementById('freq-xlabel').value=el.xlabel||'ערכים';
     document.getElementById('freq-show-hist').checked=el.showHist!==false;
     document.getElementById('freq-show-poly').checked=el.showPoly!==false;
