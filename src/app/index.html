@@ -13460,7 +13460,9 @@ function openStatBarModal(){
   const bb=document.getElementById('bar-insert-btn');if(bb)bb.textContent=(_u&&_u.graphAdd)||'Add to canvas';
   const bt=document.getElementById('bar-title');if(bt&&!bt.value)bt.value=(_u&&_u.statBarTitle&&_u.statBarTitle.replace(/^📊\s*/,''))||'Bar Chart';}
   if(!document.getElementById('bar-rows').children.length){
-    statBarAddRow('ינואר','30');statBarAddRow('פברואר','45');statBarAddRow('מרץ','28');statBarAddRow('אפריל','52');
+    const _u2=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
+    const _m=_u2&&_u2.statDefaultMonths||['ינואר','פברואר','מרץ','אפריל'];
+    statBarAddRow(_m[0],'30');statBarAddRow(_m[1],'45');statBarAddRow(_m[2],'28');statBarAddRow(_m[3],'52');
   }
   statBarPreview();
 }
@@ -13468,7 +13470,7 @@ function statBarAddRow(lbl,val){
   const idx=document.getElementById('bar-rows').children.length;
   const col=STAT_COLORS[idx%STAT_COLORS.length];
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statBarPreview()" placeholder="קטגוריה"></td>`+
+  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statBarPreview()" placeholder="${(LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui&&LANGS[currentLang].ui.statCategory)||'קטגוריה'}"></td>`+
     `<td><input type="number" value="${val||'0'}" oninput="statBarPreview()" style="width:64px"></td>`+
     `<td style="width:36px"><input type="color" value="${col}" oninput="statBarPreview()" style="width:28px;height:22px;border:none;padding:0;cursor:pointer;background:none"></td>`+
     `<td><button class="alg-remove-frac" onclick="this.closest('tr').remove();statBarPreview()">✕</button></td>`;
@@ -13517,7 +13519,9 @@ function statBarInsert(){
 function openStatPieModal(){
   {const _u=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;const pb=document.getElementById('pie-insert-btn');if(pb)pb.textContent=(_u&&_u.graphAdd)||'Add to canvas';}
   if(!document.getElementById('pie-rows').children.length){
-    statPieAddRow('קטגוריה א','40');statPieAddRow('קטגוריה ב','30');statPieAddRow('קטגוריה ג','20');statPieAddRow('קטגוריה ד','10');
+    const _u2=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
+    const _c=_u2&&_u2.statDefaultCats||['קטגוריה א','קטגוריה ב','קטגוריה ג','קטגוריה ד'];
+    statPieAddRow(_c[0],'40');statPieAddRow(_c[1],'30');statPieAddRow(_c[2],'20');statPieAddRow(_c[3],'10');
   }
   statPiePreview();
 }
@@ -13525,7 +13529,7 @@ function statPieAddRow(lbl,val){
   const idx=document.getElementById('pie-rows').children.length;
   const col=STAT_COLORS[idx%STAT_COLORS.length];
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statPiePreview()" placeholder="קטגוריה"></td>`+
+  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statPiePreview()" placeholder="${(LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui&&LANGS[currentLang].ui.statCategory)||'קטגוריה'}"></td>`+
     `<td><input type="number" value="${val||'0'}" oninput="statPiePreview()" style="width:64px"></td>`+
     `<td style="width:36px"><input type="color" value="${col}" oninput="statPiePreview()" style="width:28px;height:22px;border:none;padding:0;cursor:pointer;background:none"></td>`+
     `<td><button class="alg-remove-frac" onclick="this.closest('tr').remove();statPiePreview()">✕</button></td>`;
@@ -13903,7 +13907,7 @@ function statBarAddRowData(lbl,val,col){
   const idx=document.getElementById('bar-rows').children.length;
   const color=col||STAT_COLORS[idx%STAT_COLORS.length];
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statBarPreview()" placeholder="קטגוריה"></td>`+
+  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statBarPreview()" placeholder="${(LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui&&LANGS[currentLang].ui.statCategory)||'קטגוריה'}"></td>`+
     `<td><input type="number" value="${val||'0'}" oninput="statBarPreview()" style="width:64px"></td>`+
     `<td style="width:36px"><input type="color" value="${color}" oninput="statBarPreview()" style="width:28px;height:22px;border:none;padding:0;cursor:pointer;background:none"></td>`+
     `<td><button class="alg-remove-frac" onclick="this.closest('tr').remove();statBarPreview()">✕</button></td>`;
@@ -13913,7 +13917,7 @@ function statPieAddRowData(lbl,val,col){
   const idx=document.getElementById('pie-rows').children.length;
   const color=col||STAT_COLORS[idx%STAT_COLORS.length];
   const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statPiePreview()" placeholder="קטגוריה"></td>`+
+  tr.innerHTML=`<td><input type="text" value="${lbl||''}" oninput="statPiePreview()" placeholder="${(LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui&&LANGS[currentLang].ui.statCategory)||'קטגוריה'}"></td>`+
     `<td><input type="number" value="${val||'0'}" oninput="statPiePreview()" style="width:64px"></td>`+
     `<td style="width:36px"><input type="color" value="${color}" oninput="statPiePreview()" style="width:28px;height:22px;border:none;padding:0;cursor:pointer;background:none"></td>`+
     `<td><button class="alg-remove-frac" onclick="this.closest('tr').remove();statPiePreview()">✕</button></td>`;
@@ -14619,6 +14623,8 @@ var LANGS = {
       statMeasSub:'הזן נתונים — המדדים מחושבים אוטומטית ומוכנים להדפסה',
       statFGSub:'הכנס נקודות, הגדר ציר X וY — הגרף מתעדכן בזמן אמת',
       statTableSub:'בחר גודל טבלה — לחץ על תא להתחלת עריכה בקנבס',
+      statDefaultMonths:['ינואר','פברואר','מרץ','אפריל'],
+      statDefaultCats:['קטגוריה א','קטגוריה ב','קטגוריה ג','קטגוריה ד'],
       // stat bar chart
       statBarTitle:'📊 תרשים עמודות', statChartTitle:'כותרת התרשים', statDataLabel:'נתונים',
       statCategory:'קטגוריה', statValue:'ערך', statColor:'צבע', statAddRow:'+ הוסף שורה',
@@ -14845,6 +14851,8 @@ var LANGS = {
       statMeasSub:'Enter data — measures calculated automatically and ready to print',
       statFGSub:'Add data points, define X and Y axes — graph updates in real time',
       statTableSub:'Choose table size — click a cell to start editing on canvas',
+      statDefaultMonths:['January','February','March','April'],
+      statDefaultCats:['Category A','Category B','Category C','Category D'],
       // stat bar chart
       statBarTitle:'📊 Bar Chart', statChartTitle:'Chart title', statDataLabel:'Data',
       statCategory:'Category', statValue:'Value', statColor:'Color', statAddRow:'+ Add row',
@@ -15070,6 +15078,8 @@ var LANGS = {
       statWidth:'Breite:', statSmall:'Klein', statMedium:'Mittel', statLarge:'Groß',
       // stat pie chart
       statPieTitle:'🥧 Kreisdiagramm', statShowPct:'Prozentzahlen anzeigen', statShowLabels:'Beschriftungen anzeigen', statSize:'Größe:',
+      statDefaultMonths:['Januar','Februar','März','April'],
+      statDefaultCats:['Kategorie A','Kategorie B','Kategorie C','Kategorie D'],
       // stat frequency polygon
       statFreqTitle:'📉 Häufigkeitspolygon', statXAxis:'X-Achse:', statXValues:'Werte', statXClasses:'Klassen',
       statClass:'Klasse (von–bis)', statMidpoint:'Klassenmitte', statFreq:'Häufigkeit', statCumFreq:'Kumulierte Häufigk.',
