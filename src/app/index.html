@@ -9255,7 +9255,7 @@ function confirmInlineText(){
   redraw();
   if(!txt)return;
   const finalDir=_detectDir(txt)||dir||'rtl';
-  {const _dbg=document.getElementById('_font_debug');if(_dbg)_dbg.textContent='font saved: '+(fontFamily||'Heebo');}
+  alert('font saved: '+(fontFamily||'Heebo'));
   if(elId!==null){
     const el=els.find(e=>e.id===elId);
     if(el){el.content=txt;el.fs=fs;el.bold=bold;el.italic=italic;el.underline=underline;el.color=color;el.align=align;el.fontFamily=fontFamily||'Heebo';el.mathMode=!!mathMode;el.listType=listType||null;el.dir=finalDir;selId=el.id;}
