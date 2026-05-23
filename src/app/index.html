@@ -268,6 +268,7 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
   box-shadow:0 1px 4px rgba(0,0,0,0.2);
 }
 .tbtn svg{width:26px;height:26px;transition:transform 0.17s cubic-bezier(.34,1.4,.64,1);}
+.tbtn img{width:36px;height:36px;object-fit:contain;image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;}
 .tbtn:hover{
   background:rgba(108,99,255,0.16);color:#e8e4ff;
   border-color:rgba(108,99,255,0.32);
@@ -2054,35 +2055,35 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </svg>
     </button>
     <button class="tbtn" id="tbtn-freehand" onclick="setTool('freehand')" data-tip="עפרון חופשי" data-tip-key="tipFreehand">
-      <img src="../assets/icons/toolbar/עפרון.svg" width="32" height="32" style="object-fit:contain;" id="tbtn-freehand-img">
+      <img src="../assets/icons/toolbar/עפרון.svg" style="object-fit:contain;" id="tbtn-freehand-img">
     </button>
     <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
-      <img src="../assets/icons/toolbar/shapes.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/shapes.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('graphs',this)" data-key="graphs" data-tip="גרפים" data-tip-key="tipGraphs">
-      <img src="../assets/icons/toolbar/wave.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/wave.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="startInlineText()" data-key="text" data-tip="טקסט" data-tip-key="tipText">
-      <img src="../assets/icons/toolbar/text.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/text.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="toggleEqRibbon()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
       <img id="tbtn-eq-icon" src="../assets/icons/toolbar/ללא רקע.png" width="42" height="42" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
-      <img src="../assets/icons/toolbar/description.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/description.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('shapes3d',this)" data-tip="צורות תלת-מימד" data-tip-key="tipShapes3d">
-      <img src="../assets/icons/toolbar/3d shapes.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/3d shapes.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" id="tbtn-fill" onclick="setTool('fill')" data-tip="מילוי" data-tip-key="tipFill">
-      <img src="../assets/icons/toolbar/paint.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/paint.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" id="tbtn-clearfill" onclick="setTool('clearfill')" data-tip="נקה מילוי" data-tip-key="tipClearFill">
-      <img src="../assets/icons/toolbar/clear-fill.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/clear-fill.png" style="object-fit:contain;">
     </button>
     <div class="tsep"></div>
     <button class="tbtn" id="tbtn-delete" onclick="setTool('delete')" data-tip="מחק" data-tip-key="tipDelete">
-      <img src="../assets/icons/toolbar/eraser.png" width="32" height="32" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/eraser.png" style="object-fit:contain;">
     </button>
   </div>
 
@@ -14330,9 +14331,9 @@ function parseMath(str){
         while(j<str.length&&depth>0){if(str[j]==='(')depth++;else if(str[j]===')')depth--;j++;}
         inner=str.slice(start,j-1);
       } else {
-        // bare: capture until end of string (use √(expr) to limit scope)
-        inner=str.slice(i+1);
-        j=str.length;
+        // bare: capture until = or end of string
+        while(j<str.length&&str[j]!=='=')j++;
+        inner=str.slice(i+1,j);
       }
       tokens.push({type:'sqrt',inner});i=j;continue;
     }
