@@ -9254,6 +9254,7 @@ function confirmInlineText(){
   redraw();
   if(!txt)return;
   const finalDir=_detectDir(txt)||dir||'rtl';
+  console.log('[confirmInlineText] fontFamily=',fontFamily,'_taState.fontFamily=',_taState.fontFamily);
   if(elId!==null){
     const el=els.find(e=>e.id===elId);
     if(el){el.content=txt;el.fs=fs;el.bold=bold;el.italic=italic;el.underline=underline;el.color=color;el.align=align;el.fontFamily=fontFamily||'Heebo';el.mathMode=!!mathMode;el.listType=listType||null;el.dir=finalDir;selId=el.id;}
