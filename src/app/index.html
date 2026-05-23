@@ -14320,11 +14320,21 @@ function parseMath(str){
     // Superscript: base^exp — digits OR letters (e.g. x^2, 2^x, a^n)
     const supMatch=str.slice(i).match(/^([a-zA-Z0-9]+)\^(-?[a-zA-Z0-9]+)/);
     if(supMatch){tokens.push({type:'sup',base:supMatch[1],exp:supMatch[2]});i+=supMatch[0].length;continue;}
-    // Square root: √expr
+    // Square root: √(expr) or √expr
     if(str[i]==='√'){
-      let j=i+1;
-      while(j<str.length&&str[j]!=' '&&str[j]!=='+'&&str[j]!=='-'&&str[j]!=='='&&str[j]!==')'&&str[j]!=='(')j++;
-      tokens.push({type:'sqrt',inner:str.slice(i+1,j)});i=j;continue;
+      let j=i+1,inner='';
+      if(str[j]==='('){
+        // parenthesized: √(expr) — find matching closing paren
+        let depth=1;j++;
+        const start=j;
+        while(j<str.length&&depth>0){if(str[j]==='(')depth++;else if(str[j]===')')depth--;j++;}
+        inner=str.slice(start,j-1);
+      } else {
+        // bare: stop at space/operator
+        while(j<str.length&&str[j]!=' '&&str[j]!=='+'&&str[j]!=='-'&&str[j]!=='='&&str[j]!==')'&&str[j]!=='(')j++;
+        inner=str.slice(i+1,j);
+      }
+      tokens.push({type:'sqrt',inner});i=j;continue;
     }
     // Regular text — accumulate
     let j=i;
@@ -14504,18 +14514,21 @@ function drawMathLine(str,x,y,fs,color,fontFamily){
       }
     } else if(t.type==='sqrt'){
       ctx.font=`${fs}px "Times New Roman",serif`;
-      const iw=ctx.measureText(t.inner).width;
+      // Measure the actual rendered width of inner content (may contain math)
+      const iw=measureMathLine(t.inner,fs).w||ctx.measureText(t.inner).width;
       // Draw sqrt symbol
       ctx.strokeStyle=color||'#111';ctx.lineWidth=1;
       const h2=fs*0.7;
+      const pad=4;
       ctx.beginPath();
       ctx.moveTo(cx,baseline+h2*0.3);
       ctx.lineTo(cx+fs*0.25,baseline+h2*0.6);
       ctx.lineTo(cx+fs*0.45,baseline-h2*0.6);
-      ctx.lineTo(cx+fs*0.45+iw+4,baseline-h2*0.6);
+      ctx.lineTo(cx+fs*0.45+iw+pad,baseline-h2*0.6);
       ctx.stroke();
-      ctx.fillText(t.inner,cx+fs*0.45,baseline);
-      cx+=fs*0.45+iw+4;
+      // Draw inner content (supports nested math)
+      drawMathLine(t.inner,cx+fs*0.45,baseline,fs,color,fontFamily);
+      cx+=fs*0.45+iw+pad;
     }
   });
   ctx.restore();
