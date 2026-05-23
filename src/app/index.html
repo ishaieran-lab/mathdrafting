@@ -1343,7 +1343,6 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 </head>
 <body>
-<div id="_font_debug" style="position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:99999;background:red;color:white;font-size:20px;padding:12px 28px;border-radius:10px;font-family:monospace;pointer-events:none;white-space:nowrap"></div>
 
 <!-- NEW UI HEADER (Figma style) -->
 <header id="nui-header">
@@ -6857,7 +6856,7 @@ cv.addEventListener('mousedown',e=>{
   if(tool==='text'){
     if(eqCursor.active) confirmEqEdit();
     // Create a temporary text element at click position
-    const tmp={type:'text',x:snap(mx),y:snap(my),w:120,h:44,lines:[''],content:'',color:'#111',fill:'none',sw:1,fs:22};
+    const tmp={type:'text',x:snap(mx),y:snap(my),w:120,h:44,lines:[''],content:'',color:'#111',fill:'none',sw:1,fs:22,fontFamily:_taState.fontFamily||'Heebo'};
     addEl(tmp);
     const added=els.find(e=>e.id===selId);
     if(added) startEqEdit(added);
@@ -9255,7 +9254,6 @@ function confirmInlineText(){
   redraw();
   if(!txt)return;
   const finalDir=_detectDir(txt)||dir||'rtl';
-  alert('font saved: '+(fontFamily||'Heebo'));
   if(elId!==null){
     const el=els.find(e=>e.id===elId);
     if(el){el.content=txt;el.fs=fs;el.bold=bold;el.italic=italic;el.underline=underline;el.color=color;el.align=align;el.fontFamily=fontFamily||'Heebo';el.mathMode=!!mathMode;el.listType=listType||null;el.dir=finalDir;selId=el.id;}
@@ -9355,8 +9353,10 @@ function startEqEdit(el){
   const _d=el.dir||'rtl';
   document.getElementById('tfb-dir-rtl').classList.toggle('tfb-on',_d==='rtl');
   document.getElementById('tfb-dir-ltr').classList.toggle('tfb-on',_d==='ltr');
-  // Sync color from element
-  if(el.color){_taState.color=el.color;_tfbSync();}
+  // Sync color and font from element
+  if(el.color) _taState.color=el.color;
+  if(el.fontFamily) _taState.fontFamily=el.fontFamily;
+  _tfbSync();
   _syncMarginHud();
   redraw();
 }
@@ -9377,14 +9377,14 @@ function confirmEqEdit(){
   if(elId!==null){
     const el=els.find(e=>e.id===elId);
     if(el){
-      el.lines=cleanLines;el.w=w;el.h=h;el.listType=eqCursor.listType||null;el.dir=eqCursor.dir||'rtl';el.color=_taState.color||el.color||'#111';selId=el.id;
+      el.lines=cleanLines;el.w=w;el.h=h;el.listType=eqCursor.listType||null;el.dir=eqCursor.dir||'rtl';el.color=_taState.color||el.color||'#111';el.fontFamily=_taState.fontFamily||el.fontFamily||'Heebo';selId=el.id;
       // For text elements: also update content for backward compat
       if(el.type==='text') el.content=cleanLines.join('\n');
       delete el.eqParams;
     }
   } else {
     // New text element created via text tool → became equation block
-    addEl({type:'text',x:eqCursor.x,y:eqCursor.y,w,h,lines:cleanLines,content:cleanLines.join('\n'),color:_taState.color||'#111',fill:'none',sw:1,fs,listType:eqCursor.listType||null,dir:eqCursor.dir||'rtl'});
+    addEl({type:'text',x:eqCursor.x,y:eqCursor.y,w,h,lines:cleanLines,content:cleanLines.join('\n'),color:_taState.color||'#111',fontFamily:_taState.fontFamily||'Heebo',fill:'none',sw:1,fs,listType:eqCursor.listType||null,dir:eqCursor.dir||'rtl'});
     selId=els[els.length-1].id;
   }
   const kb=document.getElementById('eq-sym-kb');
