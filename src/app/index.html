@@ -8783,7 +8783,7 @@ function showInlineTextAt(x,y,existingEl){
   const italic=!!(existingEl&&existingEl.italic);
   const color=(existingEl&&existingEl.color)||'#000';
   const align=(existingEl&&existingEl.align)||'right';
-  const fontFamily=(existingEl&&existingEl.fontFamily)||'Heebo';
+  const fontFamily=(existingEl&&existingEl.fontFamily)||_taState.fontFamily||'Heebo';
   const mathMode=!!(existingEl&&existingEl.mathMode);
   const elId=existingEl?existingEl.id:null;
   const existingText=existingEl?existingEl.content||'':'';
