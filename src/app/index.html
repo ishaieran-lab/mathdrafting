@@ -1343,6 +1343,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 </head>
 <body>
+<div id="_font_debug" style="position:fixed;top:0;left:50%;transform:translateX(-50%);z-index:99999;background:red;color:white;font-size:18px;padding:8px 20px;border-radius:0 0 10px 10px;font-family:monospace;pointer-events:none"></div>
 
 <!-- NEW UI HEADER (Figma style) -->
 <header id="nui-header">
@@ -9254,7 +9255,7 @@ function confirmInlineText(){
   redraw();
   if(!txt)return;
   const finalDir=_detectDir(txt)||dir||'rtl';
-  console.log('[confirmInlineText] fontFamily=',fontFamily,'_taState.fontFamily=',_taState.fontFamily);
+  {const _dbg=document.getElementById('_font_debug');if(_dbg)_dbg.textContent='font saved: '+(fontFamily||'Heebo');}
   if(elId!==null){
     const el=els.find(e=>e.id===elId);
     if(el){el.content=txt;el.fs=fs;el.bold=bold;el.italic=italic;el.underline=underline;el.color=color;el.align=align;el.fontFamily=fontFamily||'Heebo';el.mathMode=!!mathMode;el.listType=listType||null;el.dir=finalDir;selId=el.id;}
