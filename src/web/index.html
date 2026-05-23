@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathDrafting — דפי עבודה מתמטיים בשניות</title>
+<meta name="description" content="כלי דיגיטלי ליצירת דפי עבודה מתמטיים מקצועיים. צורות, נוסחאות, גרפים — הכל במקום אחד.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;800&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --accent:#6c63ff;
+  --accent2:#a78bfa;
+  --dark:#1a1a2e;
+  --text:#1a1a2e;
+  --text2:#555;
+  --bg:#fff;
+  --bg2:#f8f7ff;
+  --border:#e8e6ff;
+  --radius:14px;
+}
+
+body{
+  font-family:'Heebo',sans-serif;
+  color:var(--text);
+  background:var(--bg);
+  line-height:1.6;
+}
+
+body.ltr{
+  font-family:'Inter',sans-serif;
+  direction:ltr;
+  text-align:left;
+}
+
+/* ── HEADER ── */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 40px;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+.logo{
+  font-size:22px;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  letter-spacing:-0.5px;
+}
+
+.header-right{
+  display:flex;align-items:center;gap:16px;
+}
+
+.lang-toggle{
+  display:flex;align-items:center;gap:4px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:4px;
+}
+
+.lang-btn{
+  padding:5px 12px;border-radius:6px;border:none;
+  background:transparent;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--text2);
+  transition:all 0.15s;
+}
+
+.lang-btn.active{
+  background:var(--accent);color:#fff;
+}
+
+.header-cta{
+  padding:9px 22px;border-radius:9px;border:none;
+  background:var(--accent);color:#fff;
+  font-size:14px;font-weight:700;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:all 0.15s;
+  font-family:inherit;
+}
+
+.header-cta:hover{background:#5a52e0;transform:translateY(-1px);}
+
+/* ── HERO ── */
+.hero{
+  padding:80px 40px 60px;
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;gap:60px;
+}
+
+.hero-text{}
+
+.hero-badge{
+  display:inline-block;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  color:var(--accent);
+  font-size:13px;font-weight:600;
+  padding:5px 14px;border-radius:20px;
+  margin-bottom:20px;
+}
+
+.hero-title{
+  font-size:48px;font-weight:800;line-height:1.15;
+  margin-bottom:20px;
+  letter-spacing:-1px;
+}
+
+.hero-title span{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-sub{
+  font-size:18px;color:var(--text2);
+  margin-bottom:36px;
+  font-weight:400;
+  line-height:1.7;
+}
+
+.hero-btns{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+
+.btn-primary{
+  padding:14px 32px;border-radius:11px;border:none;
+  background:var(--accent);color:#fff;
+  font-size:16px;font-weight:700;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:all 0.15s;
+  font-family:inherit;
+  box-shadow:0 4px 20px rgba(108,99,255,0.35);
+}
+
+.btn-primary:hover{background:#5a52e0;transform:translateY(-2px);box-shadow:0 6px 24px rgba(108,99,255,0.45);}
+
+.btn-secondary{
+  padding:14px 28px;border-radius:11px;
+  border:2px solid var(--border);
+  background:transparent;color:var(--text);
+  font-size:16px;font-weight:600;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:all 0.15s;
+  font-family:inherit;
+}
+
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent);}
+
+.hero-note{
+  margin-top:16px;
+  font-size:13px;color:var(--text2);
+}
+
+.hero-image{
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(108,99,255,0.18),0 4px 16px rgba(0,0,0,0.08);
+  border:1px solid var(--border);
+}
+
+.hero-image img{
+  width:100%;display:block;
+}
+
+/* ── FEATURES ── */
+.features{
+  background:var(--bg2);
+  padding:80px 40px;
+}
+
+.features-inner{max-width:1100px;margin:0 auto;}
+
+.section-label{
+  text-align:center;
+  font-size:13px;font-weight:600;color:var(--accent);
+  text-transform:uppercase;letter-spacing:1.5px;
+  margin-bottom:12px;
+}
+
+.section-title{
+  text-align:center;
+  font-size:36px;font-weight:800;
+  margin-bottom:12px;letter-spacing:-0.5px;
+}
+
+.section-sub{
+  text-align:center;
+  font-size:17px;color:var(--text2);
+  margin-bottom:56px;
+  max-width:540px;margin-left:auto;margin-right:auto;
+}
+
+.features-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+
+.feature-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px 24px;
+  transition:all 0.2s;
+}
+
+.feature-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(108,99,255,0.12);
+  border-color:var(--accent2);
+}
+
+.feature-icon{
+  font-size:36px;margin-bottom:16px;
+}
+
+.feature-title{
+  font-size:17px;font-weight:700;margin-bottom:8px;
+}
+
+.feature-desc{
+  font-size:14px;color:var(--text2);line-height:1.6;
+}
+
+/* ── AUDIENCE ── */
+.audience{
+  padding:80px 40px;
+  max-width:1100px;margin:0 auto;
+}
+
+.audience-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:28px;margin-top:48px;
+}
+
+.audience-card{
+  border:2px solid var(--border);
+  border-radius:18px;
+  padding:36px 32px;
+  transition:all 0.2s;
+}
+
+.audience-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 8px 28px rgba(108,99,255,0.1);
+}
+
+.audience-icon{font-size:44px;margin-bottom:16px;}
+.audience-title{font-size:22px;font-weight:800;margin-bottom:10px;}
+.audience-desc{font-size:15px;color:var(--text2);line-height:1.7;}
+
+/* ── CTA ── */
+.cta-section{
+  background:linear-gradient(135deg,var(--accent) 0%,#9b6dff 100%);
+  padding:80px 40px;
+  text-align:center;
+}
+
+.cta-title{
+  font-size:40px;font-weight:800;
+  color:#fff;margin-bottom:16px;
+  letter-spacing:-0.5px;
+}
+
+.cta-sub{
+  font-size:18px;color:rgba(255,255,255,0.85);
+  margin-bottom:36px;
+}
+
+.btn-white{
+  padding:16px 40px;border-radius:12px;border:none;
+  background:#fff;color:var(--accent);
+  font-size:17px;font-weight:700;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:all 0.15s;
+  font-family:inherit;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15);
+}
+
+.btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.2);}
+
+.cta-note{margin-top:16px;color:rgba(255,255,255,0.7);font-size:14px;}
+
+/* ── FOOTER ── */
+footer{
+  background:var(--dark);color:rgba(255,255,255,0.5);
+  padding:32px 40px;
+  text-align:center;font-size:14px;
+}
+
+footer span{color:rgba(255,255,255,0.8);font-weight:600;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;padding:50px 24px 40px;gap:36px;}
+  .hero-title{font-size:34px;}
+  .features-grid{grid-template-columns:1fr;}
+  .audience-grid{grid-template-columns:1fr;}
+  .features,.audience,.cta-section{padding:60px 24px;}
+  header{padding:0 24px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">MathDrafting</div>
+  <div class="header-right">
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עברית</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+    <a href="../app/index.html" class="header-cta" data-he="התחל בחינם" data-en="Start Free">התחל בחינם</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-badge" data-he="✨ כלי חינוכי מתקדם" data-en="✨ Advanced Educational Tool">✨ כלי חינוכי מתקדם</div>
+    <h1 class="hero-title" data-he="דפי עבודה<br>מתמטיים<br><span>בשניות</span>" data-en="Math Worksheets<br>in <span>Seconds</span>">
+      דפי עבודה<br>מתמטיים<br><span>בשניות</span>
+    </h1>
+    <p class="hero-sub" data-he="צור דפי עבודה מקצועיים עם צורות גיאומטריות, נוסחאות, גרפים ועוד — ישירות בדפדפן, ללא התקנה." data-en="Create professional worksheets with geometric shapes, equations, graphs and more — directly in the browser, no installation needed.">
+      צור דפי עבודה מקצועיים עם צורות גיאומטריות, נוסחאות, גרפים ועוד — ישירות בדפדפן, ללא התקנה.
+    </p>
+    <div class="hero-btns">
+      <a href="../app/index.html" class="btn-primary" data-he="התחל בחינם →" data-en="Start Free →">התחל בחינם →</a>
+      <a href="#features" class="btn-secondary" data-he="גלה יותר" data-en="Learn More">גלה יותר</a>
+    </div>
+    <p class="hero-note" data-he="✓ ללא הרשמה &nbsp;·&nbsp; ✓ ללא התקנה &nbsp;·&nbsp; ✓ חינם לחלוטין" data-en="✓ No signup &nbsp;·&nbsp; ✓ No installation &nbsp;·&nbsp; ✓ Completely free">
+      ✓ ללא הרשמה &nbsp;·&nbsp; ✓ ללא התקנה &nbsp;·&nbsp; ✓ חינם לחלוטין
+    </p>
+  </div>
+  <div class="hero-image">
+    <img src="../assets/worksheet-preview.png" alt="דף עבודה לדוגמה">
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-inner">
+    <div class="section-label" data-he="יכולות" data-en="Features">יכולות</div>
+    <h2 class="section-title" data-he="כל מה שצריך במקום אחד" data-en="Everything You Need in One Place">כל מה שצריך במקום אחד</h2>
+    <p class="section-sub" data-he="כלים מקצועיים שתוכנן בדיוק למורים ולסטודנטים במתמטיקה" data-en="Professional tools designed specifically for math teachers and students">כלים מקצועיים שתוכנן בדיוק למורים ולסטודנטים במתמטיקה</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <div class="feature-title" data-he="צורות גיאומטריות" data-en="Geometric Shapes">צורות גיאומטריות</div>
+        <p class="feature-desc" data-he="משולשים, עיגולים, מצולעים, גופים תלת-ממדיים — עם תיוג אוטומטי ומידות." data-en="Triangles, circles, polygons, 3D shapes — with automatic labeling and measurements.">משולשים, עיגולים, מצולעים, גופים תלת-ממדיים — עם תיוג אוטומטי ומידות.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">∫</div>
+        <div class="feature-title" data-he="נוסחאות ומשוואות" data-en="Formulas & Equations">נוסחאות ומשוואות</div>
+        <p class="feature-desc" data-he="שברים, חזקות, שורשים, סינוס/קוסינוס — נוסחאות מתמטיות מלאות בלחיצה." data-en="Fractions, exponents, square roots, sin/cos — full mathematical formulas with one click.">שברים, חזקות, שורשים, סינוס/קוסינוס — נוסחאות מתמטיות מלאות בלחיצה.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <div class="feature-title" data-he="גרפים וסטטיסטיקה" data-en="Graphs & Statistics">גרפים וסטטיסטיקה</div>
+        <p class="feature-desc" data-he="פרבולות, קווים, תרשימי עמודות ועוגה — כלים מלאים לציור גרפים מתמטיים." data-en="Parabolas, lines, bar and pie charts — complete tools for drawing mathematical graphs.">פרבולות, קווים, תרשימי עמודות ועוגה — כלים מלאים לציור גרפים מתמטיים.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔤</div>
+        <div class="feature-title" data-he="תמיכה מלאה בעברית" data-en="Full Hebrew Support">תמיכה מלאה בעברית</div>
+        <p class="feature-desc" data-he="כתיבה בעברית ובאנגלית, RTL מלא, מגוון גופנים — הכל עובד חלק." data-en="Hebrew and English writing, full RTL support, multiple fonts — everything works smoothly.">כתיבה בעברית ובאנגלית, RTL מלא, מגוון גופנים — הכל עובד חלק.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖨️</div>
+        <div class="feature-title" data-he="הדפסה מיידית" data-en="Instant Printing">הדפסה מיידית</div>
+        <p class="feature-desc" data-he="הדפס ישירות מהדפדפן — דף נקי, ללא כלים, מוכן לחלוקה לכיתה." data-en="Print directly from the browser — clean page, no tools, ready to hand out in class.">הדפס ישירות מהדפדפן — דף נקי, ללא כלים, מוכן לחלוקה לכיתה.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title" data-he="מהיר ופשוט" data-en="Fast & Simple">מהיר ופשוט</div>
+        <p class="feature-desc" data-he="ללא התקנה, ללא הרשמה. פותחים דפדפן ומתחילים ליצור תוך שניות." data-en="No installation, no signup. Open a browser and start creating in seconds.">ללא התקנה, ללא הרשמה. פותחים דפדפן ומתחילים ליצור תוך שניות.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCE -->
+<section class="audience">
+  <div class="section-label" data-he="למי זה מיועד" data-en="Who It's For">למי זה מיועד</div>
+  <h2 class="section-title" data-he="בנוי למורים ולסטודנטים" data-en="Built for Teachers & Students">בנוי למורים ולסטודנטים</h2>
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="audience-icon">👩‍🏫</div>
+      <div class="audience-title" data-he="מורים ומרצים" data-en="Teachers & Lecturers">מורים ומרצים</div>
+      <p class="audience-desc" data-he="צור דפי עבודה, מבחנים ותרגולים מקצועיים בדקות. חסוך שעות של עבודה ידנית." data-en="Create professional worksheets, tests and exercises in minutes. Save hours of manual work.">צור דפי עבודה, מבחנים ותרגולים מקצועיים בדקות. חסוך שעות של עבודה ידנית.</p>
+    </div>
+    <div class="audience-card">
+      <div class="audience-icon">🎓</div>
+      <div class="audience-title" data-he="סטודנטים ותלמידים" data-en="Students">סטודנטים ותלמידים</div>
+      <p class="audience-desc" data-he="עבד על שיעורי בית, הכן סיכומים, שרטט גרפים — הכל בכלי אחד נוח." data-en="Work on homework, prepare summaries, draw graphs — all in one convenient tool.">עבד על שיעורי בית, הכן סיכומים, שרטט גרפים — הכל בכלי אחד נוח.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2 class="cta-title" data-he="מוכן להתחיל?" data-en="Ready to Start?">מוכן להתחיל?</h2>
+  <p class="cta-sub" data-he="הצטרף למורים וסטודנטים שכבר יוצרים דפי עבודה מדהימים" data-en="Join teachers and students already creating amazing worksheets">הצטרף למורים וסטודנטים שכבר יוצרים דפי עבודה מדהימים</p>
+  <a href="../app/index.html" class="btn-white" data-he="פתח את MathDrafting →" data-en="Open MathDrafting →">פתח את MathDrafting →</a>
+  <p class="cta-note" data-he="חינם לחלוטין · ללא הרשמה · עובד בכל דפדפן" data-en="Completely free · No signup · Works in any browser">חינם לחלוטין · ללא הרשמה · עובד בכל דפדפן</p>
+</section>
+
+<footer>
+  <p>© 2025 <span>MathDrafting</span> · <span data-he="כל הזכויות שמורות" data-en="All rights reserved">כל הזכויות שמורות</span></p>
+</footer>
+
+<script>
+let currentLang='he';
+
+function setLang(lang){
+  currentLang=lang;
+  document.documentElement.lang=lang;
+  document.body.classList.toggle('ltr',lang==='en');
+  document.documentElement.dir=lang==='he'?'rtl':'ltr';
+
+  document.getElementById('btn-he').classList.toggle('active',lang==='he');
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+
+  document.querySelectorAll('[data-'+lang+']').forEach(el=>{
+    const val=el.getAttribute('data-'+lang);
+    if(el.tagName==='A'||el.tagName==='BUTTON'){
+      el.textContent=val;
+    } else {
+      el.innerHTML=val;
+    }
+  });
+}
+
+// Detect browser language
+if(navigator.language&&navigator.language.toLowerCase().startsWith('en')){
+  setLang('en');
+}
+</script>
+</body>
+</html>
