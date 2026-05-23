@@ -14330,9 +14330,9 @@ function parseMath(str){
         while(j<str.length&&depth>0){if(str[j]==='(')depth++;else if(str[j]===')')depth--;j++;}
         inner=str.slice(start,j-1);
       } else {
-        // bare: stop at space/operator
-        while(j<str.length&&str[j]!=' '&&str[j]!=='+'&&str[j]!=='-'&&str[j]!=='='&&str[j]!==')'&&str[j]!=='(')j++;
-        inner=str.slice(i+1,j);
+        // bare: capture until end of string (use √(expr) to limit scope)
+        inner=str.slice(i+1);
+        j=str.length;
       }
       tokens.push({type:'sqrt',inner});i=j;continue;
     }
