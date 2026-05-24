@@ -1496,10 +1496,6 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         <text x="17.5" y="19.5" font-size="4.5" fill="currentColor" stroke="none" font-family="system-ui,sans-serif" font-weight="700" text-anchor="middle">3</text>
       </svg>
     </button>
-    <div class="nui-sep"></div>
-    <!-- מעלות ופאי -->
-    <button class="nui-tbtn" onmousedown="event.preventDefault();_eqInsertSym('°')" data-tip="מעלות (°)" style="font-size:18px;font-family:'Times New Roman',serif;font-weight:600;">°</button>
-    <button class="nui-tbtn" onmousedown="event.preventDefault();_eqInsertSym('π')" data-tip="פאי (π)" style="font-size:18px;font-family:'Times New Roman',serif;font-weight:600;">π</button>
   </div>
 
 </div>
@@ -2952,6 +2948,8 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
     <!-- Symbols -->
     <div id="peq-sym">
+      <button class="eq-tb" onclick="addLatexToCanvas('\\pi')">π</button>
+      <button class="eq-tb" onclick="addLatexToCanvas('^{\\circ}')">°</button>
       <button class="eq-tb" onclick="addLatexToCanvas('\\infty')">∞</button>
       <button class="eq-tb" onclick="addLatexToCanvas('\\neq')">≠</button>
       <button class="eq-tb" onclick="addLatexToCanvas('\\leq')">≤</button>
