@@ -1260,6 +1260,7 @@ body.new-ui #nui-header { display: flex !important; }
 .nui-spacer { flex: 1; }
 
 /* UI toggle inside new bar */
+#nui-toggle-btn, #ui-toggle-btn { display: none !important; }
 #nui-toggle-btn {
   font-size: 11px;
   font-weight: 600;
@@ -12931,15 +12932,11 @@ function toggleNewUI(){
   if(nuiLabel) nuiLabel.textContent=isNew?'Classic':'New UI';
 }
 (function(){
-  if(localStorage.getItem('daw-new-ui')==='1'){
-    document.body.classList.add('new-ui');
-    document.body.classList.add('light-theme');
-    _updateThemeIcons(true);
-    const label=document.getElementById('ui-toggle-label');
-    if(label) label.textContent='✦ Classic UI';
-    const nuiLabel=document.getElementById('nui-toggle-btn');
-    if(nuiLabel) nuiLabel.textContent='Classic';
-  }
+  // Always use New UI
+  document.body.classList.add('new-ui');
+  document.body.classList.add('light-theme');
+  localStorage.setItem('daw-new-ui','1');
+  _updateThemeIcons(true);
 })();
 // ============================================================
 // THEME TOGGLE
