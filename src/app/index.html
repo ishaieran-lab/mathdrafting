@@ -9352,8 +9352,6 @@ function startEqEdit(el){
     if(!eqCursor.active){clearInterval(eqCursorTimer);return;}
     eqCursor.blink=!eqCursor.blink;redraw();
   },530);
-  const kb=document.getElementById('eq-sym-kb');
-  if(kb)kb.style.display='flex';
   _tfbShow();
   // Sync list + dir buttons to element's state
   ['bullet','number','hebrew'].forEach(t=>{const b=document.getElementById('tfb-list-'+t);if(b)b.classList.toggle('tfb-on',(el.listType||null)===t);});
