@@ -1481,7 +1481,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       </svg>
     </button>
     <!-- 2. מספור שורות — דף עם שוליים ממוספרים (שונה מהותית מרשימה) -->
-    <button class="nui-tbtn" onmousedown="event.preventDefault();toggleNlPanel(this)" data-tip="מספור שורות">
+    <button class="nui-tbtn" onclick="toggleNlPanel(this)" data-tip="מספור שורות">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <!-- דף -->
         <rect x="4" y="2" width="16" height="20" rx="1.5" fill="none" stroke-width="1.5"/>
@@ -4013,7 +4013,8 @@ function _nlSetSize(v){
 document.addEventListener('mousedown',function(e){
   const p=document.getElementById('numlines-panel');
   const btn=document.getElementById('numlines-toggle-btn');
-  if(p&&p.classList.contains('open')&&!p.contains(e.target)&&!btn.contains(e.target)){
+  const nuiBtn=document.querySelector('.nui-tbtn[data-tip="מספור שורות"]');
+  if(p&&p.classList.contains('open')&&!p.contains(e.target)&&!(btn&&btn.contains(e.target))&&!(nuiBtn&&nuiBtn.contains(e.target))){
     p.classList.remove('open');
   }
 });
