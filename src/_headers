@@ -1,0 +1,8 @@
+/*.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/app/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/web/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
