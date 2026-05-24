@@ -826,7 +826,7 @@ body.light-theme .eq-rtabs{border-left-color:#e0e0e8;}
 body.light-theme .eq-rtab{color:#777;}
 body.light-theme .eq-rtab.active{background:rgba(108,99,255,0.15);color:#5046e5;}
 body.light-theme .eq-rtab:hover:not(.active){background:rgba(108,99,255,0.07);color:#333;}
-.eqr-section{display:none;flex-wrap:nowrap;align-items:center;gap:0;overflow-x:auto;}
+.eqr-section{display:none;flex-wrap:nowrap;align-items:center;gap:0;direction:ltr;}
 .eqr-section.active{display:flex;}
 /* Large ribbon template buttons */
 .eq-rb{
@@ -1899,10 +1899,10 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
 
 <!-- EQUATION RIBBON -->
 <div id="eq-ribbon">
-  <div style="display:flex;align-items:center;gap:8px;width:100%">
-    <button id="eq-ribbon-close" onclick="closeEqRibbon()" title="סגור" style="flex-shrink:0">✕</button>
+  <div style="display:flex;align-items:center;gap:8px;width:100%;direction:ltr;">
+    <button id="eq-ribbon-close" onclick="closeEqRibbon()" title="סגור" style="flex-shrink:0;">✕</button>
     <!-- Template sections -->
-    <div style="flex:1;overflow-x:auto">
+    <div style="flex:1;overflow-x:auto;overflow-y:hidden;display:flex;align-items:center;">
     <!-- Structures -->
     <div id="eqr-struct" class="eqr-section active">
       <button class="eq-rb" onclick="eqRibbonBtn('txt')" title="טקסט חופשי"><span class="eq-rb-icon" data-katex="\text{abc}"></span><span class="eq-rb-label">טקסט</span></button>
