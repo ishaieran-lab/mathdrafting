@@ -1705,62 +1705,6 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         </svg>
         <span data-lang-key="nlBtn">מספור שורות</span>
       </button>
-      <div id="numlines-panel">
-        <!-- כותרת + toggle -->
-        <div id="nl-master">
-          <span id="nl-master-title" data-lang-key="nlTitle">מספור שורות</span>
-          <button class="nl-toggle" id="nl-master-btn" onclick="_nlToggleOnOff()" title="הפעל/כבה" data-title-key="tipNlToggle"></button>
-        </div>
-        <div class="nl-sep"></div>
-        <!-- סוג + מודגש -->
-        <div class="nl-row">
-          <span class="nl-label" data-lang-key="nlType">סוג:</span>
-          <button class="nl-type-btn nl-on" id="nl-t-num" onclick="_nlSetType('num')">1, 2, 3</button>
-          <button class="nl-type-btn" id="nl-t-latin" onclick="_nlSetType('latin')">A, B, C</button>
-          <button class="nl-type-btn" id="nl-t-heb" onclick="_nlSetType('heb')">א, ב, ג</button>
-          <button class="nl-type-btn" id="nl-bold-btn" onclick="_nlToggleBold()" title="מודגש" data-title-key="tipNlBold" style="font-weight:700;min-width:28px;">B</button>
-        </div>
-        <!-- צד -->
-        <div class="nl-row">
-          <span class="nl-label" data-lang-key="nlSide">צד:</span>
-          <button class="nl-type-btn nl-on" id="nl-side-right" data-lang-key="nlSideRight" onclick="_nlSetSide('right')">ימין</button>
-          <button class="nl-type-btn" id="nl-side-left" data-lang-key="nlSideLeft" onclick="_nlSetSide('left')">שמאל</button>
-        </div>
-        <div class="nl-sep"></div>
-        <!-- מיקום בדף -->
-        <div class="nl-row">
-          <span class="nl-label" data-lang-key="nlFrom" style="min-width:100px;">שורה ראשונה:</span>
-          <input class="nl-input" type="number" id="nl-from" value="1" min="1" max="999" oninput="_nlSetFrom(this.value)">
-          <span data-lang-key="nlTo" style="font-size:11px;color:#9090b8;padding:0 2px;">עד</span>
-          <input class="nl-input" type="number" id="nl-to" value="0" min="0" max="999" oninput="_nlSetTo(this.value)" placeholder="∞">
-        </div>
-        <!-- מספר התחלה -->
-        <div class="nl-row">
-          <span class="nl-label" data-lang-key="nlStart">מספר התחלה:</span>
-          <input class="nl-input" type="number" id="nl-start" value="1" min="1" max="999" oninput="_nlSetStart(this.value)">
-        </div>
-        <div class="nl-sep"></div>
-        <!-- ריווח -->
-        <div class="nl-row">
-          <span class="nl-label" data-lang-key="nlSpacing">שורות ריקות:</span>
-          <button class="nl-type-btn nl-on" id="nl-sp-0" onclick="_nlSetSpacing(0)">0</button>
-          <button class="nl-type-btn" id="nl-sp-1" onclick="_nlSetSpacing(1)">1</button>
-          <button class="nl-type-btn" id="nl-sp-2" onclick="_nlSetSpacing(2)">2</button>
-          <button class="nl-type-btn" id="nl-sp-3" onclick="_nlSetSpacing(3)">3</button>
-        </div>
-        <!-- גובה שורה -->
-        <div class="nl-row">
-          <span class="nl-label" data-lang-key="nlHeight">גובה שורה:</span>
-          <input type="range" id="nl-size-range" min="20" max="80" value="30" oninput="_nlSetSize(this.value)" style="flex:1;accent-color:#6c63ff;">
-          <span id="nl-size-lbl" style="font-family:monospace;font-size:11px;color:#6c63ff;min-width:26px;font-weight:600;">30</span>
-        </div>
-        <!-- כהות קווים -->
-        <div class="nl-row">
-          <span class="nl-label">כהות:</span>
-          <input type="range" id="nl-dark-range" min="0" max="100" value="45" oninput="_nlSetDark(this.value)" style="flex:1;accent-color:#6c63ff;">
-          <span id="nl-dark-lbl" style="font-family:monospace;font-size:11px;color:#6c63ff;min-width:26px;font-weight:600;">45</span>
-        </div>
-      </div>
     </div>
     <!-- שפות -->
     <div class="lang-wrap" style="position:relative">
@@ -15630,6 +15574,56 @@ body>*:not(.canvas-area){display:none!important;}
   <div class="clr-custom">
     <input type="color" id="clr-custom-input" oninput="onCustomColor(this.value)" onchange="onCustomColor(this.value)">
     <span style="font-size:10px;color:var(--text2)">צבע מותאם</span>
+  </div>
+</div>
+
+<!-- Numbered lines panel — outside header so it works in New UI -->
+<div id="numlines-panel">
+  <div id="nl-master">
+    <span id="nl-master-title" data-lang-key="nlTitle">מספור שורות</span>
+    <button class="nl-toggle" id="nl-master-btn" onclick="_nlToggleOnOff()" title="הפעל/כבה" data-title-key="tipNlToggle"></button>
+  </div>
+  <div class="nl-sep"></div>
+  <div class="nl-row">
+    <span class="nl-label" data-lang-key="nlType">סוג:</span>
+    <button class="nl-type-btn nl-on" id="nl-t-num" onclick="_nlSetType('num')">1, 2, 3</button>
+    <button class="nl-type-btn" id="nl-t-latin" onclick="_nlSetType('latin')">A, B, C</button>
+    <button class="nl-type-btn" id="nl-t-heb" onclick="_nlSetType('heb')">א, ב, ג</button>
+    <button class="nl-type-btn" id="nl-bold-btn" onclick="_nlToggleBold()" title="מודגש" data-title-key="tipNlBold" style="font-weight:700;min-width:28px;">B</button>
+  </div>
+  <div class="nl-row">
+    <span class="nl-label" data-lang-key="nlSide">צד:</span>
+    <button class="nl-type-btn nl-on" id="nl-side-right" data-lang-key="nlSideRight" onclick="_nlSetSide('right')">ימין</button>
+    <button class="nl-type-btn" id="nl-side-left" data-lang-key="nlSideLeft" onclick="_nlSetSide('left')">שמאל</button>
+  </div>
+  <div class="nl-sep"></div>
+  <div class="nl-row">
+    <span class="nl-label" data-lang-key="nlFrom" style="min-width:100px;">שורה ראשונה:</span>
+    <input class="nl-input" type="number" id="nl-from" value="1" min="1" max="999" oninput="_nlSetFrom(this.value)">
+    <span data-lang-key="nlTo" style="font-size:11px;color:#9090b8;padding:0 2px;">עד</span>
+    <input class="nl-input" type="number" id="nl-to" value="0" min="0" max="999" oninput="_nlSetTo(this.value)" placeholder="∞">
+  </div>
+  <div class="nl-row">
+    <span class="nl-label" data-lang-key="nlStart">מספר התחלה:</span>
+    <input class="nl-input" type="number" id="nl-start" value="1" min="1" max="999" oninput="_nlSetStart(this.value)">
+  </div>
+  <div class="nl-sep"></div>
+  <div class="nl-row">
+    <span class="nl-label" data-lang-key="nlSpacing">שורות ריקות:</span>
+    <button class="nl-type-btn nl-on" id="nl-sp-0" onclick="_nlSetSpacing(0)">0</button>
+    <button class="nl-type-btn" id="nl-sp-1" onclick="_nlSetSpacing(1)">1</button>
+    <button class="nl-type-btn" id="nl-sp-2" onclick="_nlSetSpacing(2)">2</button>
+    <button class="nl-type-btn" id="nl-sp-3" onclick="_nlSetSpacing(3)">3</button>
+  </div>
+  <div class="nl-row">
+    <span class="nl-label" data-lang-key="nlHeight">גובה שורה:</span>
+    <input type="range" id="nl-size-range" min="20" max="80" value="30" oninput="_nlSetSize(this.value)" style="flex:1;accent-color:#6c63ff;">
+    <span id="nl-size-lbl" style="font-family:monospace;font-size:11px;color:#6c63ff;min-width:26px;font-weight:600;">30</span>
+  </div>
+  <div class="nl-row">
+    <span class="nl-label">כהות:</span>
+    <input type="range" id="nl-dark-range" min="0" max="100" value="45" oninput="_nlSetDark(this.value)" style="flex:1;accent-color:#6c63ff;">
+    <span id="nl-dark-lbl" style="font-family:monospace;font-size:11px;color:#6c63ff;min-width:26px;font-weight:600;">45</span>
   </div>
 </div>
 </body>
