@@ -8828,8 +8828,7 @@ function showInlineTextAt(x,y,existingEl){
   ta.style.display='block';
   _taAutoResize(ta);
   _tfbShow();
-  const _kb=document.getElementById('eq-sym-kb');
-  if(_kb)_kb.style.display='flex';
+  // eq-sym-kb hidden by design
   // Delay focus so canvas doesn't steal it back after mousedown
   setTimeout(function(){
     ta.focus();
