@@ -839,7 +839,7 @@ body.light-theme .eq-rtab:hover:not(.active){color:#1a1a3e;border-color:var(--ac
   transition:all 0.15s;
   box-shadow:0 1px 3px rgba(0,0,0,0.2);
 }
-.eq-rb:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.12);transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,0.3);}
+.eq-rb:hover{border-color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.12);box-shadow:0 4px 14px rgba(0,0,0,0.3);}
 .eq-rb-icon{font-size:22px;line-height:1.1;display:flex;align-items:center;justify-content:center;min-height:28px;direction:ltr;}
 .eq-rb-icon .katex{font-size:1.3em;color:inherit;}
 .eq-rb-icon .katex-html{pointer-events:none;}
@@ -878,9 +878,9 @@ body.light-theme .eq-rb .katex{color:#111;}
 body.light-theme .eq-rb-label{color:#888;font-weight:500;}
 /* Small symbol buttons — icon-only style */
 .eq-rb-sm{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.08);box-shadow:none;}
-.eq-rb-sm:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);transform:scale(1.12);box-shadow:0 2px 10px rgba(0,0,0,0.25);}
+.eq-rb-sm:hover{background:rgba(255,255,255,0.15);border-color:rgba(255,255,255,0.25);box-shadow:0 2px 10px rgba(0,0,0,0.25);}
 body.light-theme .eq-rb-sm{background:#f5f5f5;border:1.5px solid #e8e8e8;box-shadow:none;}
-body.light-theme .eq-rb-sm:hover{background:#ebebeb;border-color:#bbb;transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+body.light-theme .eq-rb-sm:hover{background:#ebebeb;border-color:#bbb;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 /* Edit mode bar */
 #eq-ribbon-edit{display:none;flex-direction:column;gap:6px;border-top:1px solid rgba(108,99,255,0.18);padding-top:8px;margin-top:2px;}
 #eq-ribbon-edit.active{display:flex;}
@@ -1977,6 +1977,8 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
       <button class="eq-rb" onclick="eqRibbonBtn('prod')" title="מכפלה"><span class="eq-rb-icon" data-katex="\prod_{i=1}^{n}"></span><span class="eq-rb-label">מכפלה</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('lim')" title="גבול"><span class="eq-rb-icon" data-katex="\lim_{x \to \infty}"></span><span class="eq-rb-label">גבול</span></button>
       <div class="eq-rb-divider"></div>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pi')"><span class="eq-rb-icon" data-katex="\pi"></span><span class="eq-rb-label">פאי</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('^{\\circ}')"><span class="eq-rb-icon" style="font-size:18px">°</span><span class="eq-rb-label">מעלות</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\infty')"><span class="eq-rb-icon" data-katex="\infty"></span><span class="eq-rb-label">אינסוף</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\neq')"><span class="eq-rb-icon" data-katex="\neq"></span><span class="eq-rb-label">שונה</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\leq')"><span class="eq-rb-icon" data-katex="\leq"></span><span class="eq-rb-label">קטן-שווה</span></button>
