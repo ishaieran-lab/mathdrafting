@@ -800,8 +800,9 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-tmpl-tab.active{background:var(--accent);color:white;border-color:var(--accent);}
 .eq-tmpl-grid>div{display:none;flex-wrap:wrap;gap:4px;}
 .eq-tmpl-grid>div.active{display:flex;}
-.eq-tb{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;font-family:'Times New Roman',serif;min-width:32px;text-align:center;line-height:1.3;transition:background 0.1s,border-color 0.1s;}
+.eq-tb{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;font-family:'Times New Roman',serif;min-width:32px;text-align:center;line-height:1.3;transition:background 0.1s,border-color 0.1s;box-sizing:border-box;flex-shrink:0;}
 .eq-tb:hover{border-color:var(--accent);background:rgba(108,99,255,0.09);}
+.eq-tmpl-grid>div{contain:layout;}
 .eq-fv{display:inline-flex;flex-direction:column;align-items:center;font-size:10px;line-height:1.2;vertical-align:middle;}
 .eq-fn{border-bottom:1px solid currentColor;padding:0 2px;}
 .eq-fd{padding:0 2px;}
@@ -2948,8 +2949,6 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
     <!-- Symbols -->
     <div id="peq-sym">
-      <button class="eq-tb" onclick="addLatexToCanvas('\\pi')">π</button>
-      <button class="eq-tb" onclick="addLatexToCanvas('^{\\circ}')">°</button>
       <button class="eq-tb" onclick="addLatexToCanvas('\\infty')">∞</button>
       <button class="eq-tb" onclick="addLatexToCanvas('\\neq')">≠</button>
       <button class="eq-tb" onclick="addLatexToCanvas('\\leq')">≤</button>
@@ -3463,6 +3462,8 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
         </div>
         <!-- Symbols -->
         <div id="tmpl-sym">
+          <button class="eq-tb" onclick="insertEqTmpl('\\pi ')">π</button>
+          <button class="eq-tb" onclick="insertEqTmpl('^{\\circ}')">°</button>
           <button class="eq-tb" onclick="insertEqTmpl('\\infty ')">∞</button>
           <button class="eq-tb" onclick="insertEqTmpl('\\neq ')">≠</button>
           <button class="eq-tb" onclick="insertEqTmpl('\\leq ')">≤</button>
