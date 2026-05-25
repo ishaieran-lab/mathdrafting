@@ -814,6 +814,19 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 #mq-cancel-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;flex-shrink:0;padding:4px;border-radius:5px;transition:color 0.12s;}
 #mq-cancel-btn:hover{color:#666;}
 .mq-placement-hint{position:fixed;z-index:1999;background:rgba(108,99,255,0.9);color:white;padding:6px 14px;border-radius:8px;font-size:13px;font-family:'Assistant',sans-serif;pointer-events:none;display:none;}
+/* ===== EQ TEMPLATE GALLERY PANEL ===== */
+#eq-gallery-panel{position:fixed;z-index:800;background:#1a1a2e;border:1px solid rgba(108,99,255,0.35);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.5);padding:12px;display:none;min-width:280px;}
+#eq-gallery-panel.open{display:block;animation:menuPop 0.15s cubic-bezier(.34,1.3,.64,1);}
+body.light-theme #eq-gallery-panel{background:#fff;border-color:rgba(108,99,255,0.3);box-shadow:0 8px 28px rgba(60,50,120,0.15);}
+.eq-gallery-title{font-size:11px;font-weight:700;color:rgba(180,170,255,0.6);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;font-family:'Assistant',sans-serif;}
+body.light-theme .eq-gallery-title{color:rgba(80,70,180,0.6);}
+.eq-gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.eq-gallery-item{display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px 8px;cursor:pointer;min-height:64px;transition:background 0.12s,border-color 0.12s;font-family:'Times New Roman',serif;font-size:18px;color:#e0e0f0;direction:ltr;}
+.eq-gallery-item:hover{background:rgba(108,99,255,0.18);border-color:rgba(108,99,255,0.5);color:#fff;}
+body.light-theme .eq-gallery-item{background:#f7f7fb;border-color:#e0e0ee;color:#1a1a2e;}
+body.light-theme .eq-gallery-item:hover{background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.4);}
+.eq-gallery-item .katex{font-size:1.1em;}
+
 /* ===== EQUATION RIBBON ===== */
 #eq-ribbon{display:none;background:#13131f;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 10px;flex-direction:row;align-items:stretch;gap:0;flex-shrink:0;position:relative;z-index:50;}
 #eq-ribbon.open{display:flex;}
@@ -1908,8 +1921,7 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <div id="eqr-struct" class="eqr-section active">
       <button class="eq-rb" onclick="eqRibbonBtn('txt')"><span class="eq-rb-icon" data-katex="\text{abc}"></span><span class="eq-rb-label">טקסט</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('frac')"><span class="eq-rb-icon" data-katex="\dfrac{a}{b}"></span><span class="eq-rb-label">שבר</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('sqrt')"><span class="eq-rb-icon" data-katex="\sqrt{x}"></span><span class="eq-rb-label">שורש</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('nsqrt')"><span class="eq-rb-icon" data-katex="\sqrt[n]{x}"></span><span class="eq-rb-label">שורש n</span></button>
+      <button class="eq-rb" onclick="openEqGallery('sqrt',this)" data-eq-gallery="sqrt"><span class="eq-rb-icon" data-katex="\sqrt{x}"></span><span class="eq-rb-label">שורש ▾</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('pow')"><span class="eq-rb-icon" data-katex="x^n"></span><span class="eq-rb-label">חזקה</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('int')"><span class="eq-rb-icon" data-katex="\int"></span><span class="eq-rb-label">אינטגרל</span></button>
       <button class="eq-rb" onclick="eqRibbonBtn('defint')"><span class="eq-rb-icon" data-katex="\int_a^b"></span><span class="eq-rb-label">א. מסוים</span></button>
@@ -10722,6 +10734,97 @@ function switchEqRTab(btn,tabId){
   btn.classList.add('active');
   document.getElementById(tabId).classList.add('active');
 }
+
+/* ===== EQUATION GALLERY PANEL ===== */
+const _EQ_GALLERIES = {
+  sqrt: {
+    label: 'בחר סוג שורש',
+    cols: 3,
+    items: [
+      { latex:'\\sqrt{x}',        action:()=>eqRibbonBtn('sqrt') },
+      { latex:'\\sqrt[2]{x}',     action:()=>eqRibbonBtn('nsqrt','2') },
+      { latex:'\\sqrt[3]{x}',     action:()=>eqRibbonBtn('nsqrt','3') },
+      { latex:'\\sqrt[n]{x}',     action:()=>eqRibbonBtn('nsqrt') },
+      { latex:'\\sqrt{a^2+b^2}',  action:()=>eqRibbonInsertReady('sqrt_pyth') },
+      { latex:'\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}', action:()=>eqRibbonInsertReady('quadratic') },
+    ]
+  }
+};
+
+let _eqGalleryOpen = null;
+
+function openEqGallery(type, triggerBtn){
+  const def = _EQ_GALLERIES[type];
+  if(!def) return;
+  const panel = document.getElementById('eq-gallery-panel');
+  const grid  = document.getElementById('eq-gallery-grid');
+  const label = document.getElementById('eq-gallery-label');
+
+  // Toggle off if same type already open
+  if(_eqGalleryOpen === type && panel.classList.contains('open')){
+    closeEqGallery(); return;
+  }
+  _eqGalleryOpen = type;
+  label.textContent = def.label;
+  grid.style.gridTemplateColumns = 'repeat('+(def.cols||3)+',1fr)';
+
+  // Build items
+  grid.innerHTML = '';
+  def.items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'eq-gallery-item';
+    btn.innerHTML = '<span data-katex="'+item.latex+'"></span>';
+    btn.onclick = ()=>{ closeEqGallery(); item.action(); };
+    grid.appendChild(btn);
+  });
+
+  panel.classList.add('open');
+
+  // Render KaTeX
+  grid.querySelectorAll('[data-katex]').forEach(el=>{
+    try{ katex.render(el.dataset.katex, el, {throwOnError:false, displayMode:false}); }catch(e){}
+  });
+
+  // Position below trigger button
+  requestAnimationFrame(()=>{
+    if(triggerBtn){
+      const r = triggerBtn.getBoundingClientRect();
+      let left = r.left - panel.offsetWidth/2 + r.width/2;
+      left = Math.max(4, Math.min(left, window.innerWidth - panel.offsetWidth - 4));
+      panel.style.top  = (r.bottom + 6) + 'px';
+      panel.style.left = left + 'px';
+    }
+  });
+}
+
+function closeEqGallery(){
+  _eqGalleryOpen = null;
+  document.getElementById('eq-gallery-panel').classList.remove('open');
+}
+
+function eqRibbonInsertReady(key){
+  // Insert a ready-made equation onto canvas
+  const templates = {
+    sqrt_pyth:  { type:'eq', raw:'\\sqrt{a^2+b^2}' },
+    quadratic:  { type:'eq', raw:'\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}' },
+  };
+  const t = templates[key];
+  if(!t) return;
+  // Use existing insert mechanism
+  if(typeof insertEquationRaw === 'function') insertEquationRaw(t.raw);
+  else eqRibbonInsert(t.raw);
+}
+
+// Close gallery on outside click
+document.addEventListener('mousedown', function(e){
+  const p = document.getElementById('eq-gallery-panel');
+  if(p && p.classList.contains('open') && !p.contains(e.target)){
+    const triggers = document.querySelectorAll('[data-eq-gallery]');
+    let onTrigger = false;
+    triggers.forEach(t=>{ if(t.contains(e.target)) onTrigger=true; });
+    if(!onTrigger) closeEqGallery();
+  }
+});
 function _eqFracInsertText(txt){
   if(!_eqFracActive)return;
   const {el,part}=_eqFracActive;
@@ -15591,6 +15694,12 @@ body>*:not(.canvas-area){display:none!important;}
     <input type="color" id="clr-custom-input" oninput="onCustomColor(this.value)" onchange="onCustomColor(this.value)">
     <span style="font-size:10px;color:var(--text2)">צבע מותאם</span>
   </div>
+</div>
+
+<!-- Equation template gallery panel -->
+<div id="eq-gallery-panel">
+  <div class="eq-gallery-title" id="eq-gallery-label">בחר תבנית</div>
+  <div class="eq-gallery-grid" id="eq-gallery-grid"></div>
 </div>
 
 <!-- Numbered lines panel — outside header so it works in New UI -->
