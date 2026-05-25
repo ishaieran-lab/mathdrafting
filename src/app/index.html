@@ -1904,42 +1904,45 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     <!-- Template sections -->
     <div style="flex:1;overflow-x:auto;overflow-y:hidden;display:flex;align-items:center;">
     <!-- Structures -->
+    <!-- מבנים -->
     <div id="eqr-struct" class="eqr-section active">
-      <button class="eq-rb" onclick="eqRibbonBtn('txt')" title="טקסט חופשי"><span class="eq-rb-icon" data-katex="\text{abc}"></span><span class="eq-rb-label">טקסט</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('frac')" title="שבר"><span class="eq-rb-icon" data-katex="\dfrac{a}{b}"></span><span class="eq-rb-label">שבר</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('sqrt')" title="שורש"><span class="eq-rb-icon" data-katex="\sqrt{x}"></span><span class="eq-rb-label">שורש</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('nsqrt')" title="שורש n"><span class="eq-rb-icon" data-katex="\sqrt[n]{x}"></span><span class="eq-rb-label">שורש n</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('pow')" title="חזקה"><span class="eq-rb-icon" data-katex="x^n"></span><span class="eq-rb-label">חזקה</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('int')" title="אינטגרל"><span class="eq-rb-icon" data-katex="\int"></span><span class="eq-rb-label">אינטגרל</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('defint')" title="אינטגרל מסוים"><span class="eq-rb-icon" data-katex="\int_a^b"></span><span class="eq-rb-label">א. מסוים</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('sum')" title="סכום"><span class="eq-rb-icon" data-katex="\sum_{i=1}^{n}"></span><span class="eq-rb-label">סכום</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('prod')" title="מכפלה"><span class="eq-rb-icon" data-katex="\prod_{i=1}^{n}"></span><span class="eq-rb-label">מכפלה</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('lim')" title="גבול"><span class="eq-rb-icon" data-katex="\lim_{x \to \infty}"></span><span class="eq-rb-label">גבול</span></button>
-      <div class="eq-rb-divider"></div>
+      <button class="eq-rb" onclick="eqRibbonBtn('txt')"><span class="eq-rb-icon" data-katex="\text{abc}"></span><span class="eq-rb-label">טקסט</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('frac')"><span class="eq-rb-icon" data-katex="\dfrac{a}{b}"></span><span class="eq-rb-label">שבר</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('sqrt')"><span class="eq-rb-icon" data-katex="\sqrt{x}"></span><span class="eq-rb-label">שורש</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('nsqrt')"><span class="eq-rb-icon" data-katex="\sqrt[n]{x}"></span><span class="eq-rb-label">שורש n</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('pow')"><span class="eq-rb-icon" data-katex="x^n"></span><span class="eq-rb-label">חזקה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('int')"><span class="eq-rb-icon" data-katex="\int"></span><span class="eq-rb-label">אינטגרל</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('defint')"><span class="eq-rb-icon" data-katex="\int_a^b"></span><span class="eq-rb-label">א. מסוים</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('sum')"><span class="eq-rb-icon" data-katex="\sum_{i=1}^{n}"></span><span class="eq-rb-label">סכום</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('prod')"><span class="eq-rb-icon" data-katex="\prod_{i=1}^{n}"></span><span class="eq-rb-label">מכפלה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('lim')"><span class="eq-rb-icon" data-katex="\lim_{x \to \infty}"></span><span class="eq-rb-label">גבול</span></button>
+    </div>
+    <!-- סמלים -->
+    <div id="eqr-symbols" class="eqr-section">
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pi')"><span class="eq-rb-icon" data-katex="\pi"></span><span class="eq-rb-label">פאי</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('^{\\circ}')"><span class="eq-rb-icon" style="font-size:18px">°</span><span class="eq-rb-label">מעלות</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\infty')"><span class="eq-rb-icon" data-katex="\infty"></span><span class="eq-rb-label">אינסוף</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\neq')"><span class="eq-rb-icon" data-katex="\neq"></span><span class="eq-rb-label">שונה</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\leq')"><span class="eq-rb-icon" data-katex="\leq"></span><span class="eq-rb-label">קטן-שווה</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\triangle')"><span class="eq-rb-icon" data-katex="\small\triangle"></span><span class="eq-rb-label">משולש</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\geq')"><span class="eq-rb-icon" data-katex="\geq"></span><span class="eq-rb-label">גדול-שווה</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pm')"><span class="eq-rb-icon" data-katex="\pm"></span><span class="eq-rb-label">פלוס-מינוס</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pm')"><span class="eq-rb-icon" data-katex="\pm"></span><span class="eq-rb-label">±</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\times')"><span class="eq-rb-icon" data-katex="\times"></span><span class="eq-rb-label">כפל</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cdot')"><span class="eq-rb-icon" data-katex="\cdot"></span><span class="eq-rb-label">כפל נקודה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cdot')"><span class="eq-rb-icon" data-katex="\cdot"></span><span class="eq-rb-label">נקודה</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\div')"><span class="eq-rb-icon" data-katex="\div"></span><span class="eq-rb-label">חילוק</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\neq')"><span class="eq-rb-icon" data-katex="\neq"></span><span class="eq-rb-label">שונה</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\approx')"><span class="eq-rb-icon" data-katex="\approx"></span><span class="eq-rb-label">בערך</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\leq')"><span class="eq-rb-icon" data-katex="\leq"></span><span class="eq-rb-label">≤</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\geq')"><span class="eq-rb-icon" data-katex="\geq"></span><span class="eq-rb-label">≥</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\triangle')"><span class="eq-rb-icon" data-katex="\small\triangle"></span><span class="eq-rb-label">משולש</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\in')"><span class="eq-rb-icon" data-katex="\in"></span><span class="eq-rb-label">שייך</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\notin')"><span class="eq-rb-icon" data-katex="\notin"></span><span class="eq-rb-label">לא שייך</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cap')"><span class="eq-rb-icon" data-katex="\cap"></span><span class="eq-rb-label">חיתוך</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\cup')"><span class="eq-rb-icon" data-katex="\cup"></span><span class="eq-rb-label">איחוד</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\emptyset')"><span class="eq-rb-icon" data-katex="\emptyset"></span><span class="eq-rb-label">קבוצה ריקה</span></button>
+      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\emptyset')"><span class="eq-rb-icon" data-katex="\emptyset"></span><span class="eq-rb-label">ריקה</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\to')"><span class="eq-rb-icon" data-katex="\to"></span><span class="eq-rb-label">חץ</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Rightarrow')"><span class="eq-rb-icon" data-katex="\Rightarrow"></span><span class="eq-rb-label">גורר</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Leftrightarrow')"><span class="eq-rb-icon" data-katex="\Leftrightarrow"></span><span class="eq-rb-label">שקילות</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\forall')"><span class="eq-rb-icon" data-katex="\forall"></span><span class="eq-rb-label">לכל</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\exists')"><span class="eq-rb-icon" data-katex="\exists"></span><span class="eq-rb-label">קיים</span></button>
     </div>
-    <!-- Greek -->
+    <!-- יוונית -->
     <div id="eqr-greek" class="eqr-section">
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\alpha')"><span class="eq-rb-icon" data-katex="\alpha"></span><span class="eq-rb-label">alpha</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\beta')"><span class="eq-rb-icon" data-katex="\beta"></span><span class="eq-rb-label">beta</span></button>
@@ -1973,8 +1976,9 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
     </div><!-- end flex:1 overflow -->
     <div class="eq-rtabs" style="flex-shrink:0">
-      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-lang-key="eqRibbonStruct">מבנים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-lang-key="eqRibbonGreek">יוונית</button>
+      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')">מבנים</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')">סמלים</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')">יוונית</button>
     </div>
   </div><!-- end main row -->
   <!-- Edit mode bar (appears when a template is selected) -->
