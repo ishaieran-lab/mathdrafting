@@ -10952,10 +10952,12 @@ function _placeEqMono(key){
     }
     deactivateEqBox(false);
   } else if(_eqMonoActive){
-    // Place after an active mono element
+    // Place after an active mono element — center on its midline
     const mel=_eqMonoActive.el;
+    const BFS=22,monoH=BFS*1.6;
+    const melMidY=mel.y+(mel.h||monoH)/2;
     px=mel.x+(mel.w||50)+8;
-    py=mel.y;
+    py=melMidY-monoH/2;
     deactivateEqMono();
   } else {
     // No active editor — place after selected eqfrac/eqmono if any
