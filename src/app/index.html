@@ -10957,7 +10957,7 @@ function _placeEqMono(key){
     const melMidY=mel.y+(mel.h||monoH)/2;
     px=mel.x+(mel.w||50)+8;
     // For pow: base is drawn at el.y+monoH*0.78 (alphabetic). Align that with melMidY+BFS*0.3
-    py=(key==='pow') ? melMidY+BFS*0.3-monoH*0.78 : melMidY-monoH/2;
+    py=(key==='pow') ? melMidY-monoH*0.78 : melMidY-monoH/2;
     deactivateEqMono();
   } else {
     // No active editor — place after selected eqfrac/eqmono if any
@@ -10966,7 +10966,7 @@ function _placeEqMono(key){
       const BFS=22,monoH=BFS*1.6;
       const fracLineY=sel.y+(sel.h||80)/2;
       px=sel.x+(sel.w||120)+16;
-      py=(key==='pow') ? fracLineY+BFS*0.3-monoH*0.78 : fracLineY-monoH/2;
+      py=(key==='pow') ? fracLineY-monoH*0.78 : fracLineY-monoH/2;
     } else if(sel&&sel.type==='eqmono'){
       px=sel.x+(sel.w||50)+8;
       py=sel.y;
