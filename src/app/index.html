@@ -10915,14 +10915,11 @@ function _placeEqMono(key){
   if(_eqFracActive){
     const pos=_getEqFracCursorPos();
     px=pos.x;
-    if(key==='pow'){
-      // Align pow baseline with fraction center line
+    {
       const fracEl=_eqFracActive.el;
-      const BFS=22,powH=BFS*1.6;
+      const BFS=22,monoH=BFS*1.6;
       const fracLineY=fracEl.y+(fracEl.h||80)/2;
-      py=fracLineY-powH*0.78;
-    } else {
-      py=pos.y;
+      py=fracLineY-monoH/2;
     }
     deactivateEqBox(false);
   } else if(_eqMonoActive){
@@ -10935,10 +10932,10 @@ function _placeEqMono(key){
     // No active editor — place after selected eqfrac/eqmono if any
     const sel=getSel();
     if(sel&&sel.type==='eqfrac'){
-      const BFS=22,powH=BFS*1.6;
+      const BFS=22,monoH=BFS*1.6;
       const fracLineY=sel.y+(sel.h||80)/2;
       px=sel.x+(sel.w||120)+16;
-      py=(key==='pow')?(fracLineY-powH*0.78):(sel.y+(sel.h||80)/2-11);
+      py=fracLineY-monoH/2;
     } else if(sel&&sel.type==='eqmono'){
       px=sel.x+(sel.w||50)+8;
       py=sel.y;
