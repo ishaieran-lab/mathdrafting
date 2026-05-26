@@ -14480,8 +14480,10 @@ function measureMathLine(str,fs){
       h=Math.max(h,fs*1.8);
       ctx.font=`${fs}px "Times New Roman",serif`;
     } else if(t.type==='sqrt'){
+      ctx.font=`${fs}px "Times New Roman",serif`;
+      const symW=ctx.measureText('√').width;
       const iw2=measureMathLine(t.inner,fs).w||ctx.measureText(t.inner).width;
-      w+=fs*0.45+iw2+4;
+      w+=symW+iw2+2;
     }
   });
   ctx.restore();
@@ -14564,23 +14566,23 @@ function drawMathLine(str,x,y,fs,color,fontFamily){
     } else if(t.type==='sqrt'){
       ctx.font=`${fs}px "Times New Roman",serif`;
       const iw=measureMathLine(t.inner,fs).w||ctx.measureText(t.inner).width;
-      const roofY=baseline-fs*0.52;
-      const signEndX=cx+fs*0.42;
-      const pad=4;
-      // Draw the √ sign + overline
-      ctx.save();
+      const symW=ctx.measureText('√').width;
+      const pad=2;
+      const innerX=cx+symW;
+      const roofY=baseline-fs*0.5;
+      // Draw √ symbol as text
+      ctx.fillStyle=color||'#111';
+      ctx.fillText('√',cx,baseline);
+      // Draw overline above inner content
       ctx.strokeStyle=color||'#111';
-      ctx.lineWidth=1.2;
-      ctx.lineJoin='round';
+      ctx.lineWidth=1;
       ctx.beginPath();
-      ctx.moveTo(cx,            baseline+fs*0.15);
-      ctx.lineTo(cx+fs*0.15,    baseline+fs*0.42);
-      ctx.lineTo(signEndX,      roofY);
-      ctx.lineTo(signEndX+iw+pad, roofY);
+      ctx.moveTo(innerX, roofY);
+      ctx.lineTo(innerX+iw+pad, roofY);
       ctx.stroke();
-      ctx.restore();
-      drawMathLine(t.inner, signEndX, baseline, fs, color, fontFamily);
-      cx += signEndX - cx + iw + pad;
+      // Draw inner content
+      drawMathLine(t.inner, innerX, baseline, fs, color, fontFamily);
+      cx+=symW+iw+pad;
     }
   });
   ctx.restore();
