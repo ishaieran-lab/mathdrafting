@@ -10453,20 +10453,20 @@ function drawEqMono(el){
     const expTw=ctx.measureText(expStr||'n').width;
     const expW=Math.max(expTw+6,14);
     el.w=baseW+expW; el.h=BFS*1.6;
-    const baselineY=el.y+el.h*0.78;
+    const baselineY=el.y+el.h*0.5;
     const expY=el.y+el.h*0.1;
     el._rects={
-      base:{x:el.x,y:el.y+el.h*0.3,w:baseW,h:el.h*0.7},
+      base:{x:el.x,y:el.y+el.h*0.2,w:baseW,h:el.h*0.6},
       exp:{x:el.x+baseW,y:el.y,w:expW,h:el.h*0.55},
     };
     // base
     const isFreshBase=isActBase&&_eqMonoFreshField;
     ctx.font=`${BFS}px "Times New Roman",serif`;
-    ctx.textBaseline='alphabetic';
-    if(isActBase&&baseStr){const tw=ctx.measureText(baseStr).width;ctx.fillStyle=isFreshBase?'rgba(108,99,255,0.35)':'rgba(108,99,255,0.18)';ctx.fillRect(el.x,baselineY-BFS*0.82,tw+4,BFS);}
+    ctx.textBaseline='middle';
+    if(isActBase&&baseStr){const tw=ctx.measureText(baseStr).width;ctx.fillStyle=isFreshBase?'rgba(108,99,255,0.35)':'rgba(108,99,255,0.18)';ctx.fillRect(el.x,baselineY-BFS*0.5,tw+4,BFS);}
     ctx.fillStyle=baseStr?'#111':'#aaa';
     ctx.fillText(baseStr||(isAct?'':'x'),el.x,baselineY);
-    if(isActBase&&!isFreshBase&&_eqFracBlink){const tw=ctx.measureText(baseStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(el.x+tw+2,baselineY-BFS*0.82,2,BFS);}
+    if(isActBase&&!isFreshBase&&_eqFracBlink){const tw=ctx.measureText(baseStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(el.x+tw+2,baselineY-BFS*0.5,2,BFS);}
     // exponent
     const isFreshExp=isActExp&&_eqMonoFreshField;
     ctx.font=`${EFS}px "Times New Roman",serif`;
@@ -10481,12 +10481,12 @@ function drawEqMono(el){
     const isActPost=isAct&&_eqMonoActive.field==='post';
     if(postStr||isActPost){
       ctx.font=`${BFS}px "Times New Roman",serif`;
-      ctx.textBaseline='alphabetic';
+      ctx.textBaseline='middle';
       const postX=el.x+el.w;
-      if(isActPost&&postStr){const tw=ctx.measureText(postStr).width;ctx.fillStyle='rgba(108,99,255,0.18)';ctx.fillRect(postX,baselineY-BFS*0.82,tw+4,BFS);}
+      if(isActPost&&postStr){const tw=ctx.measureText(postStr).width;ctx.fillStyle='rgba(108,99,255,0.18)';ctx.fillRect(postX,baselineY-BFS*0.5,tw+4,BFS);}
       ctx.fillStyle=postStr?'#111':'#aaa';
       ctx.fillText(postStr,postX,baselineY);
-      if(isActPost&&_eqFracBlink){const tw=ctx.measureText(postStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(postX+tw+2,baselineY-BFS*0.82,2,BFS);}
+      if(isActPost&&_eqFracBlink){const tw=ctx.measureText(postStr).width;ctx.fillStyle='#6c63ff';ctx.fillRect(postX+tw+2,baselineY-BFS*0.5,2,BFS);}
       el.w+=ctx.measureText(postStr).width+(isActPost?14:4);
     }
     ctx.restore();
@@ -10956,8 +10956,7 @@ function _placeEqMono(key){
     const BFS=22,monoH=BFS*1.6;
     const melMidY=mel.y+(mel.h||monoH)/2;
     px=mel.x+(mel.w||50)+8;
-    // For pow: base is drawn at el.y+monoH*0.78 (alphabetic). Align that with melMidY+BFS*0.3
-    py=(key==='pow') ? melMidY-monoH*0.78+BFS*0.5 : melMidY-monoH/2;
+    py=melMidY-monoH/2;
     deactivateEqMono();
   } else {
     // No active editor — place after selected eqfrac/eqmono if any
@@ -10966,7 +10965,7 @@ function _placeEqMono(key){
       const BFS=22,monoH=BFS*1.6;
       const fracLineY=sel.y+(sel.h||80)/2;
       px=sel.x+(sel.w||120)+16;
-      py=(key==='pow') ? fracLineY-monoH*0.78 : fracLineY-monoH/2;
+      py=fracLineY-monoH/2;
     } else if(sel&&sel.type==='eqmono'){
       px=sel.x+(sel.w||50)+8;
       py=sel.y;
