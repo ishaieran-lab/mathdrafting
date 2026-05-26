@@ -10507,7 +10507,9 @@ function drawEqMono(el){
   const midY=el.y+el.h/2;
   const isSqrt=(sym==='√'||sym==='ⁿ√');
   const _phld=el.template==='txt'?'abc':'□';
-  const displayVal=val||(isAct?'':_phld);
+  const isActVal=isAct&&_eqMonoActive.field==='val';
+  const isActPost=isAct&&_eqMonoActive.field==='post';
+  const displayVal=val||(isActVal?'':_phld);
   const valDisplayW=ctx.measureText(displayVal).width;
 
   if(isSqrt){
@@ -10542,22 +10544,38 @@ function drawEqMono(el){
     if(sym)ctx.fillText(sym,el.x,midY);
   }
 
-  if(isAct&&val){
+  // Highlight val field
+  if(isActVal&&val){
     const tw=ctx.measureText(val).width;
     ctx.fillStyle='rgba(108,99,255,0.18)';
     ctx.fillRect(el.x+symW,el.y+2,tw+4,el.h-4);
   }
   ctx.fillStyle=val?(el.color||'#111'):'#aaa';
   ctx.fillText(displayVal,el.x+symW,midY);
-  if(isAct&&_eqFracBlink){
+  // Cursor in val field
+  if(isActVal&&_eqFracBlink){
     const tw=ctx.measureText(val).width;
     ctx.fillStyle='#6c63ff';
     ctx.fillRect(el.x+symW+tw+2,el.y+3,2,el.h-6);
   }
+  // Draw post (after sqrt, no overline)
+  const postStr=el.post||'';
+  const postX=el.x+symW+valDisplayW+6;
+  if(postStr||isActPost){
+    ctx.fillStyle=postStr?(el.color||'#111'):'#aaa';
+    ctx.fillText(postStr,postX,midY);
+  }
+  if(isActPost&&_eqFracBlink){
+    const tw=ctx.measureText(postStr).width;
+    ctx.fillStyle='#6c63ff';
+    ctx.fillRect(postX+tw+2,el.y+3,2,el.h-6);
+  }
+  const postW=postStr?ctx.measureText(postStr).width+4:isActPost?14:0;
+  el.w=symW+valDisplayW+6+postW;
   if(suf){
-    const tw=ctx.measureText(val||'x').width;
-    ctx.fillStyle='#111';
-    ctx.fillText(suf,el.x+symW+Math.max(tw,12)+4,midY);
+    ctx.fillStyle=el.color||'#111';
+    ctx.fillText(suf,el.x+el.w,midY);
+    el.w+=ctx.measureText(suf).width+2;
   }
   ctx.restore();
 }
@@ -10586,8 +10604,19 @@ document.addEventListener('keydown',function eqMonoKeyHandler(e){
     }
     return;
   }
-  // Single-field
-  if(e.key==='Enter'||e.key==='Escape'){deactivateEqMono();return;}
+  // Single-field (sqrt/nsqrt support post field after first Enter)
+  const isSqrtEl=(el.sym==='√'||el.sym==='ⁿ√');
+  if(e.key==='Escape'){deactivateEqMono();return;}
+  if(e.key==='Enter'){
+    if(isSqrtEl&&field==='val'){activateEqMono(el,'post');return;}
+    deactivateEqMono();return;
+  }
+  if(field==='post'){
+    if(e.key==='Backspace'){el.post=(el.post||'').slice(0,-1);redraw();return;}
+    if(e.key==='Delete'){el.post='';redraw();return;}
+    if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){el.post=(el.post||'')+e.key;redraw();return;}
+    return;
+  }
   if(e.key==='Backspace'){el.val=(el.val||'').slice(0,-1);redraw();return;}
   if(e.key==='Delete'){el.val='';redraw();return;}
   if(e.key.length===1&&!e.ctrlKey&&!e.metaKey){el.val=(el.val||'')+e.key;redraw();return;}
