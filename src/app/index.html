@@ -10505,16 +10505,30 @@ function drawEqMono(el){
   el.w=symW+valW+sufW; el.h=FS*1.6;
   el._rect={x:el.x+symW,y:el.y,w:valW,h:el.h};
   const midY=el.y+el.h/2;
-  ctx.fillStyle='#111';
+  ctx.fillStyle=el.color||'#111';
   if(sym)ctx.fillText(sym,el.x,midY);
   if(isAct&&val){
     const tw=ctx.measureText(val).width;
     ctx.fillStyle='rgba(108,99,255,0.18)';
     ctx.fillRect(el.x+symW,el.y+2,tw+4,el.h-4);
   }
-  ctx.fillStyle=val?'#111':'#aaa';
+  ctx.fillStyle=val?(el.color||'#111'):'#aaa';
   const _phld=el.template==='txt'?'abc':'□';
   ctx.fillText(val||(isAct?'':_phld),el.x+symW,midY);
+  // Draw overline above val for sqrt/nsqrt
+  if(sym==='√'||sym==='ⁿ√'){
+    const displayVal=val||(isAct?'':_phld);
+    const valDisplayW=ctx.measureText(displayVal).width;
+    const roofY=el.y+el.h*0.12;
+    ctx.save();
+    ctx.strokeStyle=el.color||'#111';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(el.x+symW, roofY);
+    ctx.lineTo(el.x+symW+valDisplayW+4, roofY);
+    ctx.stroke();
+    ctx.restore();
+  }
   if(isAct&&_eqFracBlink){
     const tw=ctx.measureText(val).width;
     ctx.fillStyle='#6c63ff';
@@ -14574,14 +14588,12 @@ function drawMathLine(str,x,y,fs,color,fontFamily){
       ctx.fillStyle=color||'#111';
       ctx.fillText('√',cx,baseline);
       // Draw overline above inner content
-      ctx.save();
-      ctx.strokeStyle='red';
-      ctx.lineWidth=3;
+      ctx.strokeStyle=color||'#111';
+      ctx.lineWidth=1;
       ctx.beginPath();
       ctx.moveTo(innerX, roofY);
       ctx.lineTo(innerX+iw+pad, roofY);
       ctx.stroke();
-      ctx.restore();
       // Draw inner content
       drawMathLine(t.inner, innerX, baseline, fs, color, fontFamily);
       cx+=symW+iw+pad;
