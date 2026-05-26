@@ -5242,9 +5242,18 @@ function drawEqFrac(el){
   ctx.fillText(nDispStr,fracX+fracW/2,el.y+BH/2);
   if(isAct('n')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+fracW/2+nTw/2+2,el.y+4,2,BH-8);}
 
-  // --- Fraction bar ---
+  // --- Fraction bar (extend to cover grouped elements in numerator/denominator) ---
+  let barRightX=fracX+fracW+4;
+  if(el.groupId){
+    els.forEach(e=>{
+      if(e!==el&&e.groupId===el.groupId){
+        const eRight=e.x+(e.w||50)+6;
+        if(eRight>barRightX)barRightX=eRight;
+      }
+    });
+  }
   ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.setLineDash([]);
-  ctx.beginPath();ctx.moveTo(fracX-4,lineY);ctx.lineTo(fracX+fracW+4,lineY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(fracX-4,lineY);ctx.lineTo(barRightX,lineY);ctx.stroke();
 
   // --- Denominator ---
   const dy=lineY+GAP;
