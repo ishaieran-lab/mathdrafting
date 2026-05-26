@@ -12364,6 +12364,14 @@ function zoomIn(){setCanvasZoom(canvasZoom+0.1);}
 function zoomOut(){setCanvasZoom(canvasZoom-0.1);}
 function zoomReset(){setCanvasZoom(1);}
 
+// Ctrl+wheel zoom
+document.addEventListener('wheel',function(e){
+  if(!e.ctrlKey)return;
+  e.preventDefault();
+  const delta=e.deltaY>0?-0.1:0.1;
+  setCanvasZoom(canvasZoom+delta);
+},{passive:false});
+
 // ===== STRAIGHTLINE POINTS =====
 let slAddingPoint=false;
 let slAddingElId=null;
