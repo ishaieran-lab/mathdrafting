@@ -11011,7 +11011,7 @@ function eqRibbonBtn(key){
       const monoMidY=mel.y+(mel.h||35)/2;
       const fracLineY=BH+GAP; // fraction's line y relative to its own top
       const fy=monoMidY-fracLineY;
-      const fx=mel.x+(mel.w||50)+16;
+      const fx=mel.x+(mel.w||50)+6;
       deactivateEqMono();
       const newEl={type:'eqfrac',x:fx,y:fy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1,groupId:_eqGroupId};
       addEl(newEl);
@@ -11026,7 +11026,7 @@ function eqRibbonBtn(key){
       const fracH=80,BH=34,GAP=6;
       const monoMidY=_selEl.y+(_selEl.h||35)/2;
       const fy=monoMidY-(BH+GAP);
-      const fx=_selEl.x+(_selEl.w||50)+16;
+      const fx=_selEl.x+(_selEl.w||50)+6;
       const newEl={type:'eqfrac',x:fx,y:fy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1,groupId:_eqGroupId};
       addEl(newEl);
       const placed=els.find(e=>e.id===selId);
