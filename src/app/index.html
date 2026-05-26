@@ -14574,12 +14574,14 @@ function drawMathLine(str,x,y,fs,color,fontFamily){
       ctx.fillStyle=color||'#111';
       ctx.fillText('√',cx,baseline);
       // Draw overline above inner content
-      ctx.strokeStyle=color||'#111';
-      ctx.lineWidth=1;
+      ctx.save();
+      ctx.strokeStyle='red';
+      ctx.lineWidth=3;
       ctx.beginPath();
       ctx.moveTo(innerX, roofY);
       ctx.lineTo(innerX+iw+pad, roofY);
       ctx.stroke();
+      ctx.restore();
       // Draw inner content
       drawMathLine(t.inner, innerX, baseline, fs, color, fontFamily);
       cx+=symW+iw+pad;
