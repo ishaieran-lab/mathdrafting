@@ -14563,21 +14563,21 @@ function drawMathLine(str,x,y,fs,color,fontFamily){
       }
     } else if(t.type==='sqrt'){
       ctx.font=`${fs}px "Times New Roman",serif`;
-      // Measure the actual rendered width of inner content (may contain math)
       const iw=measureMathLine(t.inner,fs).w||ctx.measureText(t.inner).width;
-      // Draw sqrt symbol
-      ctx.strokeStyle=color||'#111';ctx.lineWidth=1;
-      const h2=fs*0.7;
-      const pad=4;
+      ctx.strokeStyle=color||'#111';ctx.lineWidth=1.2;
+      const roofY=baseline-fs*0.52;   // top of the overline
+      const tickX=cx+fs*0.15;          // bottom of left tick
+      const signEndX=cx+fs*0.42;       // where the diagonal ends = start of inner content
+      const pad=3;
+      const totalW=signEndX-cx+iw+pad;
       ctx.beginPath();
-      ctx.moveTo(cx,baseline+h2*0.3);
-      ctx.lineTo(cx+fs*0.25,baseline+h2*0.6);
-      ctx.lineTo(cx+fs*0.45,baseline-h2*0.6);
-      ctx.lineTo(cx+fs*0.45+iw+pad,baseline-h2*0.6);
+      ctx.moveTo(cx,           baseline+fs*0.18);   // bottom-left of tick
+      ctx.lineTo(tickX,        baseline+fs*0.42);   // lowest point
+      ctx.lineTo(signEndX,     roofY);               // diagonal up
+      ctx.lineTo(signEndX+iw+pad, roofY);            // overline to the right
       ctx.stroke();
-      // Draw inner content (supports nested math)
-      drawMathLine(t.inner,cx+fs*0.45,baseline,fs,color,fontFamily);
-      cx+=fs*0.45+iw+pad;
+      drawMathLine(t.inner,signEndX,baseline,fs,color,fontFamily);
+      cx+=totalW;
     }
   });
   ctx.restore();
