@@ -10505,30 +10505,50 @@ function drawEqMono(el){
   el.w=symW+valW+sufW; el.h=FS*1.6;
   el._rect={x:el.x+symW,y:el.y,w:valW,h:el.h};
   const midY=el.y+el.h/2;
-  ctx.fillStyle=el.color||'#111';
-  if(sym)ctx.fillText(sym,el.x,midY);
+  const isSqrt=(sym==='√'||sym==='ⁿ√');
+  const _phld=el.template==='txt'?'abc':'□';
+  const displayVal=val||(isAct?'':_phld);
+  const valDisplayW=ctx.measureText(displayVal).width;
+
+  if(isSqrt){
+    // Draw entire radical as one connected path: tick + diagonal + overline
+    const clr=el.color||'#111';
+    const roofY=el.y+el.h*0.1;
+    const innerX=el.x+symW;
+    ctx.save();
+    ctx.strokeStyle=clr;
+    ctx.lineWidth=1.2;
+    ctx.lineJoin='miter';
+    ctx.beginPath();
+    ctx.moveTo(el.x,              midY+FS*0.05);        // start left
+    ctx.lineTo(el.x+symW*0.3,    midY+FS*0.42);        // bottom tick
+    ctx.lineTo(innerX,            roofY);                // diagonal up to roof start
+    ctx.lineTo(innerX+valDisplayW+4, roofY);            // overline to the right
+    ctx.stroke();
+    ctx.restore();
+    // Draw nsqrt index (ⁿ) as small text above left
+    if(sym==='ⁿ√'){
+      ctx.save();
+      ctx.font=`${Math.round(FS*0.55)}px "Times New Roman",serif`;
+      ctx.fillStyle=clr;
+      ctx.textBaseline='alphabetic';
+      ctx.fillText('n',el.x,el.y+el.h*0.25);
+      ctx.restore();
+      ctx.font=`${FS}px "Times New Roman",serif`;
+      ctx.textBaseline='middle';
+    }
+  } else {
+    ctx.fillStyle=el.color||'#111';
+    if(sym)ctx.fillText(sym,el.x,midY);
+  }
+
   if(isAct&&val){
     const tw=ctx.measureText(val).width;
     ctx.fillStyle='rgba(108,99,255,0.18)';
     ctx.fillRect(el.x+symW,el.y+2,tw+4,el.h-4);
   }
   ctx.fillStyle=val?(el.color||'#111'):'#aaa';
-  const _phld=el.template==='txt'?'abc':'□';
-  ctx.fillText(val||(isAct?'':_phld),el.x+symW,midY);
-  // Draw overline above val for sqrt/nsqrt
-  if(sym==='√'||sym==='ⁿ√'){
-    const displayVal=val||(isAct?'':_phld);
-    const valDisplayW=ctx.measureText(displayVal).width;
-    const roofY=el.y+el.h*0.12;
-    ctx.save();
-    ctx.strokeStyle=el.color||'#111';
-    ctx.lineWidth=1;
-    ctx.beginPath();
-    ctx.moveTo(el.x+symW, roofY);
-    ctx.lineTo(el.x+symW+valDisplayW+4, roofY);
-    ctx.stroke();
-    ctx.restore();
-  }
+  ctx.fillText(displayVal,el.x+symW,midY);
   if(isAct&&_eqFracBlink){
     const tw=ctx.measureText(val).width;
     ctx.fillStyle='#6c63ff';
