@@ -3606,6 +3606,7 @@ let fillLayerData=null; // persisted flood fill pixels
 let fillOffscreen=null; // offscreen canvas for flood fills
 let dragging=false,resizing=false,drawing=false;
 let dox=0,doy=0,dsx=0,dsy=0,drawSx=0,drawSy=0,rHandle=null;
+let _eqGrpResizing=false,_eqGrpResizeCorner=null,_eqGrpResizeBBox=null,_eqGrpResizeGroupId=null;
 let currentLang='he';
 let clipboard=[]; // copied elements
 let pasteCount=0; // how many times pasted (for offset)
@@ -5176,7 +5177,8 @@ function drawEqBlock(el){
 // ===== EQFRAC — inline fraction editor =====
 function drawEqFrac(el){
   const isAct=p=>_eqFracActive&&_eqFracActive.el===el&&_eqFracActive.part===p;
-  const FS=22, BH=34, GAP=6;
+  const sc=el.scale||1;
+  const FS=Math.round(22*sc), BH=Math.round(34*sc), GAP=Math.round(6*sc);
   const lineY=el.y+BH+GAP; // y of fraction bar
   const totalH=BH*2+GAP*2;
   el.h=totalH;
@@ -6075,9 +6077,34 @@ function drawPtsAngles(pts, el){
 let rotating=false; // are we currently rotating an element?
 let _3dRotDragging=false,_3dRotStartX=0,_3dRotStartY=0,_3dRotStartTheta=0,_3dRotStartPhi=0;
 
+function _getGroupBBox(groupId){
+  const members=els.filter(e=>e.groupId===groupId);
+  if(!members.length)return null;
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  members.forEach(e=>{minX=Math.min(minX,e.x);minY=Math.min(minY,e.y);maxX=Math.max(maxX,e.x+(e.w||60));maxY=Math.max(maxY,e.y+(e.h||40));});
+  return{minX,minY,maxX,maxY,w:maxX-minX,h:maxY-minY};
+}
+
 function drawHandles(el){
   if(!el)return;
-  if(el.type==='eqfrac'||el.type==='eqmono')return;
+  if(el.type==='eqfrac'||el.type==='eqmono'){
+    if(!el.groupId)return;
+    const bb=_getGroupBBox(el.groupId);
+    if(!bb)return;
+    const pad=10;
+    const bx=bb.minX-pad,by=bb.minY-pad,bw=bb.w+pad*2,bh=bb.h+pad*2;
+    ctx.save();
+    ctx.strokeStyle='rgba(108,99,255,0.8)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+    ctx.strokeRect(bx,by,bw,bh);
+    ctx.setLineDash([]);
+    // 4 corner handles
+    [[bx,by],[bx+bw,by],[bx+bw,by+bh],[bx,by+bh]].forEach(([hx,hy])=>{
+      ctx.fillStyle='white';ctx.fillRect(hx-5,hy-5,10,10);
+      ctx.strokeStyle='rgba(60,100,200,0.85)';ctx.lineWidth=1.5;ctx.strokeRect(hx-5,hy-5,10,10);
+    });
+    ctx.restore();
+    return;
+  }
 
   // POINT EDIT MODE — for triangle only
   if(editingPoints && el.pts && el.type==='triangle'){
@@ -6844,6 +6871,29 @@ cv.addEventListener('mousedown',e=>{
 
   // ===== SELECT mode (א) =====
   if(tool==='select'){
+    // Check eq-group resize handles
+    {
+      const s=getSel();
+      if(s&&(s.type==='eqfrac'||s.type==='eqmono')&&s.groupId){
+        const bb=_getGroupBBox(s.groupId);
+        if(bb){
+          const pad=10;
+          const bx=bb.minX-pad,by=bb.minY-pad,bw=bb.w+pad*2,bh=bb.h+pad*2;
+          const corners=[[bx,by,'nw'],[bx+bw,by,'ne'],[bx+bw,by+bh,'se'],[bx,by+bh,'sw']];
+          for(const[hx,hy,name]of corners){
+            if(Math.abs(mx-hx)<=8&&Math.abs(my-hy)<=8){
+              saveHistory();
+              _eqGrpResizing=true;_eqGrpResizeCorner=name;
+              _eqGrpResizeBBox={bx,by,bw,bh,minX:bb.minX,minY:bb.minY};
+              _eqGrpResizeGroupId=s.groupId;
+              // Save base positions and scales for proportional scaling
+              els.filter(e=>e.groupId===s.groupId).forEach(e=>{e._resizeBaseX=e.x;e._resizeBaseY=e.y;e._resizeBaseScale=e.scale||1;});
+              return;
+            }
+          }
+        }
+      }
+    }
     // if clicking on a selected single element handle
     const s=getSel();
     if(s&&multiSel.length===0){
@@ -7257,6 +7307,31 @@ cv.addEventListener('mousemove',e=>{
     redraw();return;
   }
 
+  if(_eqGrpResizing&&_eqGrpResizeGroupId){
+    const members=els.filter(e=>e.groupId===_eqGrpResizeGroupId);
+    const bb=_eqGrpResizeBBox;
+    const corner=_eqGrpResizeCorner;
+    // Compute scale from how far the mouse moved
+    let scaleX=1,scaleY=1;
+    if(corner==='se'){scaleX=(mx-bb.minX)/(bb.bw);scaleY=(my-bb.minY)/(bb.bh);}
+    else if(corner==='sw'){scaleX=(bb.minX+bb.bw-mx)/(bb.bw);scaleY=(my-bb.minY)/(bb.bh);}
+    else if(corner==='ne'){scaleX=(mx-bb.minX)/(bb.bw);scaleY=(bb.minY+bb.bh-my)/(bb.bh);}
+    else if(corner==='nw'){scaleX=(bb.minX+bb.bw-mx)/(bb.bw);scaleY=(bb.minY+bb.bh-my)/(bb.bh);}
+    const sc=Math.max(0.3,Math.min(4,(scaleX+scaleY)/2));
+    // Determine anchor point (opposite corner)
+    const ancX=(corner==='nw'||corner==='sw')?bb.minX+bb.bw:bb.minX;
+    const ancY=(corner==='nw'||corner==='ne')?bb.minY+bb.bh:bb.minY;
+    // Apply to each member relative to anchor
+    const baseScale=members[0]._resizeBaseScale||1;
+    members.forEach(e=>{
+      const relX=(e._resizeBaseX||e.x)-ancX;
+      const relY=(e._resizeBaseY||e.y)-ancY;
+      e.x=ancX+relX*sc;e.y=ancY+relY*sc;
+      e.scale=(e._resizeBaseScale||1)*sc;
+    });
+    redraw();return;
+  }
+
   if(dragging){const s=getSel();if(!s)return;
     const newX=snap(mx-dox), newY=snap(my-doy);
     const dx=newX-s.x, dy=newY-s.y;
@@ -7426,6 +7501,10 @@ cv.addEventListener('mousemove',e=>{
 
 cv.addEventListener('mouseup',e=>{
   const{x:mx,y:my}=cvPos(e);
+  if(_eqGrpResizing){
+    _eqGrpResizing=false;_eqGrpResizeCorner=null;_eqGrpResizeBBox=null;_eqGrpResizeGroupId=null;
+    redraw();return;
+  }
 
   // End equation drag selection
   if(eqCursor&&eqCursor._dragging){
@@ -10467,7 +10546,8 @@ function drawEqMono(el){
 
   // ── POW template: base^exp with two editable fields ──
   if(el.template==='pow'){
-    const BFS=22, EFS=15;
+    const sc=el.scale||1;
+    const BFS=Math.round(22*sc), EFS=Math.round(15*sc);
     const baseStr=el.base!==undefined?el.base:'x';
     const expStr=el.exp!==undefined?el.exp:'n';
     const isActBase=isAct&&_eqMonoActive.field==='base';
@@ -10520,7 +10600,7 @@ function drawEqMono(el){
   }
 
   // ── Single-field template ──
-  const FS=22;
+  const FS=Math.round(22*(el.scale||1));
   ctx.font=`${FS}px "Times New Roman",serif`;
   ctx.textBaseline='middle';
   const sym=el.sym||'', val=el.val||'', suf=el.suf||'';
