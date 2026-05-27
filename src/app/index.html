@@ -5240,14 +5240,16 @@ function drawEqFrac(el){
   // --- Numerator ---
   const nf=`${FS-2}px "Times New Roman",serif`;
   ctx.font=nf;ctx.textAlign='center';
-  const nDispStr=nStr||'a';
+  const nDispStr=nStr||(isAct('n')?'':'a');
   const nTw=ctx.measureText(nDispStr).width;
-  if(isAct('n')){
+  if(isAct('n')&&nStr){
     ctx.fillStyle='rgba(108,99,255,0.22)';
     ctx.fillRect(fracX+nW/2-nTw/2-3,el.y+4,nTw+6,BH-8);
   }
-  ctx.fillStyle=nStr?'#111':'#aaa';
-  ctx.fillText(nDispStr,fracX+nW/2,el.y+BH/2);
+  if(nDispStr){
+    ctx.fillStyle=nStr?'#111':'#aaa';
+    ctx.fillText(nDispStr,fracX+nW/2,el.y+BH/2);
+  }
   if(isAct('n')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+nW/2+nTw/2+2,el.y+4,2,BH-8);}
 
   // --- Fraction bar ---
@@ -5256,14 +5258,16 @@ function drawEqFrac(el){
 
   // --- Denominator ---
   const dy=lineY+GAP;
-  const dDispStr=dStr||'b';
+  const dDispStr=dStr||(isAct('d')?'':'b');
   const dTw=ctx.measureText(dDispStr).width;
-  if(isAct('d')){
+  if(isAct('d')&&dStr){
     ctx.fillStyle='rgba(108,99,255,0.22)';
     ctx.fillRect(fracX+dW/2-dTw/2-3,dy+4,dTw+6,BH-8);
   }
-  ctx.fillStyle=dStr?'#111':'#aaa';
-  ctx.fillText(dDispStr,fracX+dW/2,dy+BH/2);
+  if(dDispStr){
+    ctx.fillStyle=dStr?'#111':'#aaa';
+    ctx.fillText(dDispStr,fracX+dW/2,dy+BH/2);
+  }
   if(isAct('d')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+dW/2+dTw/2+2,dy+4,2,BH-8);}
 
   // --- Post text ---
