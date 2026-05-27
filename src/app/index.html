@@ -5196,18 +5196,27 @@ function drawEqFrac(el){
   const dStr=el.dVal!==undefined?el.dVal:'b';
   const nW=Math.max(44,ctx.measureText(nStr||'a').width+18);
   const dW=Math.max(44,ctx.measureText(dStr||'b').width+18);
-  const fracW=Math.max(nW,dW);
-
-  // X positions
+  // fracW for each row independently — denom never shifts numerator
   const fracX=el.x+(preW>0?preW+8:0);
-  const postX=fracX+fracW+8;
-  el.w=(preW>0?preW+8:0)+fracW+8+(postW>0?postW:8);
+  // bar extends to cover grouped elements
+  let barRightX=fracX+Math.max(nW,dW)+4;
+  if(el.groupId){
+    els.forEach(e=>{
+      if(e!==el&&e.groupId===el.groupId){
+        const eRight=e.x+(e.w||50)+6;
+        if(eRight>barRightX)barRightX=eRight;
+      }
+    });
+  }
+  const barW=barRightX-fracX;
+  const postX=barRightX+8;
+  el.w=(preW>0?preW+8:0)+barW+8+(postW>0?postW:8);
 
   // Store click-detection rects (used in mousedown)
   el._rects={
     pre:{x:el.x,          y:el.y,         w:Math.max(preW+10,20), h:totalH},
-    n:  {x:fracX,         y:el.y,         w:fracW,                h:BH},
-    d:  {x:fracX,         y:lineY+GAP,    w:fracW,                h:BH},
+    n:  {x:fracX,         y:el.y,         w:nW,                   h:BH},
+    d:  {x:fracX,         y:lineY+GAP,    w:dW,                   h:BH},
     post:{x:postX,        y:el.y,         w:Math.max(postW+20,24),h:totalH},
   };
 
@@ -5234,24 +5243,14 @@ function drawEqFrac(el){
   const nDispStr=nStr||'a';
   const nTw=ctx.measureText(nDispStr).width;
   if(isAct('n')){
-    // highlight behind the letter
     ctx.fillStyle='rgba(108,99,255,0.22)';
-    ctx.fillRect(fracX+fracW/2-nTw/2-3,el.y+4,nTw+6,BH-8);
+    ctx.fillRect(fracX+nW/2-nTw/2-3,el.y+4,nTw+6,BH-8);
   }
   ctx.fillStyle=nStr?'#111':'#aaa';
-  ctx.fillText(nDispStr,fracX+fracW/2,el.y+BH/2);
-  if(isAct('n')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+fracW/2+nTw/2+2,el.y+4,2,BH-8);}
+  ctx.fillText(nDispStr,fracX+nW/2,el.y+BH/2);
+  if(isAct('n')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+nW/2+nTw/2+2,el.y+4,2,BH-8);}
 
-  // --- Fraction bar (extend to cover grouped elements in numerator/denominator) ---
-  let barRightX=fracX+fracW+4;
-  if(el.groupId){
-    els.forEach(e=>{
-      if(e!==el&&e.groupId===el.groupId){
-        const eRight=e.x+(e.w||50)+6;
-        if(eRight>barRightX)barRightX=eRight;
-      }
-    });
-  }
+  // --- Fraction bar ---
   ctx.strokeStyle='#111';ctx.lineWidth=2;ctx.setLineDash([]);
   ctx.beginPath();ctx.moveTo(fracX-4,lineY);ctx.lineTo(barRightX,lineY);ctx.stroke();
 
@@ -5261,11 +5260,11 @@ function drawEqFrac(el){
   const dTw=ctx.measureText(dDispStr).width;
   if(isAct('d')){
     ctx.fillStyle='rgba(108,99,255,0.22)';
-    ctx.fillRect(fracX+fracW/2-dTw/2-3,dy+4,dTw+6,BH-8);
+    ctx.fillRect(fracX+dW/2-dTw/2-3,dy+4,dTw+6,BH-8);
   }
   ctx.fillStyle=dStr?'#111':'#aaa';
-  ctx.fillText(dDispStr,fracX+fracW/2,dy+BH/2);
-  if(isAct('d')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+fracW/2+dTw/2+2,dy+4,2,BH-8);}
+  ctx.fillText(dDispStr,fracX+dW/2,dy+BH/2);
+  if(isAct('d')&&_eqFracBlink){ctx.fillStyle='#6c63ff';ctx.fillRect(fracX+dW/2+dTw/2+2,dy+4,2,BH-8);}
 
   // --- Post text ---
   if(postStr||isAct('post')){
