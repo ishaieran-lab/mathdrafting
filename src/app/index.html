@@ -5202,9 +5202,12 @@ function drawEqFrac(el){
   let barRightX=fracX+Math.max(nW,dW)+4;
   if(el.groupId){
     els.forEach(e=>{
-      if(e!==el&&e.groupId===el.groupId){
-        const eRight=e.x+(e.w||50)+6;
-        if(eRight>barRightX)barRightX=eRight;
+      if(e!==el&&e.groupId===el.groupId&&e.type==='eqmono'){
+        const eMidY=e.y+(e.h||35)/2;
+        if(eMidY>el.y-10&&eMidY<el.y+totalH+10){
+          const eRight=e.x+(e.w||50)+6;
+          if(eRight>barRightX)barRightX=eRight;
+        }
       }
     });
   }
