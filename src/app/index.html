@@ -5236,7 +5236,7 @@ function drawEqFrac(el){
     ctx.font=`${FS}px "Times New Roman",serif`;
     ctx.textAlign='left';
     ctx.fillStyle='#111';
-    ctx.fillText(preStr,el.x,lineY);
+    ctx.fillText(preStr.replace(/-/g,'−'),el.x,lineY);
     if(isAct('pre')&&_eqFracBlink) drawCursor(el.x,lineY,preStr,`${FS}px "Times New Roman",serif`,lineY);
   }
 
@@ -5278,7 +5278,7 @@ function drawEqFrac(el){
     ctx.font=`${FS}px "Times New Roman",serif`;
     ctx.textAlign='left';
     ctx.fillStyle='#111';
-    ctx.fillText(postStr,postX,lineY);
+    ctx.fillText(postStr.replace(/-/g,'−'),postX,lineY);
     if(isAct('post')&&_eqFracBlink) drawCursor(postX,lineY,postStr,`${FS}px "Times New Roman",serif`,lineY);
   }
 
