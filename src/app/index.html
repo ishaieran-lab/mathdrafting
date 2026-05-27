@@ -11031,8 +11031,8 @@ function eqRibbonBtn(key){
       if(!_eqGroupId){_eqGroupId='g'+Date.now();el.groupId=_eqGroupId;}
       const cursorPos=_getEqFracCursorPos();
       const fracH=80,BH=34,GAP=6;
-      const areaCenterY=(part==='d') ? el.y+60 : el.y+20;
-      const newFy=areaCenterY-(BH+GAP); // align new frac's line with area center
+      const areaCenterY=(part==='d') ? el.y+60 : (part==='post') ? el.y+40 : el.y+20;
+      const newFy=areaCenterY-(BH+GAP);
       deactivateEqBox();
       const newEl={type:'eqfrac',x:cursorPos.x,y:newFy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:el.color||'#111',fill:'none',sw:1,groupId:_eqGroupId};
       addEl(newEl);
