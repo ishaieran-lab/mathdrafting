@@ -11033,8 +11033,9 @@ function eqRibbonBtn(key){
       const fracH=80,BH=34,GAP=6;
       const areaCenterY=(part==='d') ? el.y+60 : (part==='post') ? el.y+40 : el.y+20;
       const newFy=areaCenterY-(BH+GAP);
+      const newFx=cursorPos.x+(part==='post'?12:0);
       deactivateEqBox();
-      const newEl={type:'eqfrac',x:cursorPos.x,y:newFy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:el.color||'#111',fill:'none',sw:1,groupId:_eqGroupId};
+      const newEl={type:'eqfrac',x:newFx,y:newFy,w:120,h:fracH,pre:'',nVal:'a',dVal:'b',post:'',color:el.color||'#111',fill:'none',sw:1,groupId:_eqGroupId};
       addEl(newEl);
       const placed=els.find(e=>e.id===selId);
       if(placed)activateEqBox(placed,'n');
