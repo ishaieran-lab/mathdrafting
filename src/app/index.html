@@ -10421,6 +10421,17 @@ function activateEqMono(el,field){
   redraw();
 }
 
+// If el is grouped with a frac and is in the numerator area, go to denominator
+function _deactivateMonoOrGoDenom(el){
+  if(el&&el.groupId){
+    const frac=els.find(e=>e.type==='eqfrac'&&e.groupId===el.groupId);
+    if(frac){
+      const lineY=frac.y+40;
+      if((el.y+(el.h||35)/2)<lineY){deactivateEqMono();activateEqBox(frac,'d');return;}
+    }
+  }
+  deactivateEqMono();
+}
 function deactivateEqMono(){
   if(!_eqMonoActive)return;
   if(_eqFracBlinkTimer){clearInterval(_eqFracBlinkTimer);_eqFracBlinkTimer=null;}
@@ -10602,7 +10613,7 @@ document.addEventListener('keydown',function eqMonoKeyHandler(e){
       _eqMonoFreshField=false;
       if(field==='base')activateEqMono(el,'exp');
       else if(field==='exp')activateEqMono(el,'post');
-      else deactivateEqMono();
+      else{_deactivateMonoOrGoDenom(el);return;}
       return;
     }
     if(e.key==='Backspace'){_eqMonoFreshField=false;setV(getV().slice(0,-1));redraw();return;}
@@ -10618,7 +10629,7 @@ document.addEventListener('keydown',function eqMonoKeyHandler(e){
   if(e.key==='Escape'){deactivateEqMono();return;}
   if(e.key==='Enter'){
     if(isSqrtEl&&field==='val'){activateEqMono(el,'post');return;}
-    deactivateEqMono();return;
+    _deactivateMonoOrGoDenom(el);return;
   }
   if(field==='post'){
     if(e.key==='Backspace'){el.post=(el.post||'').slice(0,-1);redraw();return;}
