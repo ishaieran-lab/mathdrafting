@@ -10674,8 +10674,12 @@ document.addEventListener('keydown',function eqFracKeyHandler(e){
     if(part==='pre')return el.pre||'';
     return el.post||'';
   };
-  // Enter: finish editing from any field
-  if(e.key==='Enter'){deactivateEqBox(false);return;}
+  // Enter: from numerator → move to denominator; from denominator → finish
+  if(e.key==='Enter'){
+    if(part==='n')activateEqBox(el,'d');
+    else deactivateEqBox(false);
+    return;
+  }
   // Tab: cycle pre→n→d→post
   if(e.key==='Tab'){
     const order=['pre','n','d','post'];
