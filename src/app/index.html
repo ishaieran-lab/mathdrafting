@@ -10630,6 +10630,16 @@ function drawEqMono(el){
     const clr=el.color||'#111';
     const roofY=el.y+el.h*0.1;
     const innerX=el.x+symW;
+    // Extend overline to cover any grouped elements (e.g. pow added inside sqrt)
+    let overlineRight=innerX+valDisplayW+4;
+    if(el.groupId){
+      els.forEach(e=>{
+        if(e!==el&&e.groupId===el.groupId&&e.type==='eqmono'){
+          const eRight=e.x+(e.w||50)+4;
+          if(eRight>overlineRight)overlineRight=eRight;
+        }
+      });
+    }
     ctx.save();
     ctx.strokeStyle=clr;
     ctx.lineWidth=1.2;
@@ -10638,7 +10648,7 @@ function drawEqMono(el){
     ctx.moveTo(el.x,              midY+FS*0.05);        // start left
     ctx.lineTo(el.x+symW*0.3,    midY+FS*0.42);        // bottom tick
     ctx.lineTo(innerX,            roofY);                // diagonal up to roof start
-    ctx.lineTo(innerX+valDisplayW+4, roofY);            // overline to the right
+    ctx.lineTo(overlineRight,     roofY);                // overline to the right
     ctx.stroke();
     ctx.restore();
     // Draw nsqrt index (ⁿ) as small text above left
@@ -11100,7 +11110,8 @@ function _placeEqMono(key){
     const tmpl=EQMONO_TEMPLATES[key];if(!tmpl)return;
     newEl={type:'eqmono',x:px,y:py,sym:tmpl.sym,val:'',suf:tmpl.suf,color:'#111',fill:'none',sw:1};
   }
-  if(_eqGroupId)newEl.groupId=_eqGroupId;
+  if(!_eqGroupId)_eqGroupId='g'+Date.now();
+  newEl.groupId=_eqGroupId;
   addEl(newEl);
   const placed=els.find(e=>e.id===selId);
   if(!placed)return;
