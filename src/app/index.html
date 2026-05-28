@@ -454,14 +454,14 @@ body.light-theme #tfb-list-drop button.tfb-drop-on{background:rgba(108,99,255,0.
 .props-section{padding:6px 8px;border-bottom:1px solid rgba(108,99,255,0.08);}
 .props-section-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;margin-bottom:10px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .pg{
-  margin-bottom:0;padding:8px 12px;
+  margin-bottom:0;padding:10px 10px 8px;
   background:transparent;
   border:none;
-  border-bottom:1px solid #2a2a2a;
+  border-bottom:1px solid #1c1c1c;
   border-radius:0;
 }
 .pg:last-child{border-bottom:none;}
-.pl{font-size:11px;color:#999;margin-bottom:4px;display:block;font-weight:400;letter-spacing:0;}
+.pl{font-size:10px;color:#666;margin-bottom:6px;display:block;font-weight:600;letter-spacing:0.3px;}
 .pi{
   width:100%;
   background:#2c2c2c;
@@ -1350,6 +1350,66 @@ body.light-theme .nui-tbtn { color: #666; }
 body.light-theme .nui-tbtn:hover { background: rgba(0,0,0,0.06); color: #111; }
 body.light-theme .nui-tbtn.active { background: rgba(0,0,0,0.09); color: #111; }
 body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111; }
+
+/* ===== FIGMA-STYLE DESIGN PANEL ===== */
+.fp-tabs{display:flex;border-bottom:1px solid #1e1e1e;flex-shrink:0;}
+.fp-tab{flex:1;padding:10px 0 8px;font-size:11px;font-weight:500;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:#555;cursor:pointer;letter-spacing:0.3px;transition:color 0.15s,border-color 0.15s;}
+.fp-tab:hover{color:#999;}
+.fp-tab.active{color:#e0e0e0;border-bottom-color:var(--accent);}
+body.light-theme .fp-tab{color:#aaa;}
+body.light-theme .fp-tab:hover{color:#666;}
+body.light-theme .fp-tab.active{color:#1a1a2e;border-bottom-color:var(--accent);}
+
+#sel-props{overflow-y:auto;overflow-x:hidden;flex:1;padding:0;}
+#sel-props::-webkit-scrollbar{width:3px;}
+#sel-props::-webkit-scrollbar-track{background:transparent;}
+#sel-props::-webkit-scrollbar-thumb{background:#2e2e2e;border-radius:2px;}
+
+.fp-section{padding:10px 10px 8px;border-bottom:1px solid #1c1c1c;}
+.fp-sec-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.fp-sec-title{font-size:10px;font-weight:600;color:#666;letter-spacing:0.5px;text-transform:uppercase;}
+
+.fp-row{display:flex;gap:5px;margin-bottom:5px;align-items:center;}
+.fp-row:last-child{margin-bottom:0;}
+
+.fp-field{display:flex;align-items:center;flex:1;background:#242424;border:1px solid #333;border-radius:2px;height:26px;padding:0 6px;gap:4px;min-width:0;transition:border-color 0.12s;}
+.fp-field:focus-within{border-color:#585858;}
+.fp-field-lbl{font-size:9px;color:#555;width:10px;flex-shrink:0;font-family:monospace;text-align:center;}
+.fp-field input{flex:1;background:transparent;border:none;outline:none;color:#d8d8d8;font-size:11px;font-family:'Assistant',sans-serif;min-width:0;width:0;text-align:right;}
+.fp-field input::-webkit-inner-spin-button,.fp-field input::-webkit-outer-spin-button{display:none;}
+.fp-field input[type=number]{-moz-appearance:textfield;}
+
+.fp-btn{height:26px;min-width:26px;background:#242424;border:1px solid #333;border-radius:2px;color:#595959;font-size:11px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0 4px;transition:background 0.1s,color 0.1s,border-color 0.1s;}
+.fp-btn:hover{background:#2e2e2e;color:#aaa;border-color:#444;}
+.fp-btn.fp-active{background:rgba(108,99,255,0.22);border-color:rgba(108,99,255,0.6);color:var(--accent);}
+
+.fp-color-row{display:flex;align-items:center;gap:7px;height:28px;background:#242424;border:1px solid #333;border-radius:2px;padding:0 7px;cursor:pointer;margin-bottom:5px;transition:border-color 0.12s;}
+.fp-color-row:hover{border-color:#505050;}
+.fp-color-row:last-child{margin-bottom:0;}
+.fp-swatch{width:16px;height:16px;border-radius:2px;border:1px solid rgba(255,255,255,0.1);flex-shrink:0;}
+.fp-color-lbl{flex:1;font-size:11px;color:#888;}
+.fp-color-pct{font-size:10px;color:#555;min-width:24px;text-align:left;}
+
+.fp-sec-btn{height:20px;min-width:20px;background:transparent;border:1px solid #333;border-radius:2px;color:#555;font-size:11px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0 4px;transition:color 0.1s,border-color 0.1s;line-height:1;}
+.fp-sec-btn:hover{color:#aaa;border-color:#505050;}
+.fp-sec-btn.fp-active{color:var(--accent);border-color:rgba(108,99,255,0.5);}
+
+.fp-proto{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#3a3a3a;font-size:11px;text-align:center;padding:24px 16px;line-height:1.7;}
+.fp-proto.visible{display:flex;}
+
+body.light-theme .fp-section{border-bottom-color:#ebebeb;}
+body.light-theme .fp-field{background:#f4f4f4;border-color:#ddd;}
+body.light-theme .fp-field:focus-within{border-color:#aaa;}
+body.light-theme .fp-field-lbl{color:#ccc;}
+body.light-theme .fp-field input{color:#1a1a1a;}
+body.light-theme .fp-btn{background:#f4f4f4;border-color:#ddd;color:#bbb;}
+body.light-theme .fp-btn:hover{background:#eaeaea;color:#555;border-color:#bbb;}
+body.light-theme .fp-color-row{background:#f4f4f4;border-color:#ddd;}
+body.light-theme .fp-color-lbl{color:#666;}
+body.light-theme .fp-sec-title{color:#bbb;}
+body.light-theme .fp-sec-btn{border-color:#ddd;color:#bbb;}
+body.light-theme .fp-sec-btn:hover{color:#555;border-color:#aaa;}
+body.light-theme .fp-swatch{border-color:rgba(0,0,0,0.15);}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -2091,35 +2151,39 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
   <!-- PROPS PANEL -->
   <div class="props" id="props-panel">
     <div class="props-resize-handle" id="props-resize-handle"></div>
-    <div class="props-title">מאפיינים</div>
+    <div class="fp-tabs" dir="ltr">
+      <button class="fp-tab active" id="fp-tab-design" onclick="switchPropTab('design')">עיצוב</button>
+      <button class="fp-tab" id="fp-tab-proto" onclick="switchPropTab('proto')">מצגת</button>
+    </div>
+    <div class="fp-proto" id="fp-proto">
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="24" height="24" rx="3"/><path d="M12 10l8 5-8 5V10z" fill="currentColor" stroke="none"/></svg>
+      <div>אינטראקציות ואנימציות<br><span style="color:#333">בקרוב</span></div>
+    </div>
     <div class="no-sel" id="no-sel">הוסף אלמנט לדף כדי לערוך</div>
     <div id="sel-props" style="display:none">
-      <div class="pg pg-sm">
-        <div style="display:flex;gap:10px;align-items:center">
-          <div style="flex:1">
-            <label class="pl" data-key="pos" style="font-size:10px;margin-bottom:2px">מיקום X, Y</label>
-            <div class="pr">
-              <input class="pi pi-sm" type="number" id="pX" oninput="upd('x',this.value)" placeholder="X">
-              <input class="pi pi-sm" type="number" id="pY" oninput="upd('y',this.value)" placeholder="Y">
-            </div>
-          </div>
-          <div style="flex:1">
-            <label class="pl" data-key="size" style="font-size:10px;margin-bottom:2px">גודל W, H</label>
-            <div class="pr">
-              <input class="pi pi-sm" type="number" id="pW" oninput="upd('w',this.value)" placeholder="W">
-              <input class="pi pi-sm" type="number" id="pH" oninput="upd('h',this.value)" placeholder="H">
-            </div>
-          </div>
+      <div class="fp-section">
+        <div class="fp-row">
+          <div class="fp-field"><span class="fp-field-lbl">X</span><input type="number" id="pX" oninput="upd('x',this.value)" placeholder="0"></div>
+          <div class="fp-field"><span class="fp-field-lbl">Y</span><input type="number" id="pY" oninput="upd('y',this.value)" placeholder="0"></div>
         </div>
-      </div>
-      <!-- ROTATION -->
-      <div class="pg">
-        <label class="pl" data-key="rotation">סיבוב (°)</label>
-        <div class="rot-wrap">
-          <input type="range" min="0" max="360" value="0" id="pRotSlider" oninput="updRot(this.value)">
-          <span class="rot-val" id="pRotVal">0°</span>
+        <div class="fp-row">
+          <div class="fp-field"><span class="fp-field-lbl">W</span><input type="number" id="pW" oninput="upd('w',this.value)" placeholder="0"></div>
+          <div class="fp-field"><span class="fp-field-lbl">H</span><input type="number" id="pH" oninput="upd('h',this.value)" placeholder="0"></div>
         </div>
-        <input class="pi" type="number" id="pRot" min="0" max="360" oninput="updRot(this.value)" style="margin-top:4px">
+        <div class="fp-row">
+          <div class="fp-field" style="flex:0 0 calc(50% - 3px)">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.3" style="color:#555;flex-shrink:0"><path d="M2 9 A6 6 0 0 1 9 2" stroke-linecap="round"/><polyline points="7,0.5 9,2 7.5,4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input type="number" id="pRot" min="0" max="360" oninput="updRot(this.value)" placeholder="0">
+          </div>
+          <button class="fp-btn" onclick="flipEl('h')" title="היפוך אופקי">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="6.5" y1="1" x2="6.5" y2="12"/><polyline points="3.5,3.5 1,6.5 3.5,9.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9.5,3.5 12,6.5 9.5,9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="fp-btn" onclick="flipEl('v')" title="היפוך אנכי">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="1" y1="6.5" x2="12" y2="6.5"/><polyline points="3.5,3.5 6.5,1 9.5,3.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.5,9.5 6.5,12 9.5,9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <input type="range" min="0" max="360" value="0" id="pRotSlider" oninput="updRot(this.value)" style="display:none">
+        <span id="pRotVal" style="display:none">0°</span>
       </div>
       <!-- ANGLES — for shapes -->
       <div class="pg" id="pg-angles" style="display:none">
@@ -2248,25 +2312,32 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
           </div>
         </div>
       </div>
-      <div class="pg" id="pg-stroke-dash">
-        <label class="pl" data-key="stroke">עובי קו</label>
-        <input class="pi" type="number" id="pSW" min="0.5" max="10" step="0.5" oninput="upd('sw',this.value)">
-        <div class="flip-row" style="margin-top:6px">
-          <button class="flip-btn" id="btn-dash-solid" data-lang-key="pgSolid" onclick="setElDash(false)" style="flex:1;font-size:11px;letter-spacing:1px">—— רציף</button>
-          <button class="flip-btn" id="btn-dash-dashed" data-lang-key="pgDashed" onclick="setElDash(true)" style="flex:1;font-size:11px;letter-spacing:1px">- - מקווקו</button>
+      <div class="fp-section" id="pg-stroke-dash">
+        <div class="fp-sec-hdr">
+          <span class="fp-sec-title" data-key="stroke">קו</span>
+          <div style="display:flex;gap:4px">
+            <button class="fp-sec-btn" id="btn-dash-solid" data-lang-key="pgSolid" onclick="setElDash(false)" title="רציף" style="letter-spacing:2px;font-size:9px">——</button>
+            <button class="fp-sec-btn" id="btn-dash-dashed" data-lang-key="pgDashed" onclick="setElDash(true)" title="מקווקו" style="letter-spacing:1px;font-size:9px">- -</button>
+          </div>
+        </div>
+        <div class="fp-row">
+          <div class="fp-field">
+            <svg width="11" height="3" viewBox="0 0 11 3" style="flex-shrink:0"><rect x="0" y="0.5" width="11" height="2" rx="1" fill="#555"/></svg>
+            <input type="number" id="pSW" min="0.5" max="10" step="0.5" oninput="upd('sw',this.value)" placeholder="1">
+          </div>
         </div>
       </div>
-      <div class="pg" id="pg-color-btns">
-        <label class="pl" data-lang-key="pgColor">צבע</label>
-        <div class="color-btn-pair">
-          <button class="color-btn" id="btn-stroke-clr" onclick="openColorPicker('color',event)">
-            <span class="color-dot" id="dot-stroke"></span>
-            <span data-lang-key="pgLine">קו</span>
-          </button>
-          <button class="color-btn" id="btn-fill-clr" onclick="openColorPicker('fill',event)">
-            <span class="color-dot" id="dot-fill"></span>
-            <span data-lang-key="pgFill">מילוי</span>
-          </button>
+      <div class="fp-section" id="pg-color-btns">
+        <div class="fp-sec-hdr">
+          <span class="fp-sec-title" data-lang-key="pgColor">צבע</span>
+        </div>
+        <div class="fp-color-row" id="btn-fill-clr" onclick="openColorPicker('fill',event)">
+          <span class="fp-swatch" id="dot-fill"></span>
+          <span class="fp-color-lbl" data-lang-key="pgFill">מילוי</span>
+        </div>
+        <div class="fp-color-row" id="btn-stroke-clr" onclick="openColorPicker('color',event)">
+          <span class="fp-swatch" id="dot-stroke"></span>
+          <span class="fp-color-lbl" data-lang-key="pgLine">קו</span>
         </div>
       </div>
       <div class="pg" id="pg-font" style="display:none">
@@ -10082,12 +10153,28 @@ function buildSw(cid,colors,prop){
   });
 }
 
+function switchPropTab(tab){
+  document.querySelectorAll('.fp-tab').forEach(t=>t.classList.toggle('active',t.id==='fp-tab-'+tab));
+  const isProto=tab==='proto';
+  const proto=document.getElementById('fp-proto');
+  if(proto)proto.classList.toggle('visible',isProto);
+  if(isProto){
+    document.getElementById('no-sel').style.display='none';
+    document.getElementById('sel-props').style.display='none';
+  }else{
+    const s=getSel();
+    document.getElementById('no-sel').style.display=s?'none':'flex';
+    document.getElementById('sel-props').style.display=s?'block':'none';
+  }
+}
 function updProps(){
   const s=getSel();
   const panel=document.getElementById('props-panel');
   if(panel)panel.classList.toggle('visible',!!s);
   document.getElementById('no-sel').style.display=s?'none':'flex';
   document.getElementById('sel-props').style.display=s?'block':'none';
+  const isProto=document.getElementById('fp-tab-proto')?.classList.contains('active');
+  if(isProto){document.getElementById('no-sel').style.display='none';document.getElementById('sel-props').style.display='none';}
   // Close color picker when selection changes
   const cp=document.getElementById('clr-picker');if(cp)cp.style.display='none';
   const zoomBar=document.getElementById('graph-zoom-bar');
