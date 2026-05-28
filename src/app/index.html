@@ -6593,7 +6593,7 @@ cv.addEventListener('mousedown',e=>{
     const cmd=_mfPendingCmd;_mfPendingCmd=null;cv.style.cursor='';
     document.getElementById('mq-hint').style.display='none';
     if(cmd==='__eqfrac__'){
-      const newEl={type:'eqfrac',x:mx,y:my,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1};
+      const newEl={type:'eqfrac',x:mx,y:my,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1,groupId:'g'+Date.now()};
       addEl(newEl);
       const placed=els.find(e=>e.id===selId);
       if(placed)activateEqBox(placed,'n');
@@ -11180,8 +11180,8 @@ function eqRibbonBtn(key){
       if(placed)activateEqBox(placed,'n');
       return;
     }
-    _eqGroupId=null;
-    const newEl={type:'eqfrac',x:80,y:60,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1};
+    _eqGroupId='g'+Date.now();
+    const newEl={type:'eqfrac',x:80,y:60,w:120,h:80,pre:'',nVal:'a',dVal:'b',post:'',color:'#111',fill:'none',sw:1,groupId:_eqGroupId};
     addEl(newEl);const placed=els.find(e=>e.id===selId);
     if(placed)activateEqBox(placed,'n');
     return;
