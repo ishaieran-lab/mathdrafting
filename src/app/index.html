@@ -11059,8 +11059,8 @@ function _placeEqMono(key){
       const fracEl=_eqFracActive.el;
       const BFS=22,monoH=BFS*1.6;
       const part=_eqFracActive.part;
-      // numerator center: el.y+20, denominator center: el.y+60
-      const areaCenterY=(part==='d') ? fracEl.y+60 : fracEl.y+20;
+      // numerator center: el.y+20, fraction line: el.y+40, denominator center: el.y+60
+      const areaCenterY=(part==='d') ? fracEl.y+60 : (part==='post'||part==='pre') ? fracEl.y+40 : fracEl.y+20;
       py=areaCenterY-monoH/2;
     }
     deactivateEqBox(false);
