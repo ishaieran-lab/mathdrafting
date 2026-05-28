@@ -11162,7 +11162,13 @@ function eqRibbonBtn(key){
   }
   if(key==='pow'||key==='sqrt'||key==='nsqrt'){
     if(_eqFracActive){
-      if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqFracActive.el.groupId=_eqGroupId;}
+      const _activePart=_eqFracActive.part;
+      // Only group with fraction if editing numerator or denominator, not post/pre
+      if(_activePart!=='post'&&_activePart!=='pre'){
+        if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqFracActive.el.groupId=_eqGroupId;}
+      } else {
+        _eqGroupId='g'+Date.now(); // new group, not shared with fraction
+      }
     } else if(_eqMonoActive){
       if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqMonoActive.el.groupId=_eqGroupId;}
     } else {
