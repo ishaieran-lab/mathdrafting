@@ -10690,7 +10690,11 @@ function drawEqMono(el){
   }
   // Draw post (after sqrt, no overline)
   const postStr=el.post||'';
-  const postX=el.x+symW+valDisplayW+6;
+  let postX=el.x+symW+valDisplayW+6;
+  // If grouped elements exist (e.g. pow inside sqrt), post cursor appears after them
+  if(el.groupId){
+    els.forEach(e=>{if(e!==el&&e.groupId===el.groupId&&e.type==='eqmono'){const r=e.x+(e.w||50)+6;if(r>postX)postX=r;}});
+  }
   if(postStr||isActPost){
     ctx.fillStyle=postStr?(el.color||'#111'):'#aaa';
     ctx.fillText(postStr,postX,midY);
