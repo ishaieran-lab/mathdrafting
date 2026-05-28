@@ -5246,7 +5246,7 @@ function drawEqFrac(el){
   // --- Numerator ---
   const nf=`${FS-2}px "Times New Roman",serif`;
   ctx.font=nf;ctx.textAlign='center';
-  const nDispStr=nStr||(isAct('n')?'':'a');
+  const nDispStr=nStr||'';
   const nTw=ctx.measureText(nDispStr).width;
   if(isAct('n')&&nStr){
     ctx.fillStyle='rgba(108,99,255,0.22)';
@@ -5264,7 +5264,7 @@ function drawEqFrac(el){
 
   // --- Denominator ---
   const dy=lineY+GAP;
-  const dDispStr=dStr||(isAct('d')?'':'b');
+  const dDispStr=dStr||'';
   const dTw=ctx.measureText(dDispStr).width;
   if(isAct('d')&&dStr){
     ctx.fillStyle='rgba(108,99,255,0.22)';
