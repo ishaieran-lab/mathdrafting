@@ -1988,9 +1988,9 @@ body.light-theme .nui-select { background: #fff; border-color: #ccc; color: #111
     </div>
     </div><!-- end flex:1 overflow -->
     <div class="eq-rtabs" style="flex-shrink:0">
-      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')">מבנים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')">סמלים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')">יוונית</button>
+      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-lang-key="eqRibbonStruct">מבנים</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')" data-lang-key="eqRibbonSymbols">סמלים</button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-lang-key="eqRibbonGreek">יוונית</button>
     </div>
   </div><!-- end main row -->
   <!-- Edit mode bar (appears when a template is selected) -->
@@ -15063,7 +15063,7 @@ var LANGS = {
       pgTextRight:'ימין ≡', pgTextCenter:'מרכז ≡', pgTextLeft:'≡ שמאל',
       pgTextEdit:'✏️ ערוך טקסט',
       // eq ribbon tabs
-      eqRibbonStruct:'מבנים', eqRibbonGreek:'יוונית',
+      eqRibbonStruct:'מבנים', eqRibbonSymbols:'סמלים', eqRibbonGreek:'יוונית',
       // eq popup tabs
       eqTabStruct:'מבנים', eqTabCalc:'חשבון', eqTabGreek:'יוונית', eqTabSym:'סמלים',
       // stats preview
@@ -15298,7 +15298,7 @@ var LANGS = {
       pgTextRight:'Right ≡', pgTextCenter:'Center ≡', pgTextLeft:'≡ Left',
       pgTextEdit:'✏️ Edit text',
       // eq ribbon tabs
-      eqRibbonStruct:'Structures', eqRibbonGreek:'Greek',
+      eqRibbonStruct:'Structures', eqRibbonSymbols:'Symbols', eqRibbonGreek:'Greek',
       // eq popup tabs
       eqTabStruct:'Structures', eqTabCalc:'Arithmetic', eqTabGreek:'Greek', eqTabSym:'Symbols',
       // stats preview
