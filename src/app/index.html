@@ -3595,6 +3595,35 @@ function _updUndoButtons(){
   if(nr) nr.disabled=!_redoStack.length;
 }
 
+// ===== AUTO-SAVE / AUTO-LOAD =====
+const _STORAGE_KEY='mathdrafting-autosave-v1';
+function _autoSave(){
+  try{
+    pages[activePage].els=els;
+    const data={pages:JSON.parse(JSON.stringify(pages)),activePage,nid};
+    localStorage.setItem(_STORAGE_KEY,JSON.stringify(data));
+  }catch(e){}
+}
+let _autoSaveTimer=null;
+function _scheduleSave(){
+  clearTimeout(_autoSaveTimer);
+  _autoSaveTimer=setTimeout(_autoSave,800);
+}
+function _autoLoad(){
+  try{
+    const raw=localStorage.getItem(_STORAGE_KEY);
+    if(!raw)return false;
+    const data=JSON.parse(raw);
+    if(!data||!data.pages||!data.pages.length)return false;
+    pages.length=0;data.pages.forEach(p=>pages.push(p));
+    activePage=data.activePage||0;
+    if(activePage>=pages.length)activePage=0;
+    els=pages[activePage].els;
+    nid=data.nid||1;
+    return true;
+  }catch(e){return false;}
+}
+
 // ===== PAGES =====
 let pages=[{id:1,name:'דף 1',els:[]}];
 let activePage=0;
@@ -4199,6 +4228,7 @@ function redraw() {
     ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.stroke();
     ctx.restore();
   }
+  _scheduleSave();
 }
 
 function drawGraphAxisIntersections(){
@@ -8186,7 +8216,7 @@ function buildILineList(el){
   });
 }
 
-function clearAll(){if(!confirm('למחוק הכל?'))return;saveHistory();els.length=0;selId=null;multiSel=[];editingPoints=false;dragPointIdx=-1;fillLayerData=null;fillOffscreen=null;updProps();redraw();}
+function clearAll(){if(!confirm('למחוק הכל?'))return;saveHistory();els.length=0;selId=null;multiSel=[];editingPoints=false;dragPointIdx=-1;fillLayerData=null;fillOffscreen=null;try{localStorage.removeItem(_STORAGE_KEY);}catch(e){}updProps();redraw();}
 
 // ===== PAGE MANAGEMENT =====
 function renderPageTabs(){
@@ -15881,6 +15911,9 @@ function setLang(lang) {
   },true);
   document.addEventListener('mousedown',hide,true);
 })();
+
+// Auto-load saved state on startup
+if(_autoLoad()){renderPageTabs();}
 
 redraw();
 
