@@ -7564,6 +7564,12 @@ cv.addEventListener('mouseup',e=>{
         return ex>=x1&&ey>=y1&&ex+ew<=x2&&ey+eh<=y2;
       }).map(el=>el.id);
       if(multiSel.length===1){selId=multiSel[0];multiSel=[];}
+      // If all selected share the same groupId, treat as single group selection
+      else if(multiSel.length>1){
+        const selEls=multiSel.map(id=>els.find(e=>e.id===id)).filter(Boolean);
+        const gids=new Set(selEls.map(e=>e.groupId).filter(Boolean));
+        if(gids.size===1&&selEls.every(e=>e.groupId)){selId=multiSel[0];multiSel=[];}
+      }
     }
     updProps();redraw();return;
   }
