@@ -10513,9 +10513,16 @@ function activateEqMono(el,field){
   redraw();
 }
 
-// If el is grouped with a frac and is in the numerator area, go to denominator
+// If el is grouped with a sqrt → go to sqrt's post field; with frac numerator → go to denom
 function _deactivateMonoOrGoDenom(el){
   if(el&&el.groupId){
+    // If el is pow/txt grouped with a sqrt — move to sqrt's post field
+    const isPow=el.template==='pow';
+    if(isPow){
+      const sqrtEl=els.find(e=>e!==el&&e.groupId===el.groupId&&e.type==='eqmono'&&(e.sym==='√'||e.sym==='ⁿ√'));
+      if(sqrtEl){deactivateEqMono();activateEqMono(sqrtEl,'post');return;}
+    }
+    // Check if grouped with a frac and in numerator area → go to denominator
     const frac=els.find(e=>e.type==='eqfrac'&&e.groupId===el.groupId);
     if(frac){
       const lineY=frac.y+40;
