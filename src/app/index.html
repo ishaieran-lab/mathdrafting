@@ -5206,7 +5206,8 @@ function drawEqFrac(el){
     els.forEach(e=>{
       if(e!==el&&e.groupId===el.groupId&&e.type==='eqmono'){
         const eMidY=e.y+(e.h||35)/2;
-        if(eMidY>el.y-10&&eMidY<el.y+totalH+10){
+        // Only extend bar for elements whose center is in the numerator area (above fraction line)
+        if(eMidY<lineY){
           const eRight=e.x+(e.w||50)+6;
           if(eRight>barRightX)barRightX=eRight;
         }
@@ -11168,13 +11169,9 @@ function eqRibbonBtn(key){
   }
   if(key==='pow'||key==='sqrt'||key==='nsqrt'){
     if(_eqFracActive){
-      const _activePart=_eqFracActive.part;
-      // Only group with fraction if editing numerator or denominator, not post/pre
-      if(_activePart!=='post'&&_activePart!=='pre'){
-        if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqFracActive.el.groupId=_eqGroupId;}
-      } else {
-        _eqGroupId='g'+Date.now(); // new group, not shared with fraction
-      }
+      // Always join the fraction's group — post field elements belong to same expression
+      if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqFracActive.el.groupId=_eqGroupId;}
+      else if(!_eqFracActive.el.groupId){_eqFracActive.el.groupId=_eqGroupId;}
     } else if(_eqMonoActive){
       if(!_eqGroupId){_eqGroupId='g'+Date.now();_eqMonoActive.el.groupId=_eqGroupId;}
     } else {
