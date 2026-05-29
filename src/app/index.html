@@ -999,8 +999,6 @@ body.light-theme .edit-item .edit-shortcut{color:rgba(0,0,0,0.3);background:rgba
 /* === DARK THEME — brighten PNG icons so they're visible === */
 .tbtn img{filter:brightness(1.9) saturate(0.9);}
 .tbtn.active img{filter:brightness(2.2) saturate(1);}
-.tbtn [src*="עפרון-חדש"]{filter:none;mix-blend-mode:multiply;}
-body.light-theme .tbtn [src*="עפרון-חדש"]{mix-blend-mode:normal;}
 /* text icon is dark-colored — invert to white in dark mode */
 .tbtn [src*="text.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="text.png"]{filter:invert(1) brightness(2);}
@@ -2082,7 +2080,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       </svg>
     </button>
     <button class="tbtn" id="tbtn-freehand" onclick="setTool('freehand')" data-tip="עפרון חופשי" data-tip-key="tipFreehand">
-      <img src="../assets/icons/toolbar/עפרון-חדש.png" style="object-fit:contain;" id="tbtn-freehand-img">
+      <img src="../assets/icons/toolbar/עפרון.svg" style="object-fit:contain;" id="tbtn-freehand-img">
     </button>
     <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
       <img src="../assets/icons/toolbar/shapes.png" style="object-fit:contain;">
