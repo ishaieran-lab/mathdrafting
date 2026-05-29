@@ -1009,7 +1009,9 @@ body.light-theme .tbtn [src*="wave.png"]{filter:invert(0.2) sepia(1) saturate(4)
 /* description + equation icons are dark-colored — invert to white in dark mode */
 .tbtn [src*="description.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="description.png"]{filter:invert(1) brightness(2);}
-body.light-theme .tbtn [src*="Equation.png"]{filter:none;}
+.tbtn [src*="משוואות"]{filter:invert(1) brightness(1.8);}
+.tbtn.active [src*="משוואות"]{filter:invert(1) brightness(2);}
+body.light-theme .tbtn [src*="משוואות"]{filter:none;}
 
 /* === LIGHT THEME — toolbar (white background → dark icons) === */
 body.light-theme .tbtn img{filter:none;}
@@ -2093,7 +2095,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <img src="../assets/icons/toolbar/text.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="toggleEqRibbon()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
-      <img id="tbtn-eq-icon" src="../assets/icons/toolbar/ללא רקע.png" width="42" height="42" style="object-fit:contain;">
+      <img id="tbtn-eq-icon" src="../assets/icons/toolbar/משוואות.svg" width="42" height="42" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
       <img src="../assets/icons/toolbar/description.png" style="object-fit:contain;">
@@ -13369,7 +13371,7 @@ function toggleTheme(){
 }
 function _updateThemeIcons(isLight){
   const eqIcon=document.getElementById('tbtn-eq-icon');
-  if(eqIcon) eqIcon.src=isLight?'../assets/icons/toolbar/Equation.png':'../assets/icons/toolbar/ללא רקע.png';
+  if(eqIcon) eqIcon.src='../assets/icons/toolbar/משוואות.svg';
   const menuIcon=document.getElementById('menu-icon');
   if(menuIcon) menuIcon.src=isLight?'../assets/icons/menu/MENU.png':'../assets/icons/menu/menu-dark.png';
   const bgIcon=document.getElementById('bg-icon');
@@ -13419,7 +13421,7 @@ function _updateThemeIcons(isLight){
   if(btn) btn.classList.add(isLight?'light-glow':'dark-glow');
   _updateThemeIcons(isLight);
   const eqIcon=document.getElementById('tbtn-eq-icon');
-  if(eqIcon) eqIcon.src=isLight?'../assets/icons/toolbar/Equation.png':'../assets/icons/toolbar/ללא רקע.png';
+  if(eqIcon) eqIcon.src='../assets/icons/toolbar/משוואות.svg';
   const menuIcon=document.getElementById('menu-icon');
   if(menuIcon) menuIcon.src=isLight?'../assets/icons/menu/MENU.png':'../assets/icons/menu/menu-dark.png';
   const bgIcon2=document.getElementById('bg-icon');
