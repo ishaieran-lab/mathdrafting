@@ -999,9 +999,6 @@ body.light-theme .edit-item .edit-shortcut{color:rgba(0,0,0,0.3);background:rgba
 /* === DARK THEME — brighten PNG icons so they're visible === */
 .tbtn img{filter:brightness(1.9) saturate(0.9);}
 .tbtn.active img{filter:brightness(2.2) saturate(1);}
-/* shapes SVG icon — black fill, invert for dark mode */
-.tbtn[data-key="shapes"] img{filter:invert(1) brightness(1.5) !important;}
-body.light-theme .tbtn[data-key="shapes"] img{filter:none !important;}
 /* text icon is dark-colored — invert to white in dark mode */
 .tbtn [src*="text.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="text.png"]{filter:invert(1) brightness(2);}
@@ -2152,7 +2149,18 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       </svg>
     </button>
     <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
-      <img src="../assets/icons/toolbar/צורות-ללא-רקע.svg" style="object-fit:contain;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width:30px;height:30px">
+        <!-- triangle -->
+        <polygon points="1.2,23 1.2,9.5 13.8,23" fill="#697B8C" stroke="#0D1117" stroke-width="1.7" stroke-linejoin="round"/>
+        <line x1="2.7" y1="11.5" x2="2.7" y2="21.5" stroke="#8A9AAA" stroke-width="0.7" opacity="0.6"/>
+        <!-- square -->
+        <rect x="11" y="12" width="12" height="10.5" rx="1.6" fill="#0D1117" stroke="#000" stroke-width="1.7"/>
+        <rect x="13" y="13.4" width="3.5" height="0.9" rx="0.45" fill="#2D3748" opacity="0.9"/>
+        <rect x="13" y="15" width="2" height="0.7" rx="0.35" fill="#2D3748" opacity="0.6"/>
+        <!-- circle -->
+        <circle cx="15" cy="8" r="6.6" fill="#78C8E6" stroke="#0D1117" stroke-width="1.7"/>
+        <ellipse cx="12.8" cy="5.8" rx="1.6" ry="1.2" fill="white" opacity="0.3" transform="rotate(-30,12.8,5.8)"/>
+      </svg>
     </button>
     <button class="tbtn" onclick="openPopup('graphs',this)" data-key="graphs" data-tip="גרפים" data-tip-key="tipGraphs">
       <img src="../assets/icons/toolbar/wave.png" style="object-fit:contain;">
