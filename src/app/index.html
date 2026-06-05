@@ -1005,6 +1005,9 @@ body.light-theme .tbtn [src*="shapes1"]{filter:none;}
 .tbtn [src*="formula"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="formula"]{filter:invert(1) brightness(2);}
 body.light-theme .tbtn [src*="formula"]{filter:none;}
+.tbtn [src*="shapes2"]{filter:invert(1) brightness(1.8);}
+.tbtn.active [src*="shapes2"]{filter:invert(1) brightness(2);}
+body.light-theme .tbtn [src*="shapes2"]{filter:none;}
 /* text icon is dark-colored — invert to white in dark mode */
 .tbtn [src*="text.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="text.png"]{filter:invert(1) brightness(2);}
@@ -2170,7 +2173,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <img src="../assets/icons/toolbar/description.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('shapes3d',this)" data-tip="צורות תלת-מימד" data-tip-key="tipShapes3d">
-      <img src="../assets/icons/toolbar/3d shapes.png" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/shapes2.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" id="tbtn-fill" onclick="setTool('fill')" data-tip="מילוי" data-tip-key="tipFill">
       <img src="../assets/icons/toolbar/paint.png" style="object-fit:contain;">
