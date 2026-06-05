@@ -1011,6 +1011,9 @@ body.light-theme .tbtn [src*="shapes2"]{filter:none;}
 .tbtn [src*="תרשים"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="תרשים"]{filter:invert(1) brightness(2);}
 body.light-theme .tbtn [src*="תרשים"]{filter:none;}
+.tbtn [src*="fill.png"]{filter:invert(1) brightness(1.8);}
+.tbtn.active [src*="fill.png"]{filter:invert(1) brightness(2);}
+body.light-theme .tbtn [src*="fill.png"]{filter:none;}
 /* text icon is dark-colored — invert to white in dark mode */
 .tbtn [src*="text.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="text.png"]{filter:invert(1) brightness(2);}
@@ -2179,7 +2182,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <img src="../assets/icons/toolbar/shapes2.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" id="tbtn-fill" onclick="setTool('fill')" data-tip="מילוי" data-tip-key="tipFill">
-      <img src="../assets/icons/toolbar/paint.png" style="object-fit:contain;">
+      <img src="../assets/icons/toolbar/fill.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" id="tbtn-clearfill" onclick="setTool('clearfill')" data-tip="נקה מילוי" data-tip-key="tipClearFill">
       <img src="../assets/icons/toolbar/clear-fill.png" style="object-fit:contain;">
