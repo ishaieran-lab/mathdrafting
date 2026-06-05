@@ -1002,6 +1002,9 @@ body.light-theme .edit-item .edit-shortcut{color:rgba(0,0,0,0.3);background:rgba
 .tbtn [src*="shapes1"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="shapes1"]{filter:invert(1) brightness(2);}
 body.light-theme .tbtn [src*="shapes1"]{filter:none;}
+.tbtn [src*="formula"]{filter:invert(1) brightness(1.8);}
+.tbtn.active [src*="formula"]{filter:invert(1) brightness(2);}
+body.light-theme .tbtn [src*="formula"]{filter:none;}
 /* text icon is dark-colored — invert to white in dark mode */
 .tbtn [src*="text.png"]{filter:invert(1) brightness(1.8);}
 .tbtn.active [src*="text.png"]{filter:invert(1) brightness(2);}
@@ -2161,7 +2164,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <img src="../assets/icons/toolbar/text.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="toggleEqRibbon()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
-      <img id="tbtn-eq-icon" src="../assets/icons/toolbar/משוואות.svg" width="42" height="42" style="object-fit:contain;">
+      <img id="tbtn-eq-icon" src="../assets/icons/toolbar/formula.png" width="42" height="42" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
       <img src="../assets/icons/toolbar/description.png" style="object-fit:contain;">
@@ -13437,7 +13440,7 @@ function toggleTheme(){
 }
 function _updateThemeIcons(isLight){
   const eqIcon=document.getElementById('tbtn-eq-icon');
-  if(eqIcon) eqIcon.src='../assets/icons/toolbar/משוואות.svg';
+  if(eqIcon) eqIcon.src='../assets/icons/toolbar/formula.png';
   const menuIcon=document.getElementById('menu-icon');
   if(menuIcon) menuIcon.src=isLight?'../assets/icons/menu/MENU.png':'../assets/icons/menu/menu-dark.png';
   const bgIcon=document.getElementById('bg-icon');
@@ -13487,7 +13490,7 @@ function _updateThemeIcons(isLight){
   if(btn) btn.classList.add(isLight?'light-glow':'dark-glow');
   _updateThemeIcons(isLight);
   const eqIcon=document.getElementById('tbtn-eq-icon');
-  if(eqIcon) eqIcon.src='../assets/icons/toolbar/משוואות.svg';
+  if(eqIcon) eqIcon.src='../assets/icons/toolbar/formula.png';
   const menuIcon=document.getElementById('menu-icon');
   if(menuIcon) menuIcon.src=isLight?'../assets/icons/menu/MENU.png':'../assets/icons/menu/menu-dark.png';
   const bgIcon2=document.getElementById('bg-icon');
