@@ -795,24 +795,28 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-fields{background:var(--surface2);border-radius:8px;padding:14px;margin-top:10px;}
 /* latex template panel (modal) */
 .eq-tmpl-panel{background:var(--surface2);border-radius:8px;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);}
-.eq-tmpl-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.eq-tmpl-tabs{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
 .eq-tmpl-tab{
-  padding:10px 22px;
-  border-radius:10px;
-  border:1.5px solid var(--border);
+  width:90px;
+  height:90px;
+  border-radius:14px;
+  border:2px solid var(--border);
   background:var(--surface);
   color:var(--text2);
   cursor:pointer;
-  font-size:14px;
+  font-size:15px;
   font-family:'Assistant',sans-serif;
-  font-weight:700;
-  letter-spacing:0.2px;
+  font-weight:800;
+  letter-spacing:0.3px;
   transition:all 0.15s;
-  min-width:80px;
   text-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
 }
-.eq-tmpl-tab:hover:not(.active){background:rgba(108,99,255,0.08);border-color:rgba(108,99,255,0.35);color:var(--text);}
-.eq-tmpl-tab.active{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 3px 10px rgba(108,99,255,0.35);}
+.eq-tmpl-tab:hover:not(.active){background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.4);color:var(--text);transform:translateY(-1px);box-shadow:0 4px 12px rgba(108,99,255,0.2);}
+.eq-tmpl-tab.active{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 4px 14px rgba(108,99,255,0.45);}
 .eq-tmpl-grid>div{display:none;flex-wrap:wrap;gap:4px;}
 .eq-tmpl-grid>div.active{display:flex;}
 .eq-tb{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;font-family:'Times New Roman',serif;min-width:32px;text-align:center;line-height:1.3;transition:background 0.1s,border-color 0.1s;box-sizing:border-box;flex-shrink:0;}
