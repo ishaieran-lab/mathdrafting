@@ -259,7 +259,8 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
   height:auto;
 }
 [dir=ltr] .toolbar{right:auto;left:16px;}
-.tsep{display:none;}
+.tsep{display:block;width:36px;height:1px;background:rgba(255,255,255,0.12);margin:4px auto;border-radius:1px;}
+body.light-theme .tsep{background:rgba(0,0,0,0.12);}
 .tbtn{
   width:50px;height:50px;border-radius:10px;border:none;
   background:rgba(255,255,255,0.05);color:rgba(180,175,220,0.75);cursor:pointer;
@@ -2130,6 +2131,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 
   <!-- TOOLBAR -->
   <div class="toolbar">
+    <!-- קבוצה 1: ניווט ובחירה -->
     <button class="tbtn active" id="tbtn-select" onclick="setTool('select')" data-tip="בחירה" data-tip-key="tipSelect">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" overflow="visible">
         <defs>
@@ -2143,30 +2145,31 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
             <stop offset="100%" stop-color="#0f172a"/>
           </linearGradient>
         </defs>
-        <!-- shadow -->
         <path transform="translate(0.7,0.9)" opacity="0.22" fill="#0f172a"
           d="m1.26 2.5 7.984 19.39c0.258 0.626 1.07 0.788 1.549 0.309l4.36-4.361 4.696 4.697c0.371 0.37 0.971 0.37 1.342 0l1.341-1.342c0.371-0.371 0.371-0.972 0-1.342l-4.696-4.697 4.361-4.36c0.479-0.479 0.316-1.291-0.31-1.549L2.499 1.26c-0.675-0.278-1.399 0.279-1.302 1.003 0.011 0.081 0.032 0.16 0.063 0.235Z"/>
-        <!-- body -->
         <path fill="url(#cur-fill)" stroke="url(#cur-stroke)" stroke-width="0.75" stroke-linejoin="round" stroke-linecap="round"
           d="m1.26 2.5 7.984 19.39c0.258 0.626 1.07 0.788 1.549 0.309l4.36-4.361 4.696 4.697c0.371 0.37 0.971 0.37 1.342 0l1.341-1.342c0.371-0.371 0.371-0.972 0-1.342l-4.696-4.697 4.361-4.36c0.479-0.479 0.316-1.291-0.31-1.549L2.499 1.26c-0.675-0.278-1.399 0.279-1.302 1.003 0.011 0.081 0.032 0.16 0.063 0.235Z"/>
-        <!-- tip highlight -->
         <path d="M1.8 3.2 L2.8 1.9" stroke="#bfdbfe" stroke-width="1.1" stroke-linecap="round" opacity="0.75"/>
       </svg>
     </button>
+    <div class="tsep"></div>
+    <!-- קבוצה 2: יצירה וציור -->
     <button class="tbtn" id="tbtn-freehand" onclick="setTool('freehand')" data-tip="עפרון חופשי" data-tip-key="tipFreehand">
       <img src="../assets/icons/toolbar/עפרון.png" style="object-fit:contain;">
-    </button>
-    <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
-      <img src="../assets/icons/toolbar/צורות.png?v=2" style="object-fit:contain;">
-    </button>
-    <button class="tbtn" onclick="openPopup('graphs',this)" data-key="graphs" data-tip="גרפים" data-tip-key="tipGraphs">
-      <img src="../assets/icons/toolbar/wave.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="startInlineText()" data-key="text" data-tip="טקסט" data-tip-key="tipText">
       <img src="../assets/icons/toolbar/text.png" style="object-fit:contain;">
     </button>
+    <button class="tbtn" onclick="openPopup('shapes',this)" data-key="shapes" data-tip="צורות" data-tip-key="tipShapes">
+      <img src="../assets/icons/toolbar/צורות.png?v=2" style="object-fit:contain;">
+    </button>
+    <div class="tsep"></div>
+    <!-- קבוצה 3: כלים מתקדמים -->
     <button class="tbtn" onclick="toggleEqRibbon()" data-key="equations" data-tip="משוואות ואלגברה" data-tip-key="tipEquations">
       <img id="tbtn-eq-icon" src="../assets/icons/toolbar/משוואות.png" style="object-fit:contain;">
+    </button>
+    <button class="tbtn" onclick="openPopup('graphs',this)" data-key="graphs" data-tip="גרפים" data-tip-key="tipGraphs">
+      <img src="../assets/icons/toolbar/wave.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" onclick="openPopup('statistics',this)" data-tip="סטטיסטיקה" data-tip-key="tipStatistics">
       <img src="../assets/icons/toolbar/סטטיסטיקה.png" style="object-fit:contain;">
@@ -2174,13 +2177,14 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <button class="tbtn" onclick="openPopup('shapes3d',this)" data-tip="צורות תלת-מימד" data-tip-key="tipShapes3d">
       <img src="../assets/icons/toolbar/תלת ממד.png?v=2" style="object-fit:contain;">
     </button>
+    <div class="tsep"></div>
+    <!-- קבוצה 4: צבע ומחיקה -->
     <button class="tbtn" id="tbtn-fill" onclick="setTool('fill')" data-tip="מילוי" data-tip-key="tipFill">
       <img src="../assets/icons/toolbar/מילוי.png" style="object-fit:contain;">
     </button>
     <button class="tbtn" id="tbtn-clearfill" onclick="setTool('clearfill')" data-tip="נקה מילוי" data-tip-key="tipClearFill">
       <img src="../assets/icons/toolbar/ניקוי מילוי.png" style="object-fit:contain;">
     </button>
-    <div class="tsep"></div>
     <button class="tbtn" id="tbtn-delete" onclick="setTool('delete')" data-tip="מחק" data-tip-key="tipDelete">
       <img src="../assets/icons/toolbar/מחק.png" style="object-fit:contain;">
     </button>
