@@ -16288,14 +16288,15 @@ redraw();
     const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
-      // Respond with hmac auth, then create content part
+      // Respond with hmac (no applicationKey), then newContentPart — both AFTER async hmac
+      // so newContentPart is never sent before auth
       if(msg.hmacChallenge){
         const h = await _hmac(APP_KEY+msg.hmacChallenge);
-        _wsSend({type:'hmac',hmac:h}); // auth response — no applicationKey
+        _wsSend({type:'hmac',hmac:h});
       }
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
     } else if(msg.type==='contentPackageDescription'){
-      // Package auto-created by server; content part sent from ack handler
+      // Package created; newContentPart sent from ack handler after auth (not here — timing)
     } else if(msg.type==='partChanged'){
       _wsReady=true;
       _status('מחובר — ניתן לצייר','#2d9e4e');
@@ -16319,8 +16320,8 @@ redraw();
     _ws.onopen =()=>{
       console.log('[MyScript] onopen');
       _status('מחובר, מאתחל...','#f39c12');
-      // Send newContentPackage (NO applicationKey) to trigger server ack+hmacChallenge
-      _wsSend({type:'newContentPackage',xDpi:96,yDpi:96,
+      // Send newContentPackage WITH applicationKey to identify the app and trigger ack
+      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
                viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230});
     };
     _ws.onmessage=e=>{
