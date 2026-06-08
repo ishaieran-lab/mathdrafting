@@ -16288,8 +16288,11 @@ redraw();
     const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
-      // newContentPackage already sent on open — ack is just a session confirmation, no re-send needed
-      console.log('[MyScript] ack received (session id:', msg.iinkSessionId,')');
+      // Respond to HMAC challenge with a separate 'hmac' auth message
+      if(msg.hmacChallenge){
+        const h=await _hmac(APP_KEY+msg.hmacChallenge);
+        _wsSend({type:'hmac',applicationKey:APP_KEY,hmac:h});
+      }
     } else if(msg.type==='contentPackageDescription'){
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
     } else if(msg.type==='partChanged'){
