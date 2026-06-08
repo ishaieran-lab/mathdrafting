@@ -2446,14 +2446,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
           <span style="font-family:monospace;font-size:12px;color:var(--accent3);min-width:32px" id="prop-skew-val">25%</span>
         </div>
       </div>
-      <!-- FLIP — for triangles only -->
-      <div class="pg" id="pg-flip" style="display:none">
-        <label class="pl" data-key="flip">היפוך</label>
-        <div class="flip-row">
-          <button class="flip-btn" data-key="flipH" onclick="flipEl('h')">↔ אופקי</button>
-          <button class="flip-btn" data-key="flipV" onclick="flipEl('v')">↕ אנכי</button>
-        </div>
-      </div>
       <!-- CENTER / RADIUS / DIAMETER — circles only -->
       <div class="pg" id="pg-center" style="display:none">
         <label class="pl" data-key="center">מרכז, רדיוס וקוטר</label>
@@ -10365,7 +10357,6 @@ function updProps(){
   const isTriangle=['triangle','righttriangle'].includes(s.type);
   const isSimplePar=s.type==='simple-parabola';
   const isSimpleCubic=s.type==='simple-cubic';
-  document.getElementById('pg-flip').style.display=(isTriangle||isSimplePar||isSimpleCubic)?'block':'none';
   // edit points — triangle only (trapezoid now uses always-on corner handles)
   const canEditPts = s.type==='triangle';
   document.getElementById('pg-editpts').style.display=canEditPts?'block':'none';
