@@ -2456,6 +2456,14 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
         </div>
         <div style="font-size:10px;color:var(--text2);margin-top:3px;text-align:right" data-lang-key="pgCenterNameHint">שם נקודת המרכז (A, B, O…)</div>
         <div id="pg-circle-info" style="margin-top:8px;display:none">
+          <div style="background:var(--surface2);border-radius:6px;padding:8px 10px;font-size:12px;font-family:monospace;line-height:2">
+            <div style="color:var(--text2)" data-lang-key="pgRadiusLabel">רדיוס (r):</div>
+            <div style="color:var(--accent3)" id="circle-radius-val">—</div>
+            <div style="color:var(--text2)" data-lang-key="pgDiameterLabel">קוטר (d):</div>
+            <div style="color:var(--accent3)" id="circle-diam-val">—</div>
+            <div style="color:var(--text2)" data-lang-key="pgCenterLabel">מרכז (x,y):</div>
+            <div style="color:var(--accent3)" id="circle-center-val">—</div>
+          </div>
           <label class="pl" data-lang-key="pgShowLabels" style="margin-top:8px">הצג תוויות על הקנבס</label>
           <div class="flip-row">
             <button class="flip-btn" data-key="radius" id="btn-show-radius" onclick="toggleCircleLabel('radius')">רדיוס</button>
@@ -10408,6 +10416,12 @@ function updProps(){
     const infoDiv=document.getElementById('pg-circle-info');
     infoDiv.style.display=s.showCenter?'block':'none';
     if(s.showCenter){
+      const rx=(s.w||0)/2, ry=(s.h||0)/2;
+      const r=Math.round((rx+ry)/2*10)/10; // average radius (for ellipse show both)
+      const isEllipse=Math.abs(rx-ry)>2;
+      document.getElementById('circle-radius-val').textContent=isEllipse?`rx=${Math.round(rx)}, ry=${Math.round(ry)}`:`${r} px`;
+      document.getElementById('circle-diam-val').textContent=isEllipse?`dx=${Math.round(rx*2)}, dy=${Math.round(ry*2)}`:`${Math.round(r*2)} px`;
+      document.getElementById('circle-center-val').textContent=`(${Math.round(s.x+rx)}, ${Math.round(s.y+ry)})`;
       document.getElementById('btn-show-radius').style.background=s.showRadius?'var(--accent)':'';
       document.getElementById('btn-show-radius').style.color=s.showRadius?'white':'';
       document.getElementById('btn-show-diam').style.background=s.showDiam?'var(--accent)':'';
