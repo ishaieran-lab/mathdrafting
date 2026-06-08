@@ -2128,18 +2128,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 <!-- HANDWRITING MATH MODAL -->
 <div id="handwrite-overlay" onclick="if(event.target===this)hwClose()">
   <div id="handwrite-dialog">
-    <!-- Setup screen — shown when API keys not configured -->
-    <div id="hw-setup">
-      <h3>הגדרת זיהוי כתב יד</h3>
-      <p>שירות זה משתמש ב-<strong>MyScript Cloud</strong> לזיהוי כתב יד מתמטי.<br>
-        <a href="https://developer.myscript.com" target="_blank">הירשם בחינם</a> ב-developer.myscript.com וקבל מפתחות API (2,000 זיהויים/חודש חינם).</p>
-      <input id="hw-key-app" class="hw-key-input" placeholder="Application Key" autocomplete="off">
-      <input id="hw-key-hmac" class="hw-key-input" placeholder="HMAC Key" autocomplete="off">
-      <div id="hw-setup-btns">
-        <button class="btn btn-ghost" onclick="hwClose()">ביטול</button>
-        <button class="btn btn-primary" onclick="hwSaveKeys()">שמור ופתח</button>
-      </div>
-    </div>
+    <div id="hw-setup" style="display:none"></div>
     <!-- Main drawing screen -->
     <div id="hw-main" style="display:none;flex-direction:column;">
       <div id="hw-header">
@@ -2160,7 +2149,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
         <button class="hw-tool" onclick="hwUndo()">↩ ביטול אחרון</button>
         <button class="hw-tool" onclick="hwClear()">🗑 נקה הכל</button>
         <span style="flex:1"></span>
-        <button class="hw-tool" style="font-size:11px;color:#888" onclick="hwResetKeys()">⚙ מפתחות API</button>
       </div>
       <div id="hw-footer">
         <span id="hw-latex-disp"></span>
@@ -16270,19 +16258,19 @@ redraw();
 
 // ===== HANDWRITING MATH RECOGNITION =====
 (function(){
-  const LS_KEY = 'hw-myscript-keys';
+  const _KEYS = {
+    app:  '95d066cb-1402-410d-837d-14a1acc2632b',
+    hmac: '771a78a9-3f95-4939-90ad-c82076093ca0'
+  };
   let _strokes = [], _curStroke = null, _tool = 'pen', _latex = '', _timer = null;
   let _cv, _ctx;
 
-  function _getKeys(){ try{return JSON.parse(localStorage.getItem(LS_KEY))||null;}catch(e){return null;} }
-
   function openHandwriteModal(){
     const ov = document.getElementById('handwrite-overlay');
-    const keys = _getKeys();
-    document.getElementById('hw-setup').style.display  = keys ? 'none'  : 'block';
-    document.getElementById('hw-main').style.display   = keys ? 'flex'  : 'none';
+    document.getElementById('hw-setup').style.display = 'none';
+    const m = document.getElementById('hw-main'); m.style.display='flex'; m.style.flexDirection='column';
     ov.classList.add('open');
-    if(keys) _initDrawing();
+    _initDrawing();
   }
 
   function _initDrawing(){
@@ -16354,8 +16342,8 @@ redraw();
   function _scheduleRecognize(){ clearTimeout(_timer); _timer=setTimeout(_recognize,900); }
 
   async function _recognize(){
-    const keys=_getKeys();
-    if(!keys||_strokes.length===0) return;
+    const keys=_KEYS;
+    if(_strokes.length===0) return;
     const body=JSON.stringify({
       configuration:{lang:'en_US'},
       contentType:'Math',
@@ -16406,17 +16394,6 @@ redraw();
     hwClose();
     renderLatex(_latex,img=>addEl({type:'latex',x:100,y:100,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:_latex,img}));
   }
-  function hwSaveKeys(){
-    const app=document.getElementById('hw-key-app').value.trim();
-    const hmac=document.getElementById('hw-key-hmac').value.trim();
-    if(!app||!hmac){alert('נא להזין את שני המפתחות');return;}
-    localStorage.setItem(LS_KEY,JSON.stringify({app,hmac}));
-    document.getElementById('hw-setup').style.display='none';
-    const m=document.getElementById('hw-main'); m.style.display='flex'; m.style.flexDirection='column';
-    _initDrawing();
-  }
-  function hwResetKeys(){ localStorage.removeItem(LS_KEY); hwClose(); setTimeout(openHandwriteModal,100); }
-
   // Bind canvas events once on DOMContentLoaded
   document.addEventListener('DOMContentLoaded',()=>{
     const cv=document.getElementById('hw-canvas');
@@ -16435,8 +16412,6 @@ redraw();
   window.hwClear=hwClear;
   window.hwUndo=hwUndo;
   window.hwInsert=hwInsert;
-  window.hwSaveKeys=hwSaveKeys;
-  window.hwResetKeys=hwResetKeys;
 })();
 </script>
 <script>
