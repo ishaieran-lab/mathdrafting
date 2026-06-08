@@ -16288,11 +16288,10 @@ redraw();
     const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
-      // Respond to HMAC challenge with a separate 'hmac' auth message
-      if(msg.hmacChallenge){
-        const h=await _hmac(APP_KEY+msg.hmacChallenge);
-        _wsSend({type:'hmac',applicationKey:APP_KEY,hmac:h});
-      }
+      // iink-ts protocol: server sends ack first; we respond with newContentPackage+hmac (once)
+      const h = msg.hmacChallenge ? await _hmac(APP_KEY+msg.hmacChallenge) : '';
+      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
+               viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230,hmac:h});
     } else if(msg.type==='contentPackageDescription'){
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
     } else if(msg.type==='partChanged'){
@@ -16315,10 +16314,7 @@ redraw();
     _status('מתחבר...','#888');
     _ws=new WebSocket(WS_URL);
     _ws.binaryType='arraybuffer';
-    _ws.onopen =()=>{ console.log('[MyScript] onopen'); _status('מחובר, מאתחל...','#f39c12');
-      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
-               viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230});
-    };
+    _ws.onopen =()=>{ console.log('[MyScript] onopen — waiting for server ack'); _status('מחובר, ממתין לאישור...','#f39c12'); };
     _ws.onmessage=e=>{
       const d=e.data;
       const preview=d instanceof ArrayBuffer?'[binary '+d.byteLength+'b]':String(d).substring(0,120);
@@ -16327,9 +16323,9 @@ redraw();
     };
     _ws.onerror=e=>{ console.warn('[MyScript] onerror',e); _status('שגיאת חיבור','#c0392b'); };
     _ws.onclose=e=>{ console.warn('[MyScript] onclose code='+e.code+' reason='+e.reason); _wsReady=false; _status('סגור — קוד '+e.code,'#c0392b'); };
-    // Timeout diagnostic
+    // Timeout diagnostic (don't overwrite onclose message if already closed)
     setTimeout(()=>{
-      if(!_wsReady&&_ws) _status('Timeout — WS state='+_ws.readyState,'#c0392b');
+      if(!_wsReady&&_ws&&_ws.readyState!==WebSocket.CLOSED) _status('Timeout — WS state='+_ws.readyState,'#c0392b');
     }, 6000);
   }
 
