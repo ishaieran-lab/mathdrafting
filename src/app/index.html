@@ -16307,9 +16307,14 @@ redraw();
     _wsReady=false;
     _status('מתחבר...','#888');
     _ws=new WebSocket(WS_URL);
+    _ws.onopen =()=>{ console.log('[MyScript] onopen'); _status('חיבור נוצר, ממתין לאישור...','#f39c12'); };
     _ws.onmessage=e=>_handleMsg(e.data);
-    _ws.onerror=()=>_status('שגיאת חיבור','#c0392b');
-    _ws.onclose=()=>{_wsReady=false;_status('החיבור נסגר','#888');};
+    _ws.onerror=e=>{ console.warn('[MyScript] onerror',e); _status('שגיאת חיבור','#c0392b'); };
+    _ws.onclose=e=>{ console.warn('[MyScript] onclose code='+e.code+' reason='+e.reason); _wsReady=false; _status('סגור — קוד '+e.code,'#c0392b'); };
+    // Timeout diagnostic
+    setTimeout(()=>{
+      if(!_wsReady&&_ws) _status('Timeout — WS state='+_ws.readyState,'#c0392b');
+    }, 6000);
   }
 
   function _drawGrid(){
