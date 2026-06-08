@@ -16143,6 +16143,35 @@ redraw();
   const handle = document.getElementById('toolbar-handle');
   if(!tb || !handle) return;
 
+  const HANDLE_H = 14, MIN_W = 44, MAX_W = 130, MIN_BTN_H = 28;
+
+  function getButtons(){ return Array.from(tb.querySelectorAll('.tbtn')); }
+  function getSeps(){ return Array.from(tb.querySelectorAll('.tsep')); }
+
+  function applySize(w, totalH){
+    // Width
+    w = Math.max(MIN_W, Math.min(MAX_W, w));
+    tb.style.width = w + 'px';
+    // Icon size proportional to width
+    const iconSz = Math.round(w * 0.58);
+    const svgSz  = Math.round(w * 0.44);
+    getButtons().forEach(b => {
+      const img = b.querySelector('img');
+      if(img){ img.style.width = iconSz+'px'; img.style.height = iconSz+'px'; }
+      const svg = b.querySelector('svg');
+      if(svg){ svg.style.width = svgSz+'px'; svg.style.height = svgSz+'px'; }
+    });
+    // Height: distribute among buttons (no empty space)
+    if(totalH !== null){
+      const btns = getButtons();
+      const seps = getSeps();
+      const availH = totalH - HANDLE_H - seps.length;
+      const btnH = Math.max(MIN_BTN_H, Math.round(availH / btns.length));
+      btns.forEach(b => b.style.height = btnH + 'px');
+      tb.style.height = 'auto'; // let it size naturally from buttons
+    }
+  }
+
   // --- Dragging ---
   let dragging = false, dragStartX, dragStartY, tbStartLeft, tbStartTop;
 
@@ -16167,7 +16196,6 @@ redraw();
 
   // --- Resizing ---
   let resizing = false, resizeDir, resStartX, resStartY, resStartW, resStartH, resStartLeft, resStartTop;
-  const MIN_W = 44, MAX_W = 120, MIN_H = 100;
 
   document.querySelectorAll('.tb-resize').forEach(el => {
     el.addEventListener('mousedown', e => {
@@ -16178,8 +16206,6 @@ redraw();
       resStartW = tb.offsetWidth; resStartH = tb.offsetHeight;
       resStartLeft = parseFloat(tb.style.left);
       resStartTop  = parseFloat(tb.style.top);
-      tb.style.height = resStartH + 'px';
-      tb.style.overflow = 'hidden';
       e.preventDefault(); e.stopPropagation();
     });
   });
@@ -16196,12 +16222,9 @@ redraw();
       if(resizeDir.includes('w')){ newW = resStartW - dx; newL = resStartLeft + dx; }
       if(resizeDir.includes('s')) newH = resStartH + dy;
       if(resizeDir.includes('n')){ newH = resStartH - dy; newT = resStartTop + dy; }
-      newW = Math.max(MIN_W, Math.min(MAX_W, newW));
-      newH = Math.max(MIN_H, newH);
-      tb.style.width  = newW + 'px';
-      tb.style.height = newH + 'px';
-      tb.style.left   = newL + 'px';
-      tb.style.top    = newT + 'px';
+      applySize(newW, newH);
+      tb.style.left = newL + 'px';
+      tb.style.top  = newT + 'px';
     }
   });
 
