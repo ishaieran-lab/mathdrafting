@@ -888,14 +888,46 @@ body.light-theme .eq-gallery-item:hover{background:rgba(108,99,255,0.1);border-c
 #eq-ribbon{display:none;background:#13131f;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 10px;flex-direction:row;align-items:stretch;gap:0;flex-shrink:0;position:relative;z-index:50;}
 #eq-ribbon.open{display:flex;}
 body.light-theme #eq-ribbon{background:#f7f7fb;border-bottom:1px solid #e0e0e8;}
-.eq-rtabs{display:flex;gap:2px;align-items:center;flex-shrink:0;border-left:1px solid rgba(255,255,255,0.07);padding-left:8px;margin-left:4px;}
+.eq-rtabs{display:flex;gap:8px;align-items:center;flex-shrink:0;border-left:1px solid rgba(255,255,255,0.07);padding-left:12px;margin-left:4px;}
 body.light-theme .eq-rtabs{border-left-color:#e0e0e8;}
-.eq-rtab{padding:6px 16px;border-radius:4px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.55);cursor:pointer;font-size:12px;font-family:'Assistant',sans-serif;font-weight:600;transition:background 0.12s,color 0.12s,border-color 0.12s;}
-.eq-rtab.active{background:rgba(108,99,255,0.35);color:#d0caff;border-color:rgba(108,99,255,0.6);}
-.eq-rtab:hover:not(.active){background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.9);border-color:rgba(255,255,255,0.2);}
-body.light-theme .eq-rtab{color:#666;background:rgba(0,0,0,0.04);border:1px solid #d0d0de;}
-body.light-theme .eq-rtab.active{background:rgba(108,99,255,0.18);color:#5046e5;border-color:rgba(108,99,255,0.4);}
-body.light-theme .eq-rtab:hover:not(.active){background:rgba(108,99,255,0.08);color:#333;border-color:#aaa;}
+.eq-rtab{
+  display:flex;align-items:stretch;height:40px;min-width:120px;
+  border-radius:5px;border:none;cursor:pointer;
+  overflow:visible;position:relative;
+  transition:filter 0.12s,transform 0.1s;
+  box-shadow:2px 2px 6px rgba(0,0,0,0.3);
+  direction:ltr;
+}
+.eq-rtab:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.eq-rtab.active{filter:brightness(0.88);transform:none;box-shadow:inset 0 2px 5px rgba(0,0,0,0.3);}
+.ertab-icon{
+  width:40px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;border-radius:5px 0 0 5px;
+  position:relative;z-index:1;
+}
+.ertab-icon::after{
+  content:'';position:absolute;left:100%;top:0;
+  border-top:20px solid transparent;
+  border-bottom:20px solid transparent;
+  z-index:2;
+}
+.ertab-txt{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:800;
+  font-family:'Assistant',sans-serif;
+  color:white;padding:0 14px;
+  border-radius:0 5px 5px 0;letter-spacing:0.3px;
+}
+.eq-rtab[data-cat="struct"] .ertab-icon{background:#5b45d0;color:#d8d0ff;}
+.eq-rtab[data-cat="struct"] .ertab-icon::after{border-left:14px solid #5b45d0;}
+.eq-rtab[data-cat="struct"] .ertab-txt{background:#7c63e8;}
+.eq-rtab[data-cat="sym"] .ertab-icon{background:#0d8a7a;color:#b2f0e8;}
+.eq-rtab[data-cat="sym"] .ertab-icon::after{border-left:14px solid #0d8a7a;}
+.eq-rtab[data-cat="sym"] .ertab-txt{background:#1abc9c;}
+.eq-rtab[data-cat="greek"] .ertab-icon{background:#1a5fa0;color:#c0deff;}
+.eq-rtab[data-cat="greek"] .ertab-icon::after{border-left:14px solid #1a5fa0;}
+.eq-rtab[data-cat="greek"] .ertab-txt{background:#2980b9;}
 .eqr-section{display:none;flex-wrap:nowrap;align-items:center;gap:0;direction:ltr;}
 .eqr-section.active{display:flex;}
 /* Large ribbon template buttons */
@@ -2147,9 +2179,9 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     </div>
     </div><!-- end flex:1 overflow -->
     <div class="eq-rtabs" style="flex-shrink:0">
-      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-lang-key="eqRibbonStruct">מבנים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')" data-lang-key="eqRibbonSymbols">סמלים</button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-lang-key="eqRibbonGreek">יוונית</button>
+      <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-cat="struct"><span class="ertab-icon">⊟</span><span class="ertab-txt" data-lang-key="eqRibbonStruct">מבנים</span></button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')" data-cat="sym"><span class="ertab-icon">∑</span><span class="ertab-txt" data-lang-key="eqRibbonSymbols">סמלים</span></button>
+      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-cat="greek"><span class="ertab-icon">Ω</span><span class="ertab-txt" data-lang-key="eqRibbonGreek">יוונית</span></button>
     </div>
   </div><!-- end main row -->
   <!-- Edit mode bar (appears when a template is selected) -->
