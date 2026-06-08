@@ -2136,6 +2136,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <span id="hw-preview-label">תצוגה מקדימה:</span>
       <div id="hw-preview-eq"></div>
       <span id="hw-no-result">ממתין לכתיבה...</span>
+      <span id="hw-status" style="font-size:11px;margin-right:auto;font-family:'Assistant',sans-serif;">מתחבר...</span>
     </div>
     <div id="hw-canvas-wrap">
       <canvas id="hw-canvas" height="230"></canvas>
@@ -16259,7 +16260,12 @@ redraw();
 
   let _ws=null, _wsReady=false;
   let _strokes=[], _curStroke=null, _tool='pen', _latex='';
-  let _cv, _ctx;
+  let _cv, _ctx, _sid=0;
+
+  function _status(msg,color){
+    const el=document.getElementById('hw-status');
+    if(el){el.textContent=msg;el.style.color=color||'#888';}
+  }
 
   async function _hmac(msg){
     const enc=new TextEncoder();
@@ -16270,30 +16276,40 @@ redraw();
 
   function _wsSend(obj){ if(_ws&&_ws.readyState===WebSocket.OPEN) _ws.send(JSON.stringify(obj)); }
 
+  function _mkStrokes(arr){
+    return arr.map(s=>({id:s.id,pointerType:'MOUSE',x:s.x,y:s.y,t:s.t,p:new Array(s.x.length).fill(0.5)}));
+  }
+
   async function _handleMsg(data){
     const msg=JSON.parse(data);
+    console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
       const h=await _hmac(APP_KEY+msg.hmacChallenge);
-      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,viewSizeWidth:640,viewSizeHeight:230,hmac:h});
+      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230,hmac:h});
     } else if(msg.type==='contentPackageDescription'){
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
     } else if(msg.type==='partChanged'){
       _wsReady=true;
+      _status('מחובר — ניתן לצייר','#2d9e4e');
+      // Flush strokes drawn before connection was ready
+      if(_strokes.length>0) _wsSend({type:'addStrokes',strokes:_mkStrokes(_strokes)});
     } else if(msg.type==='exported'){
       const ltx=msg.exports&&msg.exports['application/x-latex'];
-      if(ltx) _setLatex(ltx.trim());
+      if(ltx&&ltx.trim()) _setLatex(ltx.trim());
     } else if(msg.type==='error'){
-      console.warn('MyScript:',msg.code,msg.message);
+      console.warn('MyScript error:',msg.code,msg.message);
+      _status('שגיאת זיהוי: '+msg.message,'#c0392b');
     }
   }
 
   function _connectWS(){
     if(_ws&&(_ws.readyState===WebSocket.OPEN||_ws.readyState===WebSocket.CONNECTING)) return;
     _wsReady=false;
+    _status('מתחבר...','#888');
     _ws=new WebSocket(WS_URL);
     _ws.onmessage=e=>_handleMsg(e.data);
-    _ws.onerror=e=>console.warn('MyScript WS error',e);
-    _ws.onclose=()=>{_wsReady=false;};
+    _ws.onerror=()=>_status('שגיאת חיבור','#c0392b');
+    _ws.onclose=()=>{_wsReady=false;_status('החיבור נסגר','#888');};
   }
 
   function _drawGrid(){
@@ -16304,7 +16320,6 @@ redraw();
     for(let y=0;y<=H;y+=G){_ctx.beginPath();_ctx.moveTo(0,y);_ctx.lineTo(W,y);_ctx.stroke();}
     _strokes.forEach(_drawStroke);
   }
-
   function _drawStroke(s){
     if(!s||s.x.length<1)return;
     _ctx.strokeStyle='#111';_ctx.lineWidth=2.5;_ctx.lineCap='round';_ctx.lineJoin='round';
@@ -16312,17 +16327,15 @@ redraw();
     for(let i=1;i<s.x.length;i++) _ctx.lineTo(s.x[i],s.y[i]);
     _ctx.stroke();
   }
-
   function _pos(e){
     const r=_cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;
     return{x:(t.clientX-r.left)*(_cv.width/r.width),y:(t.clientY-r.top)*(_cv.height/r.height),t:Date.now()};
   }
-
   function _onDown(e){
     e.preventDefault();
     const p=_pos(e);
     if(_tool==='erase'){_eraseAt(p.x,p.y);return;}
-    _curStroke={x:[p.x],y:[p.y],t:[p.t]};
+    _curStroke={id:'s'+(++_sid),x:[p.x],y:[p.y],t:[p.t]};
   }
   function _onMove(e){
     e.preventDefault();
@@ -16337,7 +16350,8 @@ redraw();
     if(!_curStroke)return;
     if(_curStroke.x.length>=2){
       _strokes.push(_curStroke);
-      if(_wsReady) _wsSend({type:'addStrokes',strokes:[{pointerType:'MOUSE',x:_curStroke.x,y:_curStroke.y,t:_curStroke.t,p:new Array(_curStroke.x.length).fill(0.5)}]});
+      // Send immediately if ready; otherwise will be flushed on partChanged
+      if(_wsReady) _wsSend({type:'addStrokes',strokes:_mkStrokes([_curStroke])});
     }
     _curStroke=null;
   }
@@ -16345,10 +16359,9 @@ redraw();
     const R=22;
     _strokes=_strokes.filter(s=>{for(let i=0;i<s.x.length;i++)if(Math.hypot(s.x[i]-x,s.y[i]-y)<R)return false;return true;});
     _drawGrid();
-    if(_wsReady){_wsSend({type:'clear'});if(_strokes.length) _wsSend({type:'addStrokes',strokes:_strokes.map(s=>({pointerType:'MOUSE',x:s.x,y:s.y,t:s.t,p:new Array(s.x.length).fill(0.5)}))});}
-    if(!_strokes.length) _clearPreview();
+    if(_wsReady){_wsSend({type:'clear'});if(_strokes.length)_wsSend({type:'addStrokes',strokes:_mkStrokes(_strokes)});}
+    if(!_strokes.length)_clearPreview();
   }
-
   function _setLatex(ltx){
     _latex=ltx;
     document.getElementById('hw-latex-disp').textContent=ltx;
@@ -16375,29 +16388,23 @@ redraw();
     _cv.width=_cv.parentElement.offsetWidth||640;
     _drawGrid();_clearPreview();hwSetTool('pen');
     _connectWS();
-    // If already connected, clear server state
-    if(_wsReady) _wsSend({type:'clear'});
+    if(_wsReady){_wsSend({type:'clear'});_status('מחובר — ניתן לצייר','#2d9e4e');}
   }
-
   function hwClose(){document.getElementById('handwrite-overlay').classList.remove('open');}
-
   function hwInsert(){
     if(!_latex)return;
     hwClose();
     renderLatex(_latex,img=>addEl({type:'latex',x:100,y:100,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:_latex,img}));
   }
-
   function hwSetTool(t){
     _tool=t;
     ['pen','erase'].forEach(tt=>{const b=document.getElementById('hw-tool-'+tt);if(b)b.classList.toggle('active',tt===t);});
-    if(_cv) _cv.style.cursor=t==='erase'?'cell':'crosshair';
+    if(_cv)_cv.style.cursor=t==='erase'?'cell':'crosshair';
   }
-
   function hwClear(){
     _strokes=[];if(_ctx)_drawGrid();_clearPreview();
     if(_wsReady)_wsSend({type:'clear'});
   }
-
   function hwUndo(){
     if(_strokes.length>0){_strokes.pop();_drawGrid();}
     if(_wsReady)_wsSend({type:'undo'});
