@@ -2456,11 +2456,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
         </div>
         <div style="font-size:10px;color:var(--text2);margin-top:3px;text-align:right" data-lang-key="pgCenterNameHint">שם נקודת המרכז (A, B, O…)</div>
         <div id="pg-circle-info" style="margin-top:8px;display:none">
-          <label class="pl" data-lang-key="pgShowLabels" style="margin-top:8px">הצג תוויות על הקנבס</label>
-          <div class="flip-row">
-            <button class="flip-btn" data-key="radius" id="btn-show-radius" onclick="toggleCircleLabel('radius')">רדיוס</button>
-            <button class="flip-btn" data-key="diameter" id="btn-show-diam" onclick="toggleCircleLabel('diameter')">קוטר</button>
-          </div>
           <!-- Radius/Diameter line -->
           <label class="pl" data-lang-key="pgRadiusDiamLine" style="margin-top:10px">קו רדיוס / קוטר</label>
           <div class="flip-row" style="margin-top:4px">
@@ -10408,10 +10403,6 @@ function updProps(){
     const infoDiv=document.getElementById('pg-circle-info');
     infoDiv.style.display=s.showCenter?'block':'none';
     if(s.showCenter){
-      document.getElementById('btn-show-radius').style.background=s.showRadius?'var(--accent)':'';
-      document.getElementById('btn-show-radius').style.color=s.showRadius?'white':'';
-      document.getElementById('btn-show-diam').style.background=s.showDiam?'var(--accent)':'';
-      document.getElementById('btn-show-diam').style.color=s.showDiam?'white':'';
       // Circle line buttons
       const hasLine=s.showRadLine||s.showDiamLine;
       document.getElementById('btn-show-radline').style.background=s.showRadLine?'var(--accent)':'';
