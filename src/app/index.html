@@ -11297,16 +11297,14 @@ function closeEqGallery(){
 }
 
 function eqRibbonInsertReady(key){
-  // Insert a ready-made equation onto canvas
   const templates = {
-    sqrt_pyth:  { type:'eq', raw:'\\sqrt{a^2+b^2}' },
-    quadratic:  { type:'eq', raw:'\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}' },
+    sqrt_pyth: '\\sqrt{a^2+b^2}',
+    quadratic: '\\frac{-b\\pm\\sqrt{b^2-4ac}}{2a}',
   };
-  const t = templates[key];
-  if(!t) return;
-  // Use existing insert mechanism
-  if(typeof insertEquationRaw === 'function') insertEquationRaw(t.raw);
-  else eqRibbonInsert(t.raw);
+  const latex = templates[key];
+  if(!latex) return;
+  closeEqGallery();
+  renderLatex(latex, img => addEl({type:'latex', x:100, y:100, w:img?Math.max(img.width,80):200, h:img?Math.max(img.height,36):50, color:'#000', fill:'none', sw:1, src:latex, img}));
 }
 
 // Close gallery on outside click
