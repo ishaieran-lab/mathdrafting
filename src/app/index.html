@@ -809,28 +809,52 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-fields{background:var(--surface2);border-radius:8px;padding:14px;margin-top:10px;}
 /* latex template panel (modal) */
 .eq-tmpl-panel{background:var(--surface2);border-radius:8px;padding:8px 10px;margin-bottom:10px;border:1px solid var(--border);}
-.eq-tmpl-tabs{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+.eq-tmpl-tabs{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;direction:ltr;}
 .eq-tmpl-tab{
-  width:90px;
-  height:90px;
-  border-radius:14px;
-  border:2px solid var(--border);
-  background:var(--surface);
-  color:var(--text2);
-  cursor:pointer;
-  font-size:15px;
-  font-family:'Assistant',sans-serif;
-  font-weight:800;
-  letter-spacing:0.3px;
-  transition:all 0.15s;
-  text-align:center;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  display:flex;align-items:stretch;
+  height:52px;min-width:150px;
+  border-radius:6px;border:none;cursor:pointer;
+  overflow:visible;position:relative;
+  transition:filter 0.12s,transform 0.1s;
+  box-shadow:2px 3px 8px rgba(0,0,0,0.28);
 }
-.eq-tmpl-tab:hover:not(.active){background:rgba(108,99,255,0.1);border-color:rgba(108,99,255,0.4);color:var(--text);transform:translateY(-1px);box-shadow:0 4px 12px rgba(108,99,255,0.2);}
-.eq-tmpl-tab.active{background:var(--accent);color:white;border-color:var(--accent);box-shadow:0 4px 14px rgba(108,99,255,0.45);}
+.eq-tmpl-tab:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:2px 5px 14px rgba(0,0,0,0.32);}
+.eq-tmpl-tab.active{filter:brightness(0.88);transform:none;box-shadow:inset 0 2px 6px rgba(0,0,0,0.3);}
+.etab-icon{
+  width:54px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;border-radius:6px 0 0 6px;
+  position:relative;z-index:1;
+}
+.etab-icon::after{
+  content:'';position:absolute;left:100%;top:0;
+  border-top:26px solid transparent;
+  border-bottom:26px solid transparent;
+  z-index:2;
+}
+.etab-txt{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;
+  font-family:'Assistant',sans-serif;
+  color:white;padding:0 18px;
+  border-radius:0 6px 6px 0;letter-spacing:0.5px;
+}
+/* מבנים — סגול */
+.eq-tmpl-tab[data-cat="struct"] .etab-icon{background:#5b45d0;color:#d8d0ff;}
+.eq-tmpl-tab[data-cat="struct"] .etab-icon::after{border-left:18px solid #5b45d0;}
+.eq-tmpl-tab[data-cat="struct"] .etab-txt{background:#7c63e8;}
+/* חשבון — אדום */
+.eq-tmpl-tab[data-cat="calc"] .etab-icon{background:#c0392b;color:#ffd5d0;}
+.eq-tmpl-tab[data-cat="calc"] .etab-icon::after{border-left:18px solid #c0392b;}
+.eq-tmpl-tab[data-cat="calc"] .etab-txt{background:#e74c3c;}
+/* יוונית — כחול */
+.eq-tmpl-tab[data-cat="greek"] .etab-icon{background:#1a5fa0;color:#c0deff;}
+.eq-tmpl-tab[data-cat="greek"] .etab-icon::after{border-left:18px solid #1a5fa0;}
+.eq-tmpl-tab[data-cat="greek"] .etab-txt{background:#2980b9;}
+/* סמלים — ירוק-כחול */
+.eq-tmpl-tab[data-cat="sym"] .etab-icon{background:#0d8a7a;color:#b2f0e8;}
+.eq-tmpl-tab[data-cat="sym"] .etab-icon::after{border-left:18px solid #0d8a7a;}
+.eq-tmpl-tab[data-cat="sym"] .etab-txt{background:#1abc9c;}
 .eq-tmpl-grid>div{display:none;flex-wrap:wrap;gap:4px;}
 .eq-tmpl-grid>div.active{display:flex;}
 .eq-tb{padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:14px;font-family:'Times New Roman',serif;min-width:32px;text-align:center;line-height:1.3;transition:background 0.1s,border-color 0.1s;box-sizing:border-box;flex-shrink:0;}
@@ -3013,10 +3037,10 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
   <div class="popup-title">🔢 משוואות</div>
   <!-- Tabs -->
   <div class="eq-tmpl-tabs">
-    <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'peq-struct')" data-lang-key="eqTabStruct">מבנים</button>
-    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-calc')" data-lang-key="eqTabCalc">חשבון</button>
-    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-greek')" data-lang-key="eqTabGreek">יוונית</button>
-    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-sym')" data-lang-key="eqTabSym">סמלים</button>
+    <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'peq-struct')" data-cat="struct"><span class="etab-icon">⊟</span><span class="etab-txt" data-lang-key="eqTabStruct">מבנים</span></button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-calc')" data-cat="calc"><span class="etab-icon">±</span><span class="etab-txt" data-lang-key="eqTabCalc">חשבון</span></button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-greek')" data-cat="greek"><span class="etab-icon">Ω</span><span class="etab-txt" data-lang-key="eqTabGreek">יוונית</span></button>
+    <button class="eq-tmpl-tab" onclick="switchEqTab(this,'peq-sym')" data-cat="sym"><span class="etab-icon">∑</span><span class="etab-txt" data-lang-key="eqTabSym">סמלים</span></button>
   </div>
   <!-- Template grid -->
   <div class="eq-tmpl-grid" style="margin-top:8px">
@@ -3527,10 +3551,10 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <!-- Template panel -->
     <div class="eq-tmpl-panel">
       <div class="eq-tmpl-tabs">
-        <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'tmpl-struct')">מבנים</button>
-        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-calc')">חשבון</button>
-        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-greek')">יוונית</button>
-        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-sym')">סמלים</button>
+        <button class="eq-tmpl-tab active" onclick="switchEqTab(this,'tmpl-struct')" data-cat="struct"><span class="etab-icon">⊟</span><span class="etab-txt">מבנים</span></button>
+        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-calc')" data-cat="calc"><span class="etab-icon">±</span><span class="etab-txt">חשבון</span></button>
+        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-greek')" data-cat="greek"><span class="etab-icon">Ω</span><span class="etab-txt">יוונית</span></button>
+        <button class="eq-tmpl-tab" onclick="switchEqTab(this,'tmpl-sym')" data-cat="sym"><span class="etab-icon">∑</span><span class="etab-txt">סמלים</span></button>
       </div>
       <div class="eq-tmpl-grid">
         <!-- Structures -->
