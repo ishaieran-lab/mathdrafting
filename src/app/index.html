@@ -16288,12 +16288,13 @@ redraw();
     const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
-      // iink-ts protocol: server sends ack first; we respond with newContentPackage+hmac (once)
+      // Server auto-creates package; respond with hmac auth (no applicationKey!) + create part
       const h = msg.hmacChallenge ? await _hmac(APP_KEY+msg.hmacChallenge) : '';
-      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
+      _wsSend({type:'newContentPackage',xDpi:96,yDpi:96,
                viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230,hmac:h});
-    } else if(msg.type==='contentPackageDescription'){
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
+    } else if(msg.type==='contentPackageDescription'){
+      // Package auto-created by server; newContentPart already sent from ack handler
     } else if(msg.type==='partChanged'){
       _wsReady=true;
       _status('מחובר — ניתן לצייר','#2d9e4e');
