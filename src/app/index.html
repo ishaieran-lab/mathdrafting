@@ -16256,8 +16256,8 @@ redraw();
 (function(){
   const APP_KEY  = '95d066cb-1402-410d-837d-14a1acc2632b';
   const HMAC_KEY = '771a78a9-3f95-4939-90ad-c82076093ca0';
-  // Correct URL: /offscreen with applicationKey in query string
-  const WS_URL   = 'wss://cloud.myscript.com/api/v4.0/iink/offscreen?applicationKey='+APP_KEY;
+  // /document supports Math content type; applicationKey in query string for new auth protocol
+  const WS_URL   = 'wss://cloud.myscript.com/api/v4.0/iink/document?applicationKey='+APP_KEY;
   const MM_PER_PX = 25.4 / 96;
 
   let _ws=null, _wsReady=false;
