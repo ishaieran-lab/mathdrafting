@@ -16149,27 +16149,32 @@ redraw();
   function getSeps(){ return Array.from(tb.querySelectorAll('.tsep')); }
 
   function applySize(w, totalH){
-    // Width
     w = Math.max(MIN_W, Math.min(MAX_W, w));
     tb.style.width = w + 'px';
-    // Icon size proportional to width
-    const iconSz = Math.round(w * 0.58);
-    const svgSz  = Math.round(w * 0.44);
-    getButtons().forEach(b => {
+
+    // Calculate button height first
+    const btns = getButtons();
+    const seps = getSeps();
+    let btnH = MIN_BTN_H;
+    if(totalH !== null){
+      const availH = totalH - HANDLE_H - seps.length;
+      btnH = Math.max(MIN_BTN_H, Math.round(availH / btns.length));
+      btns.forEach(b => b.style.height = btnH + 'px');
+      tb.style.height = 'auto';
+    } else {
+      // read current button height
+      btnH = btns[0] ? btns[0].offsetHeight : MIN_BTN_H;
+    }
+
+    // Icon size = min of width-based and height-based, with padding
+    const iconSz = Math.round(Math.min(w * 0.62, btnH * 0.72));
+    const svgSz  = Math.round(Math.min(w * 0.48, btnH * 0.56));
+    btns.forEach(b => {
       const img = b.querySelector('img');
       if(img){ img.style.width = iconSz+'px'; img.style.height = iconSz+'px'; }
       const svg = b.querySelector('svg');
       if(svg){ svg.style.width = svgSz+'px'; svg.style.height = svgSz+'px'; }
     });
-    // Height: distribute among buttons (no empty space)
-    if(totalH !== null){
-      const btns = getButtons();
-      const seps = getSeps();
-      const availH = totalH - HANDLE_H - seps.length;
-      const btnH = Math.max(MIN_BTN_H, Math.round(availH / btns.length));
-      btns.forEach(b => b.style.height = btnH + 'px');
-      tb.style.height = 'auto'; // let it size naturally from buttons
-    }
   }
 
   // --- Dragging ---
