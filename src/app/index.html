@@ -2369,40 +2369,8 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
   <!-- PROPS PANEL -->
   <div class="props" id="props-panel">
     <div class="props-resize-handle" id="props-resize-handle"></div>
-    <div class="fp-tabs" dir="ltr">
-      <button class="fp-tab active" id="fp-tab-design" onclick="switchPropTab('design')">עיצוב</button>
-      <button class="fp-tab" id="fp-tab-proto" onclick="switchPropTab('proto')">מצגת</button>
-    </div>
-    <div class="fp-proto" id="fp-proto">
-      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="24" height="24" rx="3"/><path d="M12 10l8 5-8 5V10z" fill="currentColor" stroke="none"/></svg>
-      <div>אינטראקציות ואנימציות<br><span style="color:#333">בקרוב</span></div>
-    </div>
     <div class="no-sel" id="no-sel">הוסף אלמנט לדף כדי לערוך</div>
     <div id="sel-props" style="display:none">
-      <div class="fp-section">
-        <div class="fp-row">
-          <div class="fp-field"><span class="fp-field-lbl">X</span><input type="number" id="pX" oninput="upd('x',this.value)" placeholder="0"></div>
-          <div class="fp-field"><span class="fp-field-lbl">Y</span><input type="number" id="pY" oninput="upd('y',this.value)" placeholder="0"></div>
-        </div>
-        <div class="fp-row">
-          <div class="fp-field"><span class="fp-field-lbl">W</span><input type="number" id="pW" oninput="upd('w',this.value)" placeholder="0"></div>
-          <div class="fp-field"><span class="fp-field-lbl">H</span><input type="number" id="pH" oninput="upd('h',this.value)" placeholder="0"></div>
-        </div>
-        <div class="fp-row">
-          <div class="fp-field" style="flex:0 0 calc(50% - 3px)">
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.3" style="color:#555;flex-shrink:0"><path d="M2 9 A6 6 0 0 1 9 2" stroke-linecap="round"/><polyline points="7,0.5 9,2 7.5,4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <input type="number" id="pRot" min="0" max="360" oninput="updRot(this.value)" placeholder="0">
-          </div>
-          <button class="fp-btn" onclick="flipEl('h')" title="היפוך אופקי">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="6.5" y1="1" x2="6.5" y2="12"/><polyline points="3.5,3.5 1,6.5 3.5,9.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="9.5,3.5 12,6.5 9.5,9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button class="fp-btn" onclick="flipEl('v')" title="היפוך אנכי">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.4"><line x1="1" y1="6.5" x2="12" y2="6.5"/><polyline points="3.5,3.5 6.5,1 9.5,3.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="3.5,9.5 6.5,12 9.5,9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-        <input type="range" min="0" max="360" value="0" id="pRotSlider" oninput="updRot(this.value)" style="display:none">
-        <span id="pRotVal" style="display:none">0°</span>
-      </div>
       <!-- ANGLES — for shapes -->
       <div class="pg" id="pg-angles" style="display:none">
         <label class="pl" data-lang-key="pgAnglesTitle">הצגת זוויות</label>
@@ -10382,41 +10350,17 @@ function buildSw(cid,colors,prop){
   });
 }
 
-function switchPropTab(tab){
-  document.querySelectorAll('.fp-tab').forEach(t=>t.classList.toggle('active',t.id==='fp-tab-'+tab));
-  const isProto=tab==='proto';
-  const proto=document.getElementById('fp-proto');
-  if(proto)proto.classList.toggle('visible',isProto);
-  if(isProto){
-    document.getElementById('no-sel').style.display='none';
-    document.getElementById('sel-props').style.display='none';
-  }else{
-    const s=getSel();
-    document.getElementById('no-sel').style.display=s?'none':'flex';
-    document.getElementById('sel-props').style.display=s?'block':'none';
-  }
-}
 function updProps(){
   const s=getSel();
   const panel=document.getElementById('props-panel');
   if(panel)panel.classList.toggle('visible',!!s);
   document.getElementById('no-sel').style.display=s?'none':'flex';
   document.getElementById('sel-props').style.display=s?'block':'none';
-  const isProto=document.getElementById('fp-tab-proto')?.classList.contains('active');
-  if(isProto){document.getElementById('no-sel').style.display='none';document.getElementById('sel-props').style.display='none';}
   // Close color picker when selection changes
   const cp=document.getElementById('clr-picker');if(cp)cp.style.display='none';
   const zoomBar=document.getElementById('graph-zoom-bar');
   if(zoomBar)zoomBar.style.display=(s&&(s.type==='graph'||s.type==='axes'||s.type==='parabola'))?'flex':'none';
   if(!s)return;
-  document.getElementById('pX').value=Math.round(s.x);
-  document.getElementById('pY').value=Math.round(s.y);
-  document.getElementById('pW').value=Math.round(s.w||0);
-  document.getElementById('pH').value=Math.round(s.h||0);
-  const rot=(s.rotation||0);
-  document.getElementById('pRot').value=rot;
-  document.getElementById('pRotSlider').value=rot;
-  document.getElementById('pRotVal').textContent=rot+'°';
   document.getElementById('pSW').value=s.sw||1.5;
   // dash buttons
   const isDash=!!s.dash;
