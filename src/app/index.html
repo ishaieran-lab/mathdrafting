@@ -16288,8 +16288,8 @@ redraw();
     const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
-      const h=await _hmac(APP_KEY+msg.hmacChallenge);
-      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230,hmac:h});
+      // newContentPackage already sent on open — ack is just a session confirmation, no re-send needed
+      console.log('[MyScript] ack received (session id:', msg.iinkSessionId,')');
     } else if(msg.type==='contentPackageDescription'){
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
     } else if(msg.type==='partChanged'){
@@ -16312,9 +16312,9 @@ redraw();
     _status('מתחבר...','#888');
     _ws=new WebSocket(WS_URL);
     _ws.binaryType='arraybuffer';
-    _ws.onopen =()=>{ console.log('[MyScript] onopen — sending probe'); _status('חיבור נוצר...','#f39c12');
-      // Probe: send newContentPackage immediately, before waiting for ack
-      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,viewSizeWidth:640,viewSizeHeight:230});
+    _ws.onopen =()=>{ console.log('[MyScript] onopen'); _status('מחובר, מאתחל...','#f39c12');
+      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
+               viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230});
     };
     _ws.onmessage=e=>{
       const d=e.data;
