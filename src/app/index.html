@@ -16281,7 +16281,9 @@ redraw();
   }
 
   async function _handleMsg(data){
-    const msg=JSON.parse(data);
+    // iink server sometimes sends Blob frames instead of text frames
+    const text = (data instanceof Blob) ? await data.text() : data;
+    const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
     if(msg.type==='ack'){
       const h=await _hmac(APP_KEY+msg.hmacChallenge);
