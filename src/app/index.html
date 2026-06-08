@@ -267,11 +267,17 @@ body.light-theme .hdr-lang-btn:hover{background:rgba(108,99,255,0.2);color:#3730
   border-bottom:1px solid #888;
   display:flex;align-items:center;justify-content:center;
   cursor:grab;flex-shrink:0;
+  user-select:none;
 }
 .toolbar-handle::before{
   content:'';display:block;width:22px;height:6px;
   background:repeating-linear-gradient(to bottom,#777 0,#777 1px,transparent 1px,transparent 3px);
 }
+.tb-resize{position:absolute;width:12px;height:12px;z-index:100;}
+.tb-resize-nw{top:0;left:0;cursor:nw-resize;}
+.tb-resize-ne{top:0;right:0;cursor:ne-resize;}
+.tb-resize-sw{bottom:0;left:0;cursor:sw-resize;}
+.tb-resize-se{bottom:0;right:0;cursor:se-resize;}
 .tsep{display:block;width:100%;height:1px;background:#999;margin:0;border-radius:0;flex-shrink:0;}
 .tbtn{
   width:100%;height:48px;border-radius:0;
@@ -2137,8 +2143,12 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 <div class="main">
 
   <!-- TOOLBAR -->
-  <div class="toolbar">
-    <div class="toolbar-handle"></div>
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar-handle" id="toolbar-handle"></div>
+    <div class="tb-resize tb-resize-nw" data-dir="nw"></div>
+    <div class="tb-resize tb-resize-ne" data-dir="ne"></div>
+    <div class="tb-resize tb-resize-sw" data-dir="sw"></div>
+    <div class="tb-resize tb-resize-se" data-dir="se"></div>
     <!-- קבוצה 1: ניווט ובחירה -->
     <button class="tbtn active" id="tbtn-select" onclick="setTool('select')" data-tip="בחירה" data-tip-key="tipSelect">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="22" height="22" overflow="visible">
@@ -16125,6 +16135,80 @@ redraw();
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',renderAll);}
   else{renderAll();}
+})();
+</script>
+<script>
+(function(){
+  const tb = document.getElementById('toolbar');
+  const handle = document.getElementById('toolbar-handle');
+  if(!tb || !handle) return;
+
+  // --- Dragging ---
+  let dragging = false, dragStartX, dragStartY, tbStartLeft, tbStartTop;
+
+  function initPos(){
+    const r = tb.getBoundingClientRect();
+    tb.style.right = 'auto';
+    tb.style.transform = 'none';
+    tb.style.left = r.left + 'px';
+    tb.style.top  = r.top  + 'px';
+  }
+
+  handle.addEventListener('mousedown', e => {
+    if(e.target.classList.contains('tb-resize')) return;
+    if(!tb.style.left) initPos();
+    dragging = true;
+    dragStartX = e.clientX; dragStartY = e.clientY;
+    tbStartLeft = parseFloat(tb.style.left);
+    tbStartTop  = parseFloat(tb.style.top);
+    handle.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+
+  // --- Resizing ---
+  let resizing = false, resizeDir, resStartX, resStartY, resStartW, resStartH, resStartLeft, resStartTop;
+  const MIN_W = 44, MAX_W = 120, MIN_H = 100;
+
+  document.querySelectorAll('.tb-resize').forEach(el => {
+    el.addEventListener('mousedown', e => {
+      if(!tb.style.left) initPos();
+      resizing = true;
+      resizeDir = el.dataset.dir;
+      resStartX = e.clientX; resStartY = e.clientY;
+      resStartW = tb.offsetWidth; resStartH = tb.offsetHeight;
+      resStartLeft = parseFloat(tb.style.left);
+      resStartTop  = parseFloat(tb.style.top);
+      tb.style.height = resStartH + 'px';
+      tb.style.overflow = 'hidden';
+      e.preventDefault(); e.stopPropagation();
+    });
+  });
+
+  document.addEventListener('mousemove', e => {
+    if(dragging){
+      tb.style.left = (tbStartLeft + e.clientX - dragStartX) + 'px';
+      tb.style.top  = (tbStartTop  + e.clientY - dragStartY) + 'px';
+    }
+    if(resizing){
+      const dx = e.clientX - resStartX, dy = e.clientY - resStartY;
+      let newW = resStartW, newH = resStartH, newL = resStartLeft, newT = resStartTop;
+      if(resizeDir.includes('e')) newW = resStartW + dx;
+      if(resizeDir.includes('w')){ newW = resStartW - dx; newL = resStartLeft + dx; }
+      if(resizeDir.includes('s')) newH = resStartH + dy;
+      if(resizeDir.includes('n')){ newH = resStartH - dy; newT = resStartTop + dy; }
+      newW = Math.max(MIN_W, Math.min(MAX_W, newW));
+      newH = Math.max(MIN_H, newH);
+      tb.style.width  = newW + 'px';
+      tb.style.height = newH + 'px';
+      tb.style.left   = newL + 'px';
+      tb.style.top    = newT + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', () => {
+    dragging = resizing = false;
+    handle.style.cursor = 'grab';
+  });
 })();
 </script>
 <style media="print">
