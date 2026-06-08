@@ -16252,11 +16252,13 @@ redraw();
   else{renderAll();}
 })();
 
-// ===== HANDWRITING MATH RECOGNITION (WebSocket) =====
+// ===== HANDWRITING MATH RECOGNITION (WebSocket — iink-ts protocol) =====
 (function(){
   const APP_KEY  = '95d066cb-1402-410d-837d-14a1acc2632b';
   const HMAC_KEY = '771a78a9-3f95-4939-90ad-c82076093ca0';
-  const WS_URL   = 'wss://cloud.myscript.com/api/v4.0/iink/document';
+  // Correct URL: /offscreen with applicationKey in query string
+  const WS_URL   = 'wss://cloud.myscript.com/api/v4.0/iink/offscreen?applicationKey='+APP_KEY;
+  const MM_PER_PX = 25.4 / 96;
 
   let _ws=null, _wsReady=false;
   let _strokes=[], _curStroke=null, _tool='pen', _latex='';
@@ -16267,10 +16269,11 @@ redraw();
     if(el){el.textContent=msg;el.style.color=color||'#888';}
   }
 
-  async function _hmac(msg){
+  // Correct HMAC: message=challenge, key=APP_KEY+HMAC_KEY (iink-ts crypto.ts)
+  async function _hmac(challenge){
     const enc=new TextEncoder();
-    const k=await crypto.subtle.importKey('raw',enc.encode(HMAC_KEY),{name:'HMAC',hash:'SHA-512'},false,['sign']);
-    const sig=await crypto.subtle.sign('HMAC',k,enc.encode(msg));
+    const k=await crypto.subtle.importKey('raw',enc.encode(APP_KEY+HMAC_KEY),{name:'HMAC',hash:'SHA-512'},false,['sign']);
+    const sig=await crypto.subtle.sign('HMAC',k,enc.encode(challenge));
     return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
   }
 
@@ -16287,20 +16290,17 @@ redraw();
     else text=data;
     const msg=JSON.parse(text);
     console.log('[MyScript]',msg.type, msg);
-    if(msg.type==='ack'){
-      // Respond with hmac (no applicationKey), then newContentPart — both AFTER async hmac
-      // so newContentPart is never sent before auth
-      if(msg.hmacChallenge){
-        const h = await _hmac(APP_KEY+msg.hmacChallenge);
-        _wsSend({type:'hmac',hmac:h});
-      }
+    if(msg.type==='hmacChallenge'){
+      const h = await _hmac(msg.hmacChallenge);
+      _wsSend({type:'hmac',hmac:h});
+    } else if(msg.type==='authenticated'){
+      _wsSend({type:'initSession',scaleX:MM_PER_PX,scaleY:MM_PER_PX,
+               configuration:{lang:'en_US',math:{mimeTypes:['application/x-latex']}}});
+    } else if(msg.type==='sessionDescription'){
       _wsSend({type:'newContentPart',contentType:'Math',mimeTypes:['application/x-latex']});
-    } else if(msg.type==='contentPackageDescription'){
-      // Package created; newContentPart sent from ack handler after auth (not here — timing)
-    } else if(msg.type==='partChanged'){
+    } else if(msg.type==='partChanged'||msg.type==='newPart'){
       _wsReady=true;
       _status('מחובר — ניתן לצייר','#2d9e4e');
-      // Flush strokes drawn before connection was ready
       if(_strokes.length>0) _wsSend({type:'addStrokes',strokes:_mkStrokes(_strokes)});
     } else if(msg.type==='exported'){
       const ltx=msg.exports&&msg.exports['application/x-latex'];
@@ -16317,12 +16317,10 @@ redraw();
     _status('מתחבר...','#888');
     _ws=new WebSocket(WS_URL);
     _ws.binaryType='arraybuffer';
-    _ws.onopen =()=>{
+    _ws.onopen=()=>{
       console.log('[MyScript] onopen');
       _status('מחובר, מאתחל...','#f39c12');
-      // Send newContentPackage WITH applicationKey to identify the app and trigger ack
-      _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
-               viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230});
+      _wsSend({type:'authenticate','myscript-client-name':'iink-ts','myscript-client-version':'3.3.2'});
     };
     _ws.onmessage=e=>{
       const d=e.data;
@@ -16332,10 +16330,9 @@ redraw();
     };
     _ws.onerror=e=>{ console.warn('[MyScript] onerror',e); _status('שגיאת חיבור','#c0392b'); };
     _ws.onclose=e=>{ console.warn('[MyScript] onclose code='+e.code+' reason='+e.reason); _wsReady=false; _status('סגור — קוד '+e.code,'#c0392b'); };
-    // Timeout diagnostic (don't overwrite onclose message if already closed)
     setTimeout(()=>{
       if(!_wsReady&&_ws&&_ws.readyState!==WebSocket.CLOSED) _status('Timeout — WS state='+_ws.readyState,'#c0392b');
-    }, 6000);
+    }, 8000);
   }
 
   function _drawGrid(){
