@@ -16237,11 +16237,12 @@ redraw();
   let dragging = false, dragStartX, dragStartY, tbStartLeft, tbStartTop;
 
   function initPos(){
-    const r = tb.getBoundingClientRect();
+    const r  = tb.getBoundingClientRect();
+    const pr = (tb.offsetParent || document.body).getBoundingClientRect();
     tb.style.right = 'auto';
     tb.style.transform = 'none';
-    tb.style.left = r.left + 'px';
-    tb.style.top  = r.top  + 'px';
+    tb.style.left = (r.left - pr.left) + 'px';
+    tb.style.top  = (r.top  - pr.top)  + 'px';
   }
 
   handle.addEventListener('mousedown', e => {
