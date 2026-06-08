@@ -943,12 +943,7 @@ body.light-theme .eq-rtabs{border-left-color:#e0e0e8;}
 #hw-preview-label{font-size:12px;color:#888;font-family:'Assistant',sans-serif;flex-shrink:0;direction:rtl;}
 #hw-preview-eq{min-height:36px;display:flex;align-items:center;flex:1;}
 #hw-preview-eq img{max-height:44px;}
-#hw-canvas-wrap{position:relative;line-height:0;}
-#hw-canvas{display:block;cursor:crosshair;touch-action:none;width:100%;}
-#hw-tools{padding:8px 14px;display:flex;gap:8px;align-items:center;background:#f4f4f4;border-bottom:1px solid #ddd;flex-wrap:wrap;}
-.hw-tool{padding:5px 13px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:13px;font-family:'Assistant',sans-serif;transition:background 0.15s;}
-.hw-tool:hover{background:#e8f0fe;}
-.hw-tool.active{background:#2563eb;color:#fff;border-color:#2563eb;}
+#hw-widget{border-bottom:1px solid #ddd;}
 #hw-footer{padding:10px 16px;display:flex;gap:10px;justify-content:flex-end;align-items:center;background:#fff;border-top:1px solid #eee;}
 #hw-latex-disp{flex:1;font-size:11px;color:#777;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:ltr;}
 #hw-setup{padding:28px 24px;background:#fff;direction:rtl;}
@@ -1561,6 +1556,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://unpkg.com/@myscript/math-web-component/dist/math-web-component.js"></script>
 </head>
 <body>
 
@@ -2128,33 +2124,27 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 <!-- HANDWRITING MATH MODAL -->
 <div id="handwrite-overlay" onclick="if(event.target===this)hwClose()">
   <div id="handwrite-dialog">
-    <div id="hw-setup" style="display:none"></div>
-    <!-- Main drawing screen -->
-    <div id="hw-main" style="display:none;flex-direction:column;">
-      <div id="hw-header">
-        <h3>✍ משוואה ידנית</h3>
-        <button id="hw-close-btn" onclick="hwClose()">✕</button>
-      </div>
-      <div id="hw-preview-wrap">
-        <span id="hw-preview-label">תצוגה מקדימה:</span>
-        <div id="hw-preview-eq"></div>
-        <span id="hw-no-result">ממתין לכתיבה...</span>
-      </div>
-      <div id="hw-canvas-wrap">
-        <canvas id="hw-canvas" height="220"></canvas>
-      </div>
-      <div id="hw-tools">
-        <button class="hw-tool active" id="hw-tool-pen" onclick="hwSetTool('pen')">✏️ כתוב</button>
-        <button class="hw-tool" id="hw-tool-erase" onclick="hwSetTool('erase')">🧹 מחק</button>
-        <button class="hw-tool" onclick="hwUndo()">↩ ביטול אחרון</button>
-        <button class="hw-tool" onclick="hwClear()">🗑 נקה הכל</button>
-        <span style="flex:1"></span>
-      </div>
-      <div id="hw-footer">
-        <span id="hw-latex-disp"></span>
-        <button class="btn btn-ghost" onclick="hwClose()">ביטול</button>
-        <button class="btn btn-primary" id="hw-insert-btn" onclick="hwInsert()" disabled>הוסף לקנבס</button>
-      </div>
+    <div id="hw-header">
+      <h3>✍ משוואה ידנית</h3>
+      <button id="hw-close-btn" onclick="hwClose()">✕</button>
+    </div>
+    <div id="hw-preview-wrap">
+      <span id="hw-preview-label">תצוגה מקדימה:</span>
+      <div id="hw-preview-eq"></div>
+      <span id="hw-no-result">ממתין לכתיבה...</span>
+    </div>
+    <math-widget id="hw-widget"
+      applicationkey="95d066cb-1402-410d-837d-14a1acc2632b"
+      hmackey="771a78a9-3f95-4939-90ad-c82076093ca0"
+      host="cloud.myscript.com"
+      scheme="https"
+      lang="en_US"
+      style="width:100%;height:260px;display:block;">
+    </math-widget>
+    <div id="hw-footer">
+      <span id="hw-latex-disp"></span>
+      <button class="btn btn-ghost" onclick="hwClose()">ביטול</button>
+      <button class="btn btn-primary" id="hw-insert-btn" onclick="hwInsert()" disabled>הוסף לקנבס</button>
     </div>
   </div>
 </div>
@@ -16258,160 +16248,52 @@ redraw();
 
 // ===== HANDWRITING MATH RECOGNITION =====
 (function(){
-  const _KEYS = {
-    app:  '95d066cb-1402-410d-837d-14a1acc2632b',
-    hmac: '771a78a9-3f95-4939-90ad-c82076093ca0'
-  };
-  let _strokes = [], _curStroke = null, _tool = 'pen', _latex = '', _timer = null;
-  let _cv, _ctx;
+  let _latex = '';
 
   function openHandwriteModal(){
-    const ov = document.getElementById('handwrite-overlay');
-    document.getElementById('hw-setup').style.display = 'none';
-    const m = document.getElementById('hw-main'); m.style.display='flex'; m.style.flexDirection='column';
-    ov.classList.add('open');
-    _initDrawing();
-  }
-
-  function _initDrawing(){
-    _cv  = document.getElementById('hw-canvas');
-    _ctx = _cv.getContext('2d');
-    _strokes = []; _curStroke = null; _latex = '';
-    document.getElementById('hw-latex-disp').textContent = '';
-    document.getElementById('hw-preview-eq').innerHTML  = '';
+    _latex = '';
+    document.getElementById('hw-preview-eq').innerHTML = '';
     document.getElementById('hw-no-result').style.display = 'block';
     document.getElementById('hw-insert-btn').disabled = true;
-    _cv.width = _cv.parentElement.offsetWidth || 640;
-    _drawGrid();
-    hwSetTool('pen');
+    document.getElementById('hw-latex-disp').textContent = '';
+    const w = document.getElementById('hw-widget');
+    if(w && w.clear) w.clear();
+    document.getElementById('handwrite-overlay').classList.add('open');
   }
 
-  function _drawGrid(){
-    const W=_cv.width, H=_cv.height, G=24;
-    _ctx.fillStyle='#fffde7'; _ctx.fillRect(0,0,W,H);
-    _ctx.strokeStyle='#e8d9a0'; _ctx.lineWidth=0.5;
-    for(let x=0;x<=W;x+=G){_ctx.beginPath();_ctx.moveTo(x,0);_ctx.lineTo(x,H);_ctx.stroke();}
-    for(let y=0;y<=H;y+=G){_ctx.beginPath();_ctx.moveTo(0,y);_ctx.lineTo(W,y);_ctx.stroke();}
-    _strokes.forEach(_drawStroke);
-  }
-
-  function _drawStroke(s){
-    if(!s||s.x.length<2) return;
-    _ctx.strokeStyle='#111';_ctx.lineWidth=2.5;_ctx.lineCap='round';_ctx.lineJoin='round';
-    _ctx.beginPath();_ctx.moveTo(s.x[0],s.y[0]);
-    for(let i=1;i<s.x.length;i++) _ctx.lineTo(s.x[i],s.y[i]);
-    _ctx.stroke();
-  }
-
-  function _pos(e){
-    const r=_cv.getBoundingClientRect(), t=e.touches?e.touches[0]:e;
-    return {x:(t.clientX-r.left)*((_cv.width||640)/r.width), y:(t.clientY-r.top)*((_cv.height||220)/r.height), t:Date.now()};
-  }
-
-  function _onDown(e){
-    e.preventDefault();
-    const p=_pos(e);
-    if(_tool==='erase'){_eraseAt(p.x,p.y);return;}
-    _curStroke={x:[p.x],y:[p.y],t:[p.t]};
-  }
-  function _onMove(e){
-    e.preventDefault();
-    if(!_curStroke) return;
-    const p=_pos(e);
-    _curStroke.x.push(p.x); _curStroke.y.push(p.y); _curStroke.t.push(p.t);
-    const n=_curStroke.x.length;
-    _ctx.strokeStyle='#111';_ctx.lineWidth=2.5;_ctx.lineCap='round';_ctx.lineJoin='round';
-    _ctx.beginPath();_ctx.moveTo(_curStroke.x[n-2],_curStroke.y[n-2]);_ctx.lineTo(_curStroke.x[n-1],_curStroke.y[n-1]);_ctx.stroke();
-  }
-  function _onUp(e){
-    if(!_curStroke) return;
-    if(_curStroke.x.length>=2) _strokes.push(_curStroke);
-    _curStroke=null;
-    if(_strokes.length>0) _scheduleRecognize();
-  }
-  function _eraseAt(x,y){
-    const R=22;
-    _strokes=_strokes.filter(s=>{
-      for(let i=0;i<s.x.length;i++) if(Math.hypot(s.x[i]-x,s.y[i]-y)<R) return false;
-      return true;
-    });
-    _drawGrid();
-    if(_strokes.length===0){_latex='';document.getElementById('hw-insert-btn').disabled=true;document.getElementById('hw-no-result').style.display='block';document.getElementById('hw-preview-eq').innerHTML='';document.getElementById('hw-latex-disp').textContent='';}
-  }
-
-  function _scheduleRecognize(){ clearTimeout(_timer); _timer=setTimeout(_recognize,900); }
-
-  async function _recognize(){
-    const keys=_KEYS;
-    if(_strokes.length===0) return;
-    const body=JSON.stringify({
-      configuration:{lang:'en_US'},
-      contentType:'Math',
-      strokeGroups:[{strokes:_strokes.map(s=>({x:s.x,y:s.y,t:s.t}))}]
-    });
-    try{
-      const hmac=await _hmac(keys.app+body, keys.hmac);
-      const resp=await fetch('https://cloud.myscript.com/api/v4.0/iink/batch',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','applicationKey':keys.app,'hmac':hmac},
-        body
-      });
-      if(!resp.ok){console.warn('MyScript',resp.status,await resp.text());return;}
-      const data=await resp.json();
-      const ex=data.exports||{};
-      const ltx=ex['application/x-latex']||ex['application/latex']||Object.values(ex)[0]||'';
-      if(ltx){
-        _latex=ltx.trim();
-        document.getElementById('hw-latex-disp').textContent=_latex;
-        document.getElementById('hw-no-result').style.display='none';
-        document.getElementById('hw-insert-btn').disabled=false;
-        renderLatex(_latex, img=>{
-          const p=document.getElementById('hw-preview-eq');
-          p.innerHTML='';
-          if(img){const c=img.cloneNode();c.style.maxHeight='44px';p.appendChild(c);}
-        });
-      }
-    }catch(err){console.warn('HW recognition error:',err);}
-  }
-
-  async function _hmac(msg,key){
-    const enc=new TextEncoder();
-    const k=await crypto.subtle.importKey('raw',enc.encode(key),{name:'HMAC',hash:'SHA-512'},false,['sign']);
-    const sig=await crypto.subtle.sign('HMAC',k,enc.encode(msg));
-    return Array.from(new Uint8Array(sig)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  }
-
-  function hwSetTool(t){
-    _tool=t;
-    ['pen','erase'].forEach(tt=>{ const b=document.getElementById('hw-tool-'+tt); if(b) b.classList.toggle('active',tt===t); });
-    if(_cv) _cv.style.cursor=t==='erase'?'cell':'crosshair';
-  }
-  function hwClear(){ _strokes=[]; if(_ctx) _drawGrid(); _latex=''; const btn=document.getElementById('hw-insert-btn'); if(btn) btn.disabled=true; const nr=document.getElementById('hw-no-result'); if(nr) nr.style.display='block'; const pe=document.getElementById('hw-preview-eq'); if(pe) pe.innerHTML=''; const ld=document.getElementById('hw-latex-disp'); if(ld) ld.textContent=''; }
-  function hwUndo(){ if(_strokes.length>0){_strokes.pop();_drawGrid();if(_strokes.length>0)_scheduleRecognize();else hwClear();} }
   function hwClose(){ document.getElementById('handwrite-overlay').classList.remove('open'); }
+
   function hwInsert(){
     if(!_latex) return;
     hwClose();
-    renderLatex(_latex,img=>addEl({type:'latex',x:100,y:100,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:_latex,img}));
+    renderLatex(_latex, img => addEl({type:'latex', x:100, y:100,
+      w:img?Math.max(img.width,80):200, h:img?Math.max(img.height,36):50,
+      color:'#000', fill:'none', sw:1, src:_latex, img}));
   }
-  // Bind canvas events once on DOMContentLoaded
-  document.addEventListener('DOMContentLoaded',()=>{
-    const cv=document.getElementById('hw-canvas');
-    if(!cv) return;
-    cv.addEventListener('mousedown',_onDown);
-    cv.addEventListener('mousemove',_onMove);
-    cv.addEventListener('touchstart',_onDown,{passive:false});
-    cv.addEventListener('touchmove',_onMove,{passive:false});
-    document.addEventListener('mouseup',_onUp);
-    document.addEventListener('touchend',_onUp,{passive:false});
+
+  // Listen for recognition results from math-widget
+  document.addEventListener('DOMContentLoaded', function(){
+    const w = document.getElementById('hw-widget');
+    if(!w) return;
+    w.addEventListener('exports', function(e){
+      const ex = e.detail && e.detail.exports ? e.detail.exports : e.detail;
+      const ltx = ex && (ex['application/x-latex'] || ex['application/latex']);
+      if(!ltx || !ltx.trim()) return;
+      _latex = ltx.trim();
+      document.getElementById('hw-latex-disp').textContent = _latex;
+      document.getElementById('hw-no-result').style.display = 'none';
+      document.getElementById('hw-insert-btn').disabled = false;
+      renderLatex(_latex, function(img){
+        const p = document.getElementById('hw-preview-eq');
+        p.innerHTML = '';
+        if(img){ const c = img.cloneNode(); c.style.maxHeight='44px'; p.appendChild(c); }
+      });
+    });
   });
 
-  window.openHandwriteModal=openHandwriteModal;
-  window.hwClose=hwClose;
-  window.hwSetTool=hwSetTool;
-  window.hwClear=hwClear;
-  window.hwUndo=hwUndo;
-  window.hwInsert=hwInsert;
+  window.openHandwriteModal = openHandwriteModal;
+  window.hwClose = hwClose;
+  window.hwInsert = hwInsert;
 })();
 </script>
 <script>
