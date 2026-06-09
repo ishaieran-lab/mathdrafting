@@ -4190,6 +4190,9 @@ function setTool(t){
   // Show/hide freehand HUD
   const fhHud=document.getElementById('fh-hud');
   if(fhHud) fhHud.style.display=(t==='freehand')?'flex':'none';
+  // Hide props panel while freehand tool is active
+  const _pp=document.getElementById('props-panel');
+  if(_pp){if(t==='freehand')_pp.classList.remove('visible');else if(getSel())_pp.classList.add('visible');}
   _syncMarginHud();
   redraw();
   const labels = (typeof LANGS!=='undefined' && LANGS[currentLang])
