@@ -2403,15 +2403,8 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <!-- SHAPE POINTS -->
       <div class="pg" id="pg-shape-pts" style="display:none">
         <label class="pl" data-lang-key="pgShapePtsTitle" style="color:var(--accent);font-weight:600">נקודות על הצורה</label>
-        <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
-          <div style="display:flex;gap:4px">
-            <button class="flip-btn" data-lang-key="pgShapePtsAll" onclick="addAllCorners()" style="flex:1;font-size:11px;padding:6px">⬡ הוסף לכל הפינות</button>
-            <button class="flip-btn" id="btn-shape-addpt" data-lang-key="pgShapePtsClick" onclick="startShapePoint()" style="flex:1;font-size:11px;padding:6px">⊙ הוסף לפי בחירה</button>
-          </div>
-          <button class="flip-btn" data-lang-key="pgShapePtsABC" onclick="autoLabelPts()" style="width:100%;font-size:11px;padding:6px">ABC תן שמות</button>
-          <div id="shape-pt-hint" style="display:none;font-size:10px;color:var(--accent3);line-height:1.6">
-            לחץ על קצה הצורה. Esc לביטול.
-          </div>
+        <div style="margin-top:6px">
+          <button class="flip-btn" data-lang-key="pgShapePtsAll" onclick="addAllCorners()" style="width:100%;font-size:12px;padding:7px">⬡ הוסף לכל הפינות</button>
         </div>
         <div id="shape-pts-list" style="margin-top:6px;display:flex;flex-direction:column;gap:3px"></div>
       </div>
@@ -8205,15 +8198,14 @@ function addAllCorners(){
   const s=getSel();if(!s)return;
   const poly=getElPolyPts(s);if(!poly)return;
   if(!s.shapePts) s.shapePts=[];
-  // Add corner points in relative coords
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const w=s.w||80,h=s.h||40;
   const aw=Math.abs(w),ah=Math.abs(h);
   poly.forEach(function(pt){
     const bx=w<0?s.x+w:s.x, by=h<0?s.y+h:s.y;
     const rx=(pt.x-bx)/aw, ry=(pt.y-by)/ah;
-    // Check not already there
     const exists=s.shapePts.some(function(p){return Math.abs(p.rx-rx)<0.01&&Math.abs(p.ry-ry)<0.01;});
-    if(!exists) s.shapePts.push({rx:rx,ry:ry,label:''});
+    if(!exists) s.shapePts.push({rx:rx,ry:ry,label:letters[s.shapePts.length]||''});
   });
   buildShapePtsList(s);updProps();redraw();
 }
