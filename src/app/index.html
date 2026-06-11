@@ -935,7 +935,7 @@ body.light-theme .eq-rtabs{border-left-color:#e0e0e8;}
 #handwrite-overlay.open{display:flex;animation:fadeIn 0.18s ease;}
 #handwrite-dialog{background:#fff;border-radius:14px;overflow:hidden;width:660px;max-width:96vw;box-shadow:0 24px 70px rgba(0,0,0,0.55);display:flex;flex-direction:column;}
 #hw-header{background:#1e293b;color:#fff;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;font-family:'Assistant',sans-serif;}
-#hw-header h3{margin:0;font-size:15px;font-weight:700;direction:rtl;}
+#hw-header h3{margin:0;font-size:15px;font-weight:700;}
 #hw-close-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:18px;line-height:1;padding:0 4px;}
 #hw-close-btn:hover{color:#fff;}
 #hw-preview-wrap{background:#f8f9fa;border-bottom:1px solid #e0e0e0;padding:8px 16px;min-height:52px;display:flex;align-items:center;gap:12px;}
@@ -2128,28 +2128,28 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 <div id="handwrite-overlay" onclick="if(event.target===this)hwClose()">
   <div id="handwrite-dialog">
     <div id="hw-header">
-      <h3>✍ משוואה ידנית</h3>
+      <h3 data-lang-key="hwTitle">✍ משוואה ידנית</h3>
       <button id="hw-close-btn" onclick="hwClose()">✕</button>
     </div>
     <div id="hw-preview-wrap">
-      <span id="hw-preview-label">תצוגה מקדימה:</span>
+      <span id="hw-preview-label" data-lang-key="hwPreviewLabel">תצוגה מקדימה:</span>
       <div id="hw-preview-eq"></div>
-      <span id="hw-no-result">ממתין לכתיבה...</span>
-      <span id="hw-status" style="font-size:11px;margin-right:auto;font-family:'Assistant',sans-serif;">מתחבר...</span>
+      <span id="hw-no-result" data-lang-key="hwWaiting">ממתין לכתיבה...</span>
+      <span id="hw-status" style="font-size:11px;margin-right:auto;font-family:'Assistant',sans-serif;" data-lang-key="hwConnecting">מתחבר...</span>
     </div>
     <div id="hw-canvas-wrap">
       <canvas id="hw-canvas" height="230"></canvas>
     </div>
     <div id="hw-tools">
-      <button class="hw-tool active" id="hw-tool-pen" onclick="hwSetTool('pen')">✏️ כתוב</button>
-      <button class="hw-tool" id="hw-tool-erase" onclick="hwSetTool('erase')">🧹 מחק</button>
-      <button class="hw-tool" onclick="hwUndo()">↩ ביטול</button>
-      <button class="hw-tool" onclick="hwClear()">🗑 נקה</button>
+      <button class="hw-tool active" id="hw-tool-pen" onclick="hwSetTool('pen')" data-lang-key="hwPen">✏️ כתוב</button>
+      <button class="hw-tool" id="hw-tool-erase" onclick="hwSetTool('erase')" data-lang-key="hwErase">🧹 מחק</button>
+      <button class="hw-tool" onclick="hwUndo()" data-lang-key="hwUndo">↩ ביטול</button>
+      <button class="hw-tool" onclick="hwClear()" data-lang-key="hwClear">🗑 נקה</button>
     </div>
     <div id="hw-footer">
       <span id="hw-latex-disp"></span>
-      <button class="btn btn-ghost" onclick="hwClose()">ביטול</button>
-      <button class="btn btn-primary" id="hw-insert-btn" onclick="hwInsert()" disabled>הוסף לקנבס</button>
+      <button class="btn btn-ghost" onclick="hwClose()" data-lang-key="hwCancel">ביטול</button>
+      <button class="btn btn-primary" id="hw-insert-btn" onclick="hwInsert()" disabled data-lang-key="hwInsert">הוסף לקנבס</button>
     </div>
   </div>
 </div>
@@ -2241,7 +2241,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-cat="struct"><span class="ertab-icon">⊟</span><span class="ertab-txt" data-lang-key="eqRibbonStruct">מבנים</span></button>
       <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')" data-cat="sym"><span class="ertab-icon">∑</span><span class="ertab-txt" data-lang-key="eqRibbonSymbols">סמלים</span></button>
       <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-cat="greek"><span class="ertab-icon">Ω</span><span class="ertab-txt" data-lang-key="eqRibbonGreek">יוונית</span></button>
-      <button class="eq-rtab" onclick="openHandwriteModal()" data-cat="handwrite"><span class="ertab-icon">✍</span><span class="ertab-txt">משוואה ידנית</span></button>
+      <button class="eq-rtab" onclick="openHandwriteModal()" data-cat="handwrite"><span class="ertab-icon">✍</span><span class="ertab-txt" data-lang-key="eqRibbonHandwrite">משוואה ידנית</span></button>
     </div>
   </div><!-- end main row -->
   <!-- Edit mode bar (appears when a template is selected) -->
@@ -15309,7 +15309,9 @@ var LANGS = {
       pgTextRight:'ימין ≡', pgTextCenter:'מרכז ≡', pgTextLeft:'≡ שמאל',
       pgTextEdit:'✏️ ערוך טקסט',
       // eq ribbon tabs
-      eqRibbonStruct:'מבנים', eqRibbonSymbols:'סמלים', eqRibbonGreek:'יוונית',
+      eqRibbonStruct:'מבנים', eqRibbonSymbols:'סמלים', eqRibbonGreek:'יוונית', eqRibbonHandwrite:'משוואה ידנית',
+      hwTitle:'✍ משוואה ידנית', hwPreviewLabel:'תצוגה מקדימה:', hwWaiting:'ממתין לכתיבה...', hwConnecting:'מתחבר...',
+      hwPen:'✏️ כתוב', hwErase:'🧹 מחק', hwUndo:'↩ ביטול', hwClear:'🗑 נקה', hwCancel:'ביטול', hwInsert:'הוסף לקנבס',
       // eq popup tabs
       eqTabStruct:'מבנים', eqTabCalc:'חשבון', eqTabGreek:'יוונית', eqTabSym:'סמלים',
       // stats preview
@@ -15544,7 +15546,9 @@ var LANGS = {
       pgTextRight:'Right ≡', pgTextCenter:'Center ≡', pgTextLeft:'≡ Left',
       pgTextEdit:'✏️ Edit text',
       // eq ribbon tabs
-      eqRibbonStruct:'Structures', eqRibbonSymbols:'Symbols', eqRibbonGreek:'Greek',
+      eqRibbonStruct:'Structures', eqRibbonSymbols:'Symbols', eqRibbonGreek:'Greek', eqRibbonHandwrite:'Handwriting',
+      hwTitle:'✍ Handwritten Equation', hwPreviewLabel:'Preview:', hwWaiting:'Waiting for input...', hwConnecting:'Connecting...',
+      hwPen:'✏️ Write', hwErase:'🧹 Erase', hwUndo:'↩ Undo', hwClear:'🗑 Clear', hwCancel:'Cancel', hwInsert:'Add to canvas',
       // eq popup tabs
       eqTabStruct:'Structures', eqTabCalc:'Arithmetic', eqTabGreek:'Greek', eqTabSym:'Symbols',
       // stats preview
@@ -15611,6 +15615,9 @@ var LANGS = {
       tipZoomOut:'Verkleinern', tipZoomIn:'Vergrößern',
       tipTheme:'Dark/Light umschalten', tipAccent:'Farbe wechseln',
       // equations
+      eqRibbonStruct:'Strukturen', eqRibbonSymbols:'Symbole', eqRibbonGreek:'Griechisch', eqRibbonHandwrite:'Handschrift',
+      hwTitle:'✍ Handgeschriebene Gleichung', hwPreviewLabel:'Vorschau:', hwWaiting:'Warte auf Eingabe...', hwConnecting:'Verbinde...',
+      hwPen:'✏️ Schreiben', hwErase:'🧹 Löschen', hwUndo:'↩ Rückgängig', hwClear:'🗑 Leeren', hwCancel:'Abbrechen', hwInsert:'Zur Leinwand',
       eqTutTitle:'Anleitung — Gleichungen & Algebra', eqTutClose:'✕ Schließen', eqTutOpen:'← Gleichungen öffnen',
       eqTitle:'🔢 Gleichungen', eqFree:'✏️ Freie Gleichung', eqQuadratic:'🔲 Quadratische Gleichung',
       kbBasic:'Grundlegend', kbAdv:'Erweitert ▾', kbTrig:'Trigonometrische Funktionen', kbGreek:'Griechische Buchstaben',
