@@ -2472,7 +2472,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       </div>
       <div class="fp-section" id="pg-stroke-dash">
         <div class="fp-sec-hdr">
-          <span class="fp-sec-title" data-key="stroke">קו</span>
+          <span class="fp-sec-title" data-lang-key="pgLine">קו</span>
           <div style="display:flex;gap:4px">
             <button class="fp-sec-btn" id="btn-dash-solid" data-lang-key="pgSolid" onclick="setElDash(false)" title="רציף" style="letter-spacing:2px;font-size:9px">——</button>
             <button class="fp-sec-btn" id="btn-dash-dashed" data-lang-key="pgDashed" onclick="setElDash(true)" title="מקווקו" style="letter-spacing:1px;font-size:9px">- -</button>
@@ -15312,6 +15312,7 @@ var LANGS = {
       eqRibbonStruct:'מבנים', eqRibbonSymbols:'סמלים', eqRibbonGreek:'יוונית', eqRibbonHandwrite:'משוואה ידנית',
       hwTitle:'✍ משוואה ידנית', hwPreviewLabel:'תצוגה מקדימה:', hwWaiting:'ממתין לכתיבה...', hwConnecting:'מתחבר...',
       hwPen:'✏️ כתוב', hwErase:'🧹 מחק', hwUndo:'↩ ביטול', hwClear:'🗑 נקה', hwCancel:'ביטול', hwInsert:'הוסף לקנבס',
+      hwConnected:'מחובר — ניתן לצייר', hwInitializing:'מחובר, מאתחל...', hwRecogError:'שגיאת זיהוי: ', hwConnError:'שגיאת חיבור', hwClosed:'סגור — קוד ',
       // eq popup tabs
       eqTabStruct:'מבנים', eqTabCalc:'חשבון', eqTabGreek:'יוונית', eqTabSym:'סמלים',
       // stats preview
@@ -15549,6 +15550,7 @@ var LANGS = {
       eqRibbonStruct:'Structures', eqRibbonSymbols:'Symbols', eqRibbonGreek:'Greek', eqRibbonHandwrite:'Handwriting',
       hwTitle:'✍ Handwritten Equation', hwPreviewLabel:'Preview:', hwWaiting:'Waiting for input...', hwConnecting:'Connecting...',
       hwPen:'✏️ Write', hwErase:'🧹 Erase', hwUndo:'↩ Undo', hwClear:'🗑 Clear', hwCancel:'Cancel', hwInsert:'Add to canvas',
+      hwConnected:'Connected — draw now', hwInitializing:'Connected, initializing...', hwRecogError:'Error: ', hwConnError:'Connection error', hwClosed:'Closed — code ',
       // eq popup tabs
       eqTabStruct:'Structures', eqTabCalc:'Arithmetic', eqTabGreek:'Greek', eqTabSym:'Symbols',
       // stats preview
@@ -16170,6 +16172,7 @@ redraw();
   let _strokes=[], _curStroke=null, _tool='pen', _latex='';
   let _cv, _ctx, _sid=0;
 
+  function _ui(){return(typeof LANGS!=='undefined'&&LANGS[currentLang])?LANGS[currentLang].ui:{};}
   function _status(msg,color){
     const el=document.getElementById('hw-status');
     if(el){el.textContent=msg;el.style.color=color||'#888';}
@@ -16208,26 +16211,26 @@ redraw();
       // Package auto-created; newContentPart sent from ack handler
     } else if(msg.type==='partChanged'||msg.type==='newPart'){
       _wsReady=true;
-      _status('מחובר — ניתן לצייר','#2d9e4e');
+      _status(_ui().hwConnected||'מחובר — ניתן לצייר','#2d9e4e');
       if(_strokes.length>0) _wsSend({type:'addStrokes',strokes:_mkStrokes(_strokes)});
     } else if(msg.type==='exported'){
       const ltx=msg.exports&&msg.exports['application/x-latex'];
       if(ltx&&ltx.trim()) _setLatex(ltx.trim());
     } else if(msg.type==='error'){
       console.warn('MyScript error:',msg.code,msg.message);
-      _status('שגיאת זיהוי: '+msg.message,'#c0392b');
+      _status((_ui().hwRecogError||'שגיאת זיהוי: ')+msg.message,'#c0392b');
     }
   }
 
   function _connectWS(){
     if(_ws&&(_ws.readyState===WebSocket.OPEN||_ws.readyState===WebSocket.CONNECTING)) return;
     _wsReady=false;
-    _status('מתחבר...','#888');
+    _status(_ui().hwConnecting||'מתחבר...','#888');
     _ws=new WebSocket(WS_URL);
     _ws.binaryType='arraybuffer';
     _ws.onopen=()=>{
       console.log('[MyScript] onopen');
-      _status('מחובר, מאתחל...','#f39c12');
+      _status(_ui().hwInitializing||'מחובר, מאתחל...','#f39c12');
       // Old /document protocol: send newContentPackage with applicationKey to trigger ack
       _wsSend({type:'newContentPackage',applicationKey:APP_KEY,xDpi:96,yDpi:96,
                viewSizeWidth:Math.round(_cv?_cv.width:640),viewSizeHeight:230});
@@ -16238,8 +16241,8 @@ redraw();
       console.log('[MyScript] MSG typeof='+typeof d+' | '+preview);
       _handleMsg(d);
     };
-    _ws.onerror=e=>{ console.warn('[MyScript] onerror',e); _status('שגיאת חיבור','#c0392b'); };
-    _ws.onclose=e=>{ console.warn('[MyScript] onclose code='+e.code+' reason='+e.reason); _wsReady=false; _status('סגור — קוד '+e.code,'#c0392b'); };
+    _ws.onerror=e=>{ console.warn('[MyScript] onerror',e); _status(_ui().hwConnError||'שגיאת חיבור','#c0392b'); };
+    _ws.onclose=e=>{ console.warn('[MyScript] onclose code='+e.code+' reason='+e.reason); _wsReady=false; _status((_ui().hwClosed||'סגור — קוד ')+e.code,'#c0392b'); };
     setTimeout(()=>{
       if(!_wsReady&&_ws&&_ws.readyState!==WebSocket.CLOSED) _status('Timeout — WS state='+_ws.readyState,'#c0392b');
     }, 8000);
@@ -16321,7 +16324,7 @@ redraw();
     _cv.width=_cv.parentElement.offsetWidth||640;
     _drawGrid();_clearPreview();hwSetTool('pen');
     _connectWS();
-    if(_wsReady){_wsSend({type:'clear'});_status('מחובר — ניתן לצייר','#2d9e4e');}
+    if(_wsReady){_wsSend({type:'clear'});_status(_ui().hwConnected||'מחובר — ניתן לצייר','#2d9e4e');}
   }
   function hwClose(){document.getElementById('handwrite-overlay').classList.remove('open');}
   function hwInsert(){
