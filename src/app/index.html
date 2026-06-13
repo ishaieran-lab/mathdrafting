@@ -884,7 +884,7 @@ body.light-theme .eq-gallery-item:hover{background:rgba(108,99,255,0.1);border-c
 .eq-gallery-item .katex{font-size:1.1em;}
 
 /* ===== EQUATION RIBBON ===== */
-#eq-ribbon{display:none;background:#13131f;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 10px;flex-direction:row;align-items:stretch;gap:0;flex-shrink:0;position:relative;z-index:50;height:84px;}
+#eq-ribbon{display:none;background:#13131f;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 10px;flex-direction:row;align-items:stretch;gap:0;flex-shrink:0;position:relative;z-index:50;}
 #eq-ribbon.open{display:flex;}
 body.light-theme #eq-ribbon{background:#f7f7fb;border-bottom:1px solid #e0e0e8;}
 .eq-rtabs{display:flex;gap:8px;align-items:center;flex-shrink:0;border-left:1px solid rgba(255,255,255,0.07);padding-left:12px;margin-left:4px;}
@@ -959,8 +959,9 @@ body.light-theme .eq-rtabs{border-left-color:#e0e0e8;}
 #hw-no-result{font-size:13px;color:#999;font-family:'Assistant',sans-serif;display:none;}
 .eqr-section{display:none;flex-wrap:nowrap;align-items:center;gap:0;direction:ltr;}
 .eqr-section.active{display:flex;}
-#eqr-symbols.active{display:flex!important;flex-direction:column;justify-content:center;gap:2px;}
-#eqr-symbols .eqr-row{display:flex;flex-direction:row;align-items:center;flex-wrap:nowrap;gap:0;}
+#eqr-symbols.active{display:flex!important;flex-direction:column;justify-content:center;gap:2px;width:100%;}
+#eqr-symbols .eqr-row{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:0;}
+.eqr-row-greek .eq-rb-icon .katex{font-size:1.05em!important;filter:drop-shadow(0 0 0.2px currentColor)!important;}
 /* Large ribbon template buttons — v2 */
 .eq-rb{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -2167,7 +2168,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
   <div style="display:flex;align-items:center;gap:8px;width:100%;direction:ltr;">
     <button id="eq-ribbon-close" onclick="closeEqRibbon()" title="סגור" style="flex-shrink:0;">✕</button>
     <!-- Template sections -->
-    <div style="flex:1;overflow-x:auto;overflow-y:hidden;display:flex;align-items:center;">
+    <div style="flex:1;overflow:visible;display:flex;align-items:center;min-width:0;">
     <!-- Structures -->
     <!-- מבנים -->
     <div id="eqr-struct" class="eqr-section active">
@@ -2207,7 +2208,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\forall')"><span class="eq-rb-icon" data-katex="\forall"></span><span class="eq-rb-label">לכל</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\exists')"><span class="eq-rb-icon" data-katex="\exists"></span><span class="eq-rb-label">קיים</span></button>
       </div>
-      <div class="eqr-row">
+      <div class="eqr-row eqr-row-greek">
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\alpha')"><span class="eq-rb-icon" data-katex="\alpha"></span><span class="eq-rb-label">alpha</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\beta')"><span class="eq-rb-icon" data-katex="\beta"></span><span class="eq-rb-label">beta</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\gamma')"><span class="eq-rb-icon" data-katex="\gamma"></span><span class="eq-rb-label">gamma</span></button>
