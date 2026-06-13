@@ -884,7 +884,7 @@ body.light-theme .eq-gallery-item:hover{background:rgba(108,99,255,0.1);border-c
 .eq-gallery-item .katex{font-size:1.1em;}
 
 /* ===== EQUATION RIBBON ===== */
-#eq-ribbon{display:none;background:#13131f;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 10px;flex-direction:row;align-items:stretch;gap:0;flex-shrink:0;position:relative;z-index:50;}
+#eq-ribbon{display:none;background:#13131f;border-bottom:1px solid rgba(255,255,255,0.07);padding:0 10px;flex-direction:row;align-items:stretch;gap:0;flex-shrink:0;position:relative;z-index:50;height:84px;}
 #eq-ribbon.open{display:flex;}
 body.light-theme #eq-ribbon{background:#f7f7fb;border-bottom:1px solid #e0e0e8;}
 .eq-rtabs{display:flex;gap:8px;align-items:center;flex-shrink:0;border-left:1px solid rgba(255,255,255,0.07);padding-left:12px;margin-left:4px;}
@@ -959,6 +959,7 @@ body.light-theme .eq-rtabs{border-left-color:#e0e0e8;}
 #hw-no-result{font-size:13px;color:#999;font-family:'Assistant',sans-serif;display:none;}
 .eqr-section{display:none;flex-wrap:nowrap;align-items:center;gap:0;direction:ltr;}
 .eqr-section.active{display:flex;}
+#eqr-symbols.active{display:grid!important;grid-template-rows:repeat(2,38px);grid-auto-flow:column;grid-auto-columns:38px;gap:2px;align-content:center;}
 /* Large ribbon template buttons — v2 */
 .eq-rb{
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -2203,9 +2204,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\Leftrightarrow')"><span class="eq-rb-icon" data-katex="\Leftrightarrow"></span><span class="eq-rb-label">שקילות</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\forall')"><span class="eq-rb-icon" data-katex="\forall"></span><span class="eq-rb-label">לכל</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\exists')"><span class="eq-rb-icon" data-katex="\exists"></span><span class="eq-rb-label">קיים</span></button>
-    </div>
-    <!-- יוונית -->
-    <div id="eqr-greek" class="eqr-section">
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\alpha')"><span class="eq-rb-icon" data-katex="\alpha"></span><span class="eq-rb-label">alpha</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\beta')"><span class="eq-rb-icon" data-katex="\beta"></span><span class="eq-rb-label">beta</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\gamma')"><span class="eq-rb-icon" data-katex="\gamma"></span><span class="eq-rb-label">gamma</span></button>
@@ -2218,7 +2216,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\mu')"><span class="eq-rb-icon" data-katex="\mu"></span><span class="eq-rb-label">mu</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\nu')"><span class="eq-rb-icon" data-katex="\nu"></span><span class="eq-rb-label">nu</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\xi')"><span class="eq-rb-icon" data-katex="\xi"></span><span class="eq-rb-label">xi</span></button>
-      <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\pi')"><span class="eq-rb-icon" data-katex="\pi"></span><span class="eq-rb-label">pi</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\rho')"><span class="eq-rb-icon" data-katex="\rho"></span><span class="eq-rb-label">rho</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\sigma')"><span class="eq-rb-icon" data-katex="\sigma"></span><span class="eq-rb-label">sigma</span></button>
       <button class="eq-rb eq-rb-sm" onclick="eqRibbonInsert('\\tau')"><span class="eq-rb-icon" data-katex="\tau"></span><span class="eq-rb-label">tau</span></button>
@@ -2240,8 +2237,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div class="eq-rtabs" style="flex-shrink:0">
       <button class="eq-rtab active" onclick="switchEqRTab(this,'eqr-struct')" data-cat="struct"><span class="ertab-icon">⊟</span><span class="ertab-txt" data-lang-key="eqRibbonStruct">מבנים</span></button>
       <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-symbols')" data-cat="sym"><span class="ertab-icon">∑</span><span class="ertab-txt" data-lang-key="eqRibbonSymbols">סמלים</span></button>
-      <button class="eq-rtab" onclick="switchEqRTab(this,'eqr-greek')" data-cat="greek"><span class="ertab-icon">Ω</span><span class="ertab-txt" data-lang-key="eqRibbonGreek">יוונית</span></button>
-      <button class="eq-rtab" onclick="openHandwriteModal()" data-cat="handwrite"><span class="ertab-icon">✍</span><span class="ertab-txt" data-lang-key="eqRibbonHandwrite">משוואה ידנית</span></button>
+<button class="eq-rtab" onclick="openHandwriteModal()" data-cat="handwrite"><span class="ertab-icon">✍</span><span class="ertab-txt" data-lang-key="eqRibbonHandwrite">משוואה ידנית</span></button>
     </div>
   </div><!-- end main row -->
   <!-- Edit mode bar (appears when a template is selected) -->
