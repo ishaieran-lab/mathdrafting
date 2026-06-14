@@ -7896,6 +7896,7 @@ cv.addEventListener('mouseup',e=>{
     const el={type:tool,x:Math.min(sx,ex),y:Math.min(sy,ey),w:Math.abs(ex-sx),h:Math.abs(ey-sy),color:'#000',fill:'none',sw:1.5};
     if(['line','arrow','straightline'].includes(tool)){el.x=sx;el.y=sy;el.w=ex-sx;el.h=ey-sy;}
     if(tool==='line'||tool==='arrow'){el.pts=[{x:sx,y:sy},{x:ex,y:ey}];}
+    if(tool==='circle'){el.showCenter=true;el.centerLabel='D';}
     if(tool==='trapezoid'){el.trapLeftOff=25;el.trapRightOff=25;el.trapBottomLeftOff=0;el.trapBottomRightOff=0;}
     if(['axes','graph','parabola'].includes(tool))el.sc=gridSize;
     if(['box3d','cube3d','prism3d','pyramid3d'].includes(tool)){
