@@ -1638,26 +1638,26 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div class="nui-sep"></div>
 
     <!-- 1. B / I / U — גופן מודרני system-ui -->
-    <button class="nui-tbtn nui-tbtn-letter" onclick="document.getElementById('tfb-bold').click()" data-tip="מודגש" style="font-weight:800;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif;">B</button>
-    <button class="nui-tbtn nui-tbtn-letter" onclick="document.getElementById('tfb-italic').click()" data-tip="נטוי" style="font-style:italic;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;">I</button>
-    <button class="nui-tbtn nui-tbtn-letter" onclick="document.getElementById('tfb-underline').click()" data-tip="קו תחתון" style="text-decoration:underline;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;">U</button>
+    <button class="nui-tbtn nui-tbtn-letter" onclick="document.getElementById('tfb-bold').click()" data-tip="מודגש" data-tip-key="tipBold" style="font-weight:800;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif;">B</button>
+    <button class="nui-tbtn nui-tbtn-letter" onclick="document.getElementById('tfb-italic').click()" data-tip="נטוי" data-tip-key="tipItalic" style="font-style:italic;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;">I</button>
+    <button class="nui-tbtn nui-tbtn-letter" onclick="document.getElementById('tfb-underline').click()" data-tip="קו תחתון" data-tip-key="tipUnderline" style="text-decoration:underline;font-size:14px;font-family:'Segoe UI',system-ui,sans-serif;font-weight:600;">U</button>
     <div class="nui-sep"></div>
 
     <!-- 3. יישור — שמאל / מרכז / ימין (RTL: שמאל ראשון) -->
     <!-- שמאל: שורות קצרות flush שמאל -->
-    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-left').click()" data-tip="יישור שמאל">
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-left').click()" data-tip="יישור שמאל" data-tip-key="tipAlignLeft">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="10" x2="15" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="3" y1="18" x2="15" y2="18"/>
       </svg>
     </button>
     <!-- מרכז -->
-    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-center').click()" data-tip="מרכז">
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-center').click()" data-tip="מרכז" data-tip-key="tipAlignCenter">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="6" x2="21" y2="6"/><line x1="7" y1="10" x2="17" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="7" y1="18" x2="17" y2="18"/>
       </svg>
     </button>
     <!-- ימין: שורות קצרות flush ימין -->
-    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-right').click()" data-tip="יישור ימין">
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-align-right').click()" data-tip="יישור ימין" data-tip-key="tipAlignRight">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <line x1="3" y1="6" x2="21" y2="6"/><line x1="9" y1="10" x2="21" y2="10"/><line x1="3" y1="14" x2="21" y2="14"/><line x1="9" y1="18" x2="21" y2="18"/>
       </svg>
@@ -1665,13 +1665,13 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div class="nui-sep"></div>
 
     <!-- 4. כיוון LTR — pilcrow הפוך -->
-    <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-ltr').click()" data-tip="כיוון שמאל-ימין (אנגלית)">
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-ltr').click()" data-tip="כיוון שמאל-ימין (אנגלית)" data-tip-key="tipDirLTR">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:scaleX(-1)">
         <path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13"/>
       </svg>
     </button>
     <!-- כיוון RTL — pilcrow רגיל -->
-    <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-rtl').click()" data-tip="כיוון ימין-שמאל (עברית)">
+    <button class="nui-tbtn" onclick="document.getElementById('tfb-dir-rtl').click()" data-tip="כיוון ימין-שמאל (עברית)" data-tip-key="tipDirRTL">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M13 4v16"/><path d="M17 4v16"/><path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13"/>
       </svg>
@@ -1679,7 +1679,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div class="nui-sep"></div>
 
     <!-- צבע טקסט — A מודרן + בר צבע -->
-    <button class="nui-tbtn" id="nui-color-btn" data-tip="צבע טקסט" style="position:relative;overflow:hidden;flex-direction:column;gap:1px;">
+    <button class="nui-tbtn" id="nui-color-btn" data-tip="צבע טקסט" data-tip-key="tipFontColor" style="position:relative;overflow:hidden;flex-direction:column;gap:1px;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
         <path d="M11,3L5.5,17H7.75L8.87,14H15.12L16.25,17H18.5L13,3H11M9.62,12L12,5.67L14.37,12H9.62Z"/>
         <rect x="3" y="19" width="18" height="2.5" rx="1" id="nui-color-rect" fill="#e74c3c"/>
@@ -1689,13 +1689,13 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div class="nui-sep"></div>
 
     <!-- 2. סגנון רשימה — עיגולים filled + שורות (bullet list) -->
-    <button class="nui-tbtn" onclick="_tfbListToggle(this)" data-tip="סגנון רשימה">
+    <button class="nui-tbtn" onclick="_tfbListToggle(this)" data-tip="סגנון רשימה" data-tip-key="tipListStyle">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="transform:scaleX(-1)">
         <path d="M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z"/>
       </svg>
     </button>
     <!-- רקע דף (כפתור נוסף ליד מספור שורות) -->
-    <button class="nui-tbtn" onmousedown="event.preventDefault();toggleBgPanel(this)" data-tip="רקע דף">
+    <button class="nui-tbtn" onmousedown="event.preventDefault();toggleBgPanel(this)" data-tip="רקע דף" data-tip-key="tipBgToggle">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <!-- דף -->
         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -1712,7 +1712,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
       </svg>
     </button>
     <!-- 2. מספור שורות — דף עם שוליים ממוספרים (שונה מהותית מרשימה) -->
-    <button class="nui-tbtn" onclick="toggleNlPanel(this)" data-tip="מספור שורות">
+    <button class="nui-tbtn" onclick="toggleNlPanel(this)" data-tip="מספור שורות" data-tip-key="nlBtn">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <!-- דף -->
         <rect x="4" y="2" width="16" height="20" rx="1.5" fill="none" stroke-width="1.5"/>
@@ -2172,15 +2172,15 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <!-- Structures -->
     <!-- מבנים -->
     <div id="eqr-struct" class="eqr-section active">
-      <button class="eq-rb" onclick="eqRibbonBtn('txt')"><span class="eq-rb-icon" data-katex="\text{abc}"></span><span class="eq-rb-label">טקסט</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('frac')"><span class="eq-rb-icon" data-katex="\dfrac{a}{b}"></span><span class="eq-rb-label">שבר</span></button>
-      <button class="eq-rb" onclick="openEqGallery('sqrt',this)" data-eq-gallery="sqrt"><span class="eq-rb-icon" data-katex="\sqrt{x}"></span><span class="eq-rb-label">שורש ▾</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('pow')"><span class="eq-rb-icon" data-katex="x^n"></span><span class="eq-rb-label">חזקה</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('int')"><span class="eq-rb-icon" data-katex="\int"></span><span class="eq-rb-label">אינטגרל</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('defint')"><span class="eq-rb-icon" data-katex="\int_a^b"></span><span class="eq-rb-label">א. מסוים</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('sum')"><span class="eq-rb-icon" data-katex="\sum_{i=1}^{n}"></span><span class="eq-rb-label">סכום</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('prod')"><span class="eq-rb-icon" data-katex="\prod_{i=1}^{n}"></span><span class="eq-rb-label">מכפלה</span></button>
-      <button class="eq-rb" onclick="eqRibbonBtn('lim')"><span class="eq-rb-icon" data-katex="\lim_{x \to \infty}"></span><span class="eq-rb-label">גבול</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('txt')"><span class="eq-rb-icon" data-katex="\text{abc}"></span><span class="eq-rb-label" data-lang-key="eqRbTxt">טקסט</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('frac')"><span class="eq-rb-icon" data-katex="\dfrac{a}{b}"></span><span class="eq-rb-label" data-lang-key="eqRbFrac">שבר</span></button>
+      <button class="eq-rb" onclick="openEqGallery('sqrt',this)" data-eq-gallery="sqrt"><span class="eq-rb-icon" data-katex="\sqrt{x}"></span><span class="eq-rb-label" data-lang-key="eqRbSqrt">שורש ▾</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('pow')"><span class="eq-rb-icon" data-katex="x^n"></span><span class="eq-rb-label" data-lang-key="eqRbPow">חזקה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('int')"><span class="eq-rb-icon" data-katex="\int"></span><span class="eq-rb-label" data-lang-key="eqRbInt">אינטגרל</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('defint')"><span class="eq-rb-icon" data-katex="\int_a^b"></span><span class="eq-rb-label" data-lang-key="eqRbDefInt">א. מסוים</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('sum')"><span class="eq-rb-icon" data-katex="\sum_{i=1}^{n}"></span><span class="eq-rb-label" data-lang-key="eqRbSum">סכום</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('prod')"><span class="eq-rb-icon" data-katex="\prod_{i=1}^{n}"></span><span class="eq-rb-label" data-lang-key="eqRbProd">מכפלה</span></button>
+      <button class="eq-rb" onclick="eqRibbonBtn('lim')"><span class="eq-rb-icon" data-katex="\lim_{x \to \infty}"></span><span class="eq-rb-label" data-lang-key="eqRbLim">גבול</span></button>
     </div>
     <!-- סמלים -->
     <div id="eqr-symbols" class="eqr-section">
@@ -8459,10 +8459,14 @@ function clearAll(){if(!confirm('למחוק הכל?'))return;saveHistory();els.l
 
 // ===== PAGE MANAGEMENT =====
 function renderPageTabs(){
+  const _pu=LANGS&&LANGS[currentLang]&&LANGS[currentLang].ui;
+  const _ppfx=(_pu&&_pu.pagePrefix)||'דף';
+  const _psep=(_pu&&_pu.pageSep)||'מתוך';
+  const _plbl=`${_ppfx} ${activePage+1} ${_psep} ${pages.length}`;
   const label=document.getElementById('page-picker-label');
-  if(label) label.textContent=`דף ${activePage+1} מתוך ${pages.length}`;
+  if(label) label.textContent=_plbl;
   const nuiLabel=document.getElementById('nui-pages-label');
-  if(nuiLabel) nuiLabel.textContent=`דף ${activePage+1} מתוך ${pages.length}`;
+  if(nuiLabel) nuiLabel.textContent=_plbl;
   _buildPagePickerDropdown();
 }
 function _buildPagePickerDropdown(){
@@ -15133,7 +15137,7 @@ var LANGS = {
       statsTitle:'📊 סטטיסטיקה', statBar:'תרשים עמודות', statPie:'תרשים עוגה / עיגול',
       statFreq:'פוליגון שכיחויות', statMeasures:'מדדי מרכז ופיזור', statFreeGraph:'גרף נתונים חופשי',
       // page tabs
-      pageNew:'+ דף חדש', pagePrefix:'דף', pageDelete:'מחק דף',
+      pageNew:'+ דף חדש', pagePrefix:'דף', pageSep:'מתוך', pageDelete:'מחק דף',
       // statusbar
       elsPrefix:'אלמנטים: ',
       // tooltips
@@ -15312,6 +15316,7 @@ var LANGS = {
       pgTextEdit:'✏️ ערוך טקסט',
       // eq ribbon tabs
       eqRibbonStruct:'מבנים', eqRibbonSymbols:'סמלים', eqRibbonGreek:'יוונית', eqRibbonHandwrite:'משוואה ידנית',
+      eqRbTxt:'טקסט', eqRbFrac:'שבר', eqRbSqrt:'שורש ▾', eqRbPow:'חזקה', eqRbInt:'אינטגרל', eqRbDefInt:'א. מסוים', eqRbSum:'סכום', eqRbProd:'מכפלה', eqRbLim:'גבול',
       hwTitle:'✍ משוואה ידנית', hwPreviewLabel:'תצוגה מקדימה:', hwWaiting:'ממתין לכתיבה...', hwConnecting:'מתחבר...',
       hwPen:'✏️ כתוב', hwErase:'🧹 מחק', hwUndo:'↩ ביטול', hwClear:'🗑 נקה', hwCancel:'ביטול', hwInsert:'הוסף לקנבס',
       hwConnected:'מחובר — ניתן לצייר', hwInitializing:'מחובר, מאתחל...', hwRecogError:'שגיאת זיהוי: ', hwConnError:'שגיאת חיבור', hwClosed:'סגור — קוד ',
@@ -15371,7 +15376,7 @@ var LANGS = {
       statsTitle:'📊 Statistics', statBar:'Bar Chart', statPie:'Pie Chart',
       statFreq:'Frequency Polygon', statMeasures:'Central & Spread Measures', statFreeGraph:'Free Data Graph',
       // page tabs
-      pageNew:'+ New Page', pagePrefix:'Page', pageDelete:'Delete page',
+      pageNew:'+ New Page', pagePrefix:'Page', pageSep:'of', pageDelete:'Delete page',
       // statusbar
       elsPrefix:'Elements: ',
       // tooltips
@@ -15550,6 +15555,7 @@ var LANGS = {
       pgTextEdit:'✏️ Edit text',
       // eq ribbon tabs
       eqRibbonStruct:'Structures', eqRibbonSymbols:'Symbols', eqRibbonGreek:'Greek', eqRibbonHandwrite:'Handwriting',
+      eqRbTxt:'Text', eqRbFrac:'Fraction', eqRbSqrt:'Root ▾', eqRbPow:'Power', eqRbInt:'Integral', eqRbDefInt:'Def. Int.', eqRbSum:'Sum', eqRbProd:'Product', eqRbLim:'Limit',
       hwTitle:'✍ Handwritten Equation', hwPreviewLabel:'Preview:', hwWaiting:'Waiting for input...', hwConnecting:'Connecting...',
       hwPen:'✏️ Write', hwErase:'🧹 Erase', hwUndo:'↩ Undo', hwClear:'🗑 Clear', hwCancel:'Cancel', hwInsert:'Add to canvas',
       hwConnected:'Connected — draw now', hwInitializing:'Connected, initializing...', hwRecogError:'Error: ', hwConnError:'Connection error', hwClosed:'Closed — code ',
@@ -15608,7 +15614,7 @@ var LANGS = {
       statsTitle:'📊 Statistik', statBar:'Balkendiagramm', statPie:'Kreisdiagramm',
       statFreq:'Häufigkeitspolygon', statMeasures:'Lage- und Streuungsmaße', statFreeGraph:'Freies Datendiagramm',
       // page tabs
-      pageNew:'+ Neue Seite', pagePrefix:'Seite', pageDelete:'Seite löschen',
+      pageNew:'+ Neue Seite', pagePrefix:'Seite', pageSep:'von', pageDelete:'Seite löschen',
       // statusbar
       elsPrefix:'Elemente: ',
       // tooltips
@@ -15620,6 +15626,7 @@ var LANGS = {
       tipTheme:'Dark/Light umschalten', tipAccent:'Farbe wechseln',
       // equations
       eqRibbonStruct:'Strukturen', eqRibbonSymbols:'Symbole', eqRibbonGreek:'Griechisch', eqRibbonHandwrite:'Handschrift',
+      eqRbTxt:'Text', eqRbFrac:'Bruch', eqRbSqrt:'Wurzel ▾', eqRbPow:'Potenz', eqRbInt:'Integral', eqRbDefInt:'Best. Int.', eqRbSum:'Summe', eqRbProd:'Produkt', eqRbLim:'Grenzwert',
       hwTitle:'✍ Handgeschriebene Gleichung', hwPreviewLabel:'Vorschau:', hwWaiting:'Warte auf Eingabe...', hwConnecting:'Verbinde...',
       hwPen:'✏️ Schreiben', hwErase:'🧹 Löschen', hwUndo:'↩ Rückgängig', hwClear:'🗑 Leeren', hwCancel:'Abbrechen', hwInsert:'Zur Leinwand',
       eqTutTitle:'Anleitung — Gleichungen & Algebra', eqTutClose:'✕ Schließen', eqTutOpen:'← Gleichungen öffnen',
