@@ -1569,8 +1569,8 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .p-hdr-btn.primary{background:var(--accent);color:white;border-color:var(--accent);}
 .p-hdr-btn.primary:hover{opacity:0.85;}
 #pipe-body{flex:1;display:flex;overflow:hidden;}
-#pipe-tools{width:220px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;padding:10px 10px;gap:3px;overflow-y:auto;flex-shrink:0;}
-.ptool{width:100%;padding:8px 10px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;font-size:13px;font-family:'Assistant',sans-serif;text-align:right;transition:all 0.12s;}
+#pipe-tools{width:265px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;padding:10px 10px;gap:3px;overflow-y:auto;flex-shrink:0;}
+.ptool{width:100%;padding:9px 12px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;font-size:14px;font-family:'Assistant',sans-serif;text-align:right;transition:all 0.12s;}
 .ptool:hover{background:var(--surface2);border-color:var(--border);}
 .ptool.active{background:rgba(108,99,255,0.15);border-color:rgba(108,99,255,0.4);color:var(--accent);font-weight:600;}
 .ptool-sep{height:1px;background:var(--border);margin:4px 0;flex-shrink:0;}
@@ -16467,7 +16467,7 @@ function pNodeBendK(nd){
   }
   return 0;
 }
-var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null};
+var pS={nodes:[],pipes:[],nextId:1,selEl:null,multiSel:[],selRect:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null,rotatingNode:null,rotOX:0,rotOY:0};
 var pTool='select';
 var pCv,pCtx,pRho=1000,pMu=0.001,pViscMode='dynamic',pNuUnit='cst';
 var pGridMode='grid'; // 'grid'|'dots'|'none'
@@ -16574,6 +16574,32 @@ function pToggleVisc(){
   bk.style.background=isDyn?'none':'rgba(108,99,255,0.25)';bk.style.borderColor=isDyn?'var(--border)':'var(--accent)';bk.style.color=isDyn?'var(--text2)':'var(--accent)';
 }
 
+// ===== PIPE KEYBOARD =====
+function pDeleteSelected(){
+  // Delete multi-selection first
+  if(pS.multiSel.length>0){
+    pS.multiSel.forEach(function(id){
+      pS.pipes=pS.pipes.filter(function(p){return p.n1id!==id&&p.n2id!==id;});
+      pS.nodes=pS.nodes.filter(function(n){return n.id!==id;});
+    });
+    pS.multiSel=[];pS.selEl=null;pS.results=null;pShowProps();pRender();return;
+  }
+  if(!pS.selEl) return;
+  if(pS.selEl.type==='node'){
+    var nd=pS.selEl.obj;
+    pS.pipes=pS.pipes.filter(function(p){return p.n1id!==nd.id&&p.n2id!==nd.id;});
+    pS.nodes=pS.nodes.filter(function(n){return n.id!==nd.id;});
+  } else if(pS.selEl.type==='pipe'){
+    pS.pipes=pS.pipes.filter(function(p){return p.id!==pS.selEl.obj.id;});
+  }
+  pS.selEl=null;pS.results=null;pShowProps();pRender();
+}
+function _pKeyDown(e){
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.target.tagName==='TEXTAREA') return;
+  if(document.getElementById('pipe-overlay').style.display!=='flex') return;
+  if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();pDeleteSelected();}
+  if(e.key==='Escape'){pS.pipeStart=null;pS.selRect=null;pS.multiSel=[];pS.selEl=null;pShowProps();pRender();}
+}
 function openPipeOverlay(){
   const ov=document.getElementById('pipe-overlay');
   ov.style.display='flex';
@@ -16587,9 +16613,11 @@ function openPipeOverlay(){
   pCv.addEventListener('mousemove',pMove);
   pCv.addEventListener('mouseup',pUp);
   pCv.addEventListener('mouseleave',pUp);
+  document.removeEventListener('keydown',_pKeyDown);
+  document.addEventListener('keydown',_pKeyDown);
   pResize();
 }
-function closePipeOverlay(){document.getElementById('pipe-overlay').style.display='none';}
+function closePipeOverlay(){document.getElementById('pipe-overlay').style.display='none';document.removeEventListener('keydown',_pKeyDown);}
 function pResize(){
   const w=document.getElementById('pipe-cvwrap');
   pCv.width=w.clientWidth;pCv.height=w.clientHeight;pRender();
@@ -16651,10 +16679,31 @@ function pDown(e){
   var sx=pSnap(rx),sy=pSnap(ry);
   if(pTool==='select'){
     const nd=pNodeAt(rx,ry);
+    // Check rotation handle first (for selected junction with no connections)
+    if(pS.selEl&&pS.selEl.type==='node'&&pS.selEl.obj.type==='junc'){
+      var snd=pS.selEl.obj;
+      var connCnt=pS.pipes.filter(function(pp){return pp.n1id===snd.id||pp.n2id===snd.id;}).length;
+      if(connCnt===0){
+        var Rsel=14,rhx=snd.x,rhy=snd.y-Rsel-16;
+        if(Math.hypot(rx-rhx,ry-rhy)<10){
+          pS.rotatingNode=snd;pS.rotOX=rx;pS.rotOY=ry;return;
+        }
+      }
+    }
+    // Check if clicked a node in multi-selection → move all
+    if(nd&&pS.multiSel.includes(nd.id)){
+      pS.dragNode=nd;pS.dragOX=rx-nd.x;pS.dragOY=ry-nd.y;pRender();return;
+    }
     const wpPipe=pS.pipes.find(p=>p.wx!=null&&Math.hypot(p.wx-rx,p.wy-ry)<10);
-    if(wpPipe&&!nd){pS.dragWP=wpPipe;pS.dragOX=rx-wpPipe.wx;pS.dragOY=ry-wpPipe.wy;pS.selEl={type:'pipe',obj:wpPipe};pShowProps();pRender();return;}
+    if(wpPipe&&!nd){pS.dragWP=wpPipe;pS.dragOX=rx-wpPipe.wx;pS.dragOY=ry-wpPipe.wy;pS.selEl={type:'pipe',obj:wpPipe};pS.multiSel=[];pShowProps();pRender();return;}
     const pp=nd?null:pPipeAt(rx,ry);
+    if(!nd&&!pp){
+      // Start rubber-band selection
+      pS.selRect={x:rx,y:ry,w:0,h:0,ox:rx,oy:ry};
+      pS.selEl=null;pS.multiSel=[];pShowProps();pRender();return;
+    }
     pS.selEl=nd?{type:'node',obj:nd}:pp?{type:'pipe',obj:pp}:null;
+    pS.multiSel=[];
     if(nd){pS.dragNode=nd;pS.dragOX=rx-nd.x;pS.dragOY=ry-nd.y;}
     pShowProps();pRender();return;
   }
@@ -16690,25 +16739,55 @@ function pDown(e){
       P:pTool==='source'?200000:pTool==='outlet'?0:null,Q:null,
       bendType:pTool==='junc'?pJuncPreset.bendType:'none',
       bendAngle:pTool==='junc'?pJuncPreset.bendAngle:90,
-      bendRD:pTool==='junc'?pJuncPreset.bendRD:1.5};
+      bendRD:pTool==='junc'?pJuncPreset.bendRD:1.5,
+      iconRotation:0};
     pS.nodes.push(nd);pS.selEl={type:'node',obj:nd};pS.results=null;
     pShowProps();pRender();
   }
 }
 function pMove(e){
   const r=pCv.getBoundingClientRect(),rx=e.clientX-r.left,ry=e.clientY-r.top;
+  // Rotation drag
+  if(pS.rotatingNode&&pTool==='select'){
+    var nd=pS.rotatingNode;
+    var angle=Math.atan2(ry-nd.y,rx-nd.x)+Math.PI/2;
+    nd.iconRotation=angle;pRender();return;
+  }
   if(pS.dragNode&&pTool==='select'){
-    var nx=pSnap(rx-pS.dragOX),ny=pSnap(ry-pS.dragOY);
-    pS.dragNode.x=nx;pS.dragNode.y=ny;
-    pAutoUpdatePipes(pS.dragNode);
-    pRender();
+    var dx2=pSnap(rx-pS.dragOX),dy2=pSnap(ry-pS.dragOY);
+    var deltaX=dx2-pS.dragNode.x,deltaY=dy2-pS.dragNode.y;
+    // Move all multi-selected nodes together
+    if(pS.multiSel.includes(pS.dragNode.id)&&pS.multiSel.length>1){
+      pS.multiSel.forEach(function(id){
+        var n=pS.nodes.find(function(n2){return n2.id===id;});
+        if(n){n.x+=deltaX;n.y+=deltaY;pAutoUpdatePipes(n);}
+      });
+    } else {
+      pS.dragNode.x=dx2;pS.dragNode.y=dy2;
+      pAutoUpdatePipes(pS.dragNode);
+    }
+    pRender();return;
+  }
+  if(pS.selRect&&pTool==='select'){
+    pS.selRect.w=rx-pS.selRect.ox;pS.selRect.h=ry-pS.selRect.oy;
+    // Update multiSel: all nodes inside the rect
+    var x1=Math.min(pS.selRect.ox,rx),x2=Math.max(pS.selRect.ox,rx);
+    var y1=Math.min(pS.selRect.oy,ry),y2=Math.max(pS.selRect.oy,ry);
+    pS.multiSel=pS.nodes.filter(function(n){return n.x>=x1&&n.x<=x2&&n.y>=y1&&n.y<=y2;}).map(function(n){return n.id;});
+    pRender();return;
   }
   if(pS.dragWP&&pTool==='select'){pS.dragWP.wx=rx-pS.dragOX;pS.dragWP.wy=ry-pS.dragOY;pRender();}
   if(pS.pipeStart&&pTool==='pipe'){pS._mouseX=rx;pS._mouseY=ry;pRender();}
 }
 function pUp(){
-  if(pS.dragNode){pS.results=null;} // invalidate results after move
-  pS.dragNode=null;pS.dragWP=null;
+  if(pS.dragNode){pS.results=null;}
+  pS.dragNode=null;pS.dragWP=null;pS.rotatingNode=null;
+  // Finalize rubber-band
+  if(pS.selRect){
+    if(pS.multiSel.length===1){pS.selEl={type:'node',obj:pS.nodes.find(function(n){return n.id===pS.multiSel[0];})};pS.multiSel=[];pShowProps();}
+    else if(pS.multiSel.length===0){pS.selEl=null;pShowProps();}
+    pS.selRect=null;pRender();
+  }
 }
 
 // ===== RENDER =====
@@ -16866,7 +16945,8 @@ function pRender(){
       if(bt==='miter'||bt==='bend'){
         // === SCHEMATIC ELBOW — clean L-shaped pipe cross-section ===
         var bendRad2=(nd.bendAngle||90)*Math.PI/180;
-        var ed1=dirs2.length>=1?dirs2[0]:Math.PI;
+        var iRot=nd.iconRotation||0;
+        var ed1=dirs2.length>=1?dirs2[0]:(Math.PI+iRot);
         var ed2=dirs2.length>=2?dirs2[1]:ed1-bendRad2;
         // Normalise span
         var span=ed2-ed1;
@@ -16987,7 +17067,35 @@ function pRender(){
       pCtx.fillStyle='#fbbf24';pCtx.font='bold 11px Assistant,sans-serif';pCtx.textBaseline='bottom';
       pCtx.fillText(pDisp+' '+P_UNIT_LABEL[pPressUnit],nd.x,nd.y-R-3);
     }
+    // Rotation handle: show for selected junction with no pipe connections
+    if(sel&&nd.type==='junc'){
+      var connCntR=pS.pipes.filter(function(pp){return pp.n1id===nd.id||pp.n2id===nd.id;}).length;
+      if(connCntR===0){
+        var rhDist=R+18;
+        var rhx2=nd.x,rhy2=nd.y-rhDist;
+        pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=1.5;pCtx.setLineDash([3,3]);
+        pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(rhx2,rhy2);pCtx.stroke();
+        pCtx.setLineDash([]);
+        pCtx.beginPath();pCtx.arc(rhx2,rhy2,6,0,Math.PI*2);
+        pCtx.fillStyle='#f59e0b';pCtx.fill();
+        pCtx.fillStyle='#000';pCtx.font='bold 8px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
+        pCtx.fillText('↻',rhx2,rhy2);
+      }
+    }
+    // Multi-selection highlight ring
+    if(pS.multiSel.includes(nd.id)){
+      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+8,0,Math.PI*2);
+      pCtx.strokeStyle='rgba(251,191,36,0.7)';pCtx.lineWidth=2;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);
+    }
     pCtx.restore();
+  }
+  // Rubber-band selection rect
+  if(pS.selRect){
+    var rx2=pS.selRect.ox,ry2=pS.selRect.oy,rw2=pS.selRect.w,rh2=pS.selRect.h;
+    pCtx.strokeStyle='rgba(99,102,241,0.8)';pCtx.lineWidth=1.5;pCtx.setLineDash([5,3]);
+    pCtx.strokeRect(rx2,ry2,rw2,rh2);
+    pCtx.fillStyle='rgba(99,102,241,0.08)';pCtx.fillRect(rx2,ry2,rw2,rh2);
+    pCtx.setLineDash([]);
   }
 }
 
@@ -17570,28 +17678,29 @@ body>*:not(.canvas-area){display:none!important;}
         <div style="font-size:9px;color:var(--text2);margin-top:2px">1 cSt = 1 mm²/s | מים@20°C ≈ 1 cSt</div>
       </div>
       <div class="ptool-sep"></div>
-      <div class="ptool-lbl">רקע ורשת</div>
-      <div class="p-inp-row">
-        <div class="p-inp-lbl">סוג רקע</div>
-        <select class="p-inp" onchange="pGridMode=this.value;pRender()">
-          <option value="grid">משבצות</option>
-          <option value="dots">נקודות</option>
-          <option value="none">חלק</option>
-        </select>
-      </div>
-      <div class="p-inp-row">
-        <div class="p-inp-lbl">גודל תא (px)</div>
-        <select class="p-inp" onchange="pGridSize=parseInt(this.value);pRender()">
+      <button class="ptool" onclick="var p=document.getElementById('p-bg-panel');p.style.display=p.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+        רקע
+      </button>
+      <div id="p-bg-panel" style="display:none;background:var(--surface2);border-radius:8px;padding:8px;border:1px solid var(--border);margin-top:2px">
+        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">סוג רקע:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
+          <button onclick="pGridMode='none';pRender()" style="padding:5px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">חלק</button>
+          <button onclick="pGridMode='grid';pRender()" style="padding:5px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">רשת</button>
+          <button onclick="pGridMode='dots';pRender()" style="padding:5px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">נקודות</button>
+        </div>
+        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">גודל תא (px):</div>
+        <select class="p-inp" style="margin-bottom:7px" onchange="pGridSize=parseInt(this.value);pRender()">
           <option value="20">20</option>
           <option value="40" selected>40</option>
           <option value="60">60</option>
           <option value="80">80</option>
           <option value="100">100</option>
         </select>
-      </div>
-      <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
-        <input type="checkbox" id="cb-snap" checked onchange="pSnapGrid=this.checked" style="accent-color:var(--accent)">
-        <label for="cb-snap" style="font-size:11px;color:var(--text);cursor:pointer">הצמד לרשת</label>
+        <div style="display:flex;gap:4px;align-items:center">
+          <input type="checkbox" id="cb-snap" checked onchange="pSnapGrid=this.checked" style="accent-color:var(--accent)">
+          <label for="cb-snap" style="font-size:12px;color:var(--text);cursor:pointer">הצמד לרשת</label>
+        </div>
       </div>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl">חישוב אוטומטי</div>
