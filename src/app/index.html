@@ -16444,15 +16444,29 @@ var PIPE_FITTINGS={
   entr: {label:'כניסה חדה',               K:0.5},
   exit: {label:'יציאה',                   K:1.0},
 };
+// NODE_BEND: base K values at 90°; actual K computed by pNodeBendK(nd)
 var NODE_BEND={
-  none:  {label:'ללא (T / ישר)',     K:0,    R:0},
-  miter: {label:'מרפק 90° חד (Mitered)',K:1.3,  R:0},
-  r15:   {label:'ברך R/D = 1.5',     K:0.4,  R:1.5},
-  r20:   {label:'ברך R/D = 2',       K:0.3,  R:2.0},
-  r30:   {label:'ברך R/D = 3 (ארוך)',K:0.2,  R:3.0},
-  tee_b: {label:'T — הסתעפות',       K:1.0,  R:0},
-  tee_s: {label:'T — זרימה ישרה',    K:0.6,  R:0},
+  none:  {label:'ללא / ישר',          K:0,    R:0},
+  miter: {label:'מרפק חד (Mitered)',   K:1.3,  R:0},
+  bend:  {label:'ברך (רדיוס)',         K:0.4,  R:1.5}, // R/D and angle are per-node
+  tee_b: {label:'T — הסתעפות',        K:1.0,  R:0},
+  tee_s: {label:'T — זרימה ישרה',     K:0.6,  R:0},
 };
+// Compute K for a junction node (considers angle + R/D)
+function pNodeBendK(nd){
+  var bt=nd.bendType||'none';
+  var angle=nd.bendAngle||90;
+  var rd=nd.bendRD||1.5;
+  if(bt==='none') return 0;
+  if(bt==='tee_b') return 1.0;
+  if(bt==='tee_s') return 0.6;
+  if(bt==='miter') return 1.3*(angle/90); // scales linearly with angle
+  if(bt==='bend'){
+    var k90=rd>=3?0.2:rd>=2?0.3:0.4; // K at 90° for each R/D
+    return k90*(angle/90);
+  }
+  return 0;
+}
 var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null};
 var pTool='select';
 var pCv,pCtx,pRho=1000,pMu=0.001,pViscMode='dynamic',pNuUnit='cst';
@@ -16462,7 +16476,7 @@ var pSnapGrid=true;   // snap nodes to grid
 var pAutoCalc=true;   // auto-update L when nodes dragged
 var pScale=0.01;      // meters per pixel (default: 1px = 1cm)
 var pOrtho=true;      // force 90° orthogonal pipe routing
-var pJuncPreset={bendType:'none'}; // preset for next junction placement
+var pJuncPreset={bendType:'none',bendAngle:90,bendRD:1.5};
 var pPressUnit='kpa'; // 'kpa'|'bar'|'barg'|'bara'|'psig'|'psia'
 var P_UNIT_LABEL={kpa:'kPa',bar:'bar',barg:'bar (gauge)',bara:'bar (abs)',psig:'PSI gauge',psia:'PSI (abs)'};
 function pToPA(val,unit){
@@ -16512,10 +16526,35 @@ function pFromQms(qms,unit){
 function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='lh'?0:pFlowUnit==='mh'?2:3;}
 function pSetFlowUnit(u){pFlowUnit=u;pShowProps();}
 function pJuncHighlight(key){
-  ['miter','r15','r20','none'].forEach(function(k){
+  ['miter','bend','tee_b','none'].forEach(function(k){
     var b=document.getElementById('jb-'+k);
-    if(b) b.classList.toggle('jb-active',k===key);
+    if(!b) return;
+    b.classList.toggle('jb-active',k===key);
   });
+}
+function pJbAngle(a){
+  document.querySelectorAll('.jb-angle-btn').forEach(function(b){
+    var active=parseInt(b.textContent)===a;
+    b.style.borderColor=active?'var(--accent)':'var(--border)';
+    b.style.background=active?'rgba(108,99,255,0.2)':'none';
+    b.style.color=active?'var(--accent)':'var(--text)';
+  });
+  pJbUpdateK();
+}
+function pJbRD(r){
+  document.querySelectorAll('.jb-rd-btn').forEach(function(b){
+    var active=parseFloat(b.textContent)===r;
+    b.style.borderColor=active?'var(--accent)':'var(--border)';
+    b.style.background=active?'rgba(108,99,255,0.2)':'none';
+    b.style.color=active?'var(--accent)':'var(--text)';
+  });
+  pJbUpdateK();
+}
+function pJbUpdateK(){
+  var nd={bendType:pJuncPreset.bendType,bendAngle:pJuncPreset.bendAngle,bendRD:pJuncPreset.bendRD};
+  var k=pNodeBendK(nd);
+  var el=document.getElementById('jb-k-display');
+  if(el) el.textContent='K = '+k.toFixed(2)+(pJuncPreset.bendType==='bend'?' | R/D = '+pJuncPreset.bendRD:'');
 }
 function pToggleVisc(){
   var dyn=document.getElementById('visc-dyn-row'),kin=document.getElementById('visc-kin-row');
@@ -16641,7 +16680,9 @@ function pDown(e){
     const cnt=pS.nodes.filter(n=>n.type===pTool).length;
     const nd={id:'n'+(pS.nextId++),x:sx,y:sy,type:pTool,label:label+(cnt>0?cnt+1:''),
       P:pTool==='source'?200000:pTool==='outlet'?0:null,Q:null,
-      bendType:pTool==='junc'?pJuncPreset.bendType:'none'};
+      bendType:pTool==='junc'?pJuncPreset.bendType:'none',
+      bendAngle:pTool==='junc'?pJuncPreset.bendAngle:90,
+      bendRD:pTool==='junc'?pJuncPreset.bendRD:1.5};
     pS.nodes.push(nd);pS.selEl={type:'node',obj:nd};pS.results=null;
     pShowProps();pRender();
   }
@@ -16888,12 +16929,19 @@ function pShowProps(){
       <input class="pp-inp" type="number" value="${qDisp}" placeholder="לא ידועה" step="any" oninput="pUpNode('Q',this.value===''?null:pToQms(this.value))"></div>`;
     if(n.type==='junc'){
       const bendOpts=Object.entries(NODE_BEND).map(([k,v])=>`<option value="${k}"${(n.bendType||'none')===k?' selected':''}>${v.label}</option>`).join('');
-      const bRD=NODE_BEND[n.bendType||'none']?.R||0;
-      const bK=NODE_BEND[n.bendType||'none']?.K||0;
+      const bK=pNodeBendK(n);
       html+=`<div class="pp-row" style="border-top:1px solid var(--border);padding-top:7px;margin-top:4px">
         <label class="pp-lbl" style="font-weight:700;color:var(--accent)">סוג חיבור / מרפק</label>
-        <select class="pp-inp" onchange="pUpNode('bendType',this.value);pRender()">${bendOpts}</select>
-        ${bK>0?`<div style="font-size:11px;color:var(--accent);margin-top:4px">K = ${bK}${bRD>0?' | R/D = '+bRD:''}</div>`:''}
+        <select class="pp-inp" onchange="pUpNode('bendType',this.value);pRender();pShowProps()">${bendOpts}</select>
+        ${(n.bendType==='bend'||n.bendType==='miter')?`
+        <label class="pp-lbl" style="margin-top:6px">זווית כיפוף</label>
+        <div style="display:flex;gap:4px;margin-top:3px">${[45,90,135].map(a=>`<button onclick="pUpNode('bendAngle',${a});pRender()" style="flex:1;padding:4px 2px;border-radius:5px;border:1px solid ${(n.bendAngle||90)===a?'var(--accent)':'var(--border)'};background:${(n.bendAngle||90)===a?'rgba(108,99,255,0.2)':'none'};color:${(n.bendAngle||90)===a?'var(--accent)':'var(--text)'};cursor:pointer;font-size:11px">${a}°</button>`).join('')}</div>`:''
+        }
+        ${n.bendType==='bend'?`
+        <label class="pp-lbl" style="margin-top:6px">רדיוס כיפוף R/D</label>
+        <div style="display:flex;gap:4px;margin-top:3px">${[1.5,2,3].map(r=>`<button onclick="pUpNode('bendRD',${r});pRender()" style="flex:1;padding:4px 2px;border-radius:5px;border:1px solid ${(n.bendRD||1.5)===r?'var(--accent)':'var(--border)'};background:${(n.bendRD||1.5)===r?'rgba(108,99,255,0.2)':'none'};color:${(n.bendRD||1.5)===r?'var(--accent)':'var(--text)'};cursor:pointer;font-size:11px">${r}</button>`).join('')}</div>`:''
+        }
+        ${bK>0?`<div style="font-size:11px;color:var(--accent);margin-top:5px">K = ${bK.toFixed(2)}${n.bendType==='bend'?' | R/D = '+(n.bendRD||1.5):''}</div>`:''}
       </div>`;
       // Show angles to connected pipes
       const connPipes=pS.pipes.filter(p=>p.n1id===n.id||p.n2id===n.id);
@@ -16987,8 +17035,8 @@ function pPipeR(pipe,Q){
   const f=pFrFactor(Re,D,e);
   const Kfit=(pipe.fittings||[]).reduce((s,ft)=>s+ft.K*(ft.qty||1),0);
   const n1=pS.nodes.find(n=>n.id===pipe.n1id),n2=pS.nodes.find(n=>n.id===pipe.n2id);
-  const Kn1=NODE_BEND[n1?.bendType||'none']?.K||0;
-  const Kn2=NODE_BEND[n2?.bendType||'none']?.K||0;
+  const Kn1=n1?pNodeBendK(n1):0;
+  const Kn2=n2?pNodeBendK(n2):0;
   const Ktotal=Kfit+Kn1+Kn2;
   return {R:(f*L/D+Ktotal)*pRho/(2*A*A),v,Re,f,Kfit,Kn1,Kn2};
 }
@@ -17303,23 +17351,70 @@ body>*:not(.canvas-area){display:none!important;}
       <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc');document.getElementById('junc-picker').style.display=''" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg> צומת / מרפק</button>
       <div id="junc-picker" style="display:none;margin:4px 0 0 0;background:var(--surface2);border-radius:8px;padding:7px 6px;border:1px solid var(--border)">
         <div style="font-size:10px;color:var(--text2);margin-bottom:5px">בחר סוג חיבור:</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-          <button onclick="pJuncPreset.bendType='miter';pJuncHighlight('miter')" id="jb-miter" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="10" y1="10" x2="10" y2="26" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="26" x2="26" y2="26" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><rect x="7" y="7" width="6" height="6" rx="1" fill="#6366f1"/><rect x="23" y="23" width="6" height="6" rx="1" fill="#6366f1"/></svg>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+          <!-- Sharp miter -->
+          <button onclick="pJuncPreset.bendType='miter';pJuncHighlight('miter');document.getElementById('junc-bend-sub').style.display='none'" id="jb-miter" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+              <rect width="38" height="38" rx="5" fill="var(--surface)"/>
+              <!-- pipe walls vertical -->
+              <line x1="12" y1="7" x2="12" y2="25" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="18" y1="7" x2="18" y2="25" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- pipe walls horizontal -->
+              <line x1="12" y1="25" x2="31" y2="25" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="12" y1="31" x2="31" y2="31" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- elbow cap -->
+              <circle cx="12" cy="25" r="4" fill="#6366f1"/>
+            </svg>
             <span style="font-size:9px">90° חד</span>
           </button>
-          <button onclick="pJuncPreset.bendType='r15';pJuncHighlight('r15')" id="jb-r15" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="10" y1="8" x2="10" y2="22" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><path d="M10 22 Q10 28 16 28" stroke="#6366f1" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="16" y1="28" x2="28" y2="28" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/></svg>
-            <span style="font-size:9px">ברך R/D=1.5</span>
+          <!-- Radius bend -->
+          <button onclick="pJuncPreset.bendType='bend';pJuncHighlight('bend');document.getElementById('junc-bend-sub').style.display=''" id="jb-bend" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+              <rect width="38" height="38" rx="5" fill="var(--surface)"/>
+              <!-- vertical pipe walls -->
+              <line x1="12" y1="7" x2="12" y2="20" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="18" y1="7" x2="18" y2="17" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- curved elbow outer wall -->
+              <path d="M12 20 Q12 31 23 31" stroke="#6366f1" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+              <!-- curved elbow inner wall -->
+              <path d="M18 17 Q18 25 26 25" stroke="#a5b4fc" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <!-- horizontal pipe walls -->
+              <line x1="23" y1="31" x2="31" y2="31" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="26" y1="25" x2="31" y2="25" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span style="font-size:9px">ברך</span>
           </button>
-          <button onclick="pJuncPreset.bendType='r20';pJuncHighlight('r20')" id="jb-r20" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="10" y1="8" x2="10" y2="20" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><path d="M10 20 Q10 28 18 28" stroke="#6366f1" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="18" y1="28" x2="28" y2="28" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/></svg>
-            <span style="font-size:9px">ברך R/D=2</span>
+          <!-- T fitting -->
+          <button onclick="pJuncPreset.bendType='tee_b';pJuncHighlight('tee_b');document.getElementById('junc-bend-sub').style.display='none'" id="jb-tee_b" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
+            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
+              <rect width="38" height="38" rx="5" fill="var(--surface)"/>
+              <!-- horizontal pipe -->
+              <line x1="5" y1="16" x2="33" y2="16" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="5" y1="22" x2="33" y2="22" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- branch down -->
+              <line x1="16" y1="22" x2="16" y2="33" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="22" y1="22" x2="22" y2="33" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
+              <!-- cap at branch top -->
+              <rect x="14" y="21" width="10" height="4" rx="1" fill="#6366f1"/>
+            </svg>
+            <span style="font-size:9px">T / הסתעפות</span>
           </button>
-          <button onclick="pJuncPreset.bendType='none';pJuncHighlight('none')" id="jb-none" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="4" y1="18" x2="32" y2="18" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><line x1="18" y1="4" x2="18" y2="32" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="18" r="4" fill="#6366f1"/></svg>
-            <span style="font-size:9px">T / ישר</span>
-          </button>
+        </div>
+        <!-- Bend sub-panel: angle + R/D -->
+        <div id="junc-bend-sub" style="display:none;margin-top:8px;border-top:1px solid var(--border);padding-top:7px">
+          <div style="font-size:10px;color:var(--text2);margin-bottom:4px">זווית כיפוף:</div>
+          <div style="display:flex;gap:4px;margin-bottom:7px" id="jb-angle-row">
+            <button onclick="pJuncPreset.bendAngle=45;pJbAngle(45)" class="jb-angle-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">45°</button>
+            <button onclick="pJuncPreset.bendAngle=90;pJbAngle(90)" class="jb-angle-btn jb-active" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--accent);background:rgba(108,99,255,0.2);color:var(--accent);cursor:pointer;font-size:11px">90°</button>
+            <button onclick="pJuncPreset.bendAngle=135;pJbAngle(135)" class="jb-angle-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">135°</button>
+          </div>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:4px">R/D (רדיוס כיפוף / קוטר):</div>
+          <div style="display:flex;gap:4px" id="jb-rd-row">
+            <button onclick="pJuncPreset.bendRD=1.5;pJbRD(1.5)" class="jb-rd-btn jb-active" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--accent);background:rgba(108,99,255,0.2);color:var(--accent);cursor:pointer;font-size:11px">1.5</button>
+            <button onclick="pJuncPreset.bendRD=2;pJbRD(2)" class="jb-rd-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">2</button>
+            <button onclick="pJuncPreset.bendRD=3;pJbRD(3)" class="jb-rd-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">3</button>
+          </div>
+          <div id="jb-k-display" style="font-size:10px;color:var(--accent);margin-top:5px;text-align:left">K = 0.40 | R/D = 1.5</div>
         </div>
       </div>
       <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')">🟠 פתח יציאה</button>
