@@ -16442,75 +16442,54 @@ var PIPE_FITTINGS={
   entr: {label:'כניסה חדה',               K:0.5},
   exit: {label:'יציאה',                   K:1.0},
 };
-var NODE_BEND={
-  none:  {label:'ללא (T / ישר)',     K:0,    R:0},
-  miter: {label:'מרפק 90° חד (Mitered)',K:1.3,  R:0},
-  r15:   {label:'ברך R/D = 1.5',     K:0.4,  R:1.5},
-  r20:   {label:'ברך R/D = 2',       K:0.3,  R:2.0},
-  r30:   {label:'ברך R/D = 3 (ארוך)',K:0.2,  R:3.0},
-  tee_b: {label:'T — הסתעפות',       K:1.0,  R:0},
-  tee_s: {label:'T — זרימה ישרה',    K:0.6,  R:0},
-};
 var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null};
 var pTool='select';
-var pCv,pCtx,pRho=1000,pMu=0.001,pViscMode='dynamic',pNuUnit='cst';
-var pPressUnit='kpa'; // 'kpa'|'bar'|'barg'|'bara'|'psig'|'psia'
-var P_UNIT_LABEL={kpa:'kPa',bar:'bar',barg:'bar (gauge)',bara:'bar (abs)',psig:'PSI gauge',psia:'PSI (abs)'};
+var pCv,pCtx,pRho=1000,pMu=0.001;
+var pPressUnit='kpa'; // 'kpa' | 'bar' | 'psig' | 'psia'
+var P_UNIT_LABEL={kpa:'kPa',bar:'bar',psig:'PSI gauge',psia:'PSI (abs)'};
+// Convert user-entered value → internal Pa (gauge)
 function pToPA(val,unit){
   unit=unit||pPressUnit;
-  var v=parseFloat(val);if(isNaN(v)) return null;
+  var v=parseFloat(val);
+  if(isNaN(v)) return null;
   if(unit==='kpa')  return v*1000;
   if(unit==='bar')  return v*100000;
-  if(unit==='barg') return v*100000;
-  if(unit==='bara') return v*100000-101325;
   if(unit==='psig') return v*6894.76;
-  if(unit==='psia') return v*6894.76-101325;
+  if(unit==='psia') return v*6894.76-101325; // absolute → gauge
   return v*1000;
 }
+// Convert internal Pa (gauge) → display value in current unit
 function pFromPA(pa,unit){
   unit=unit||pPressUnit;
-  if(unit==='kpa')  return pa/1000;
-  if(unit==='bar')  return pa/100000;
-  if(unit==='barg') return pa/100000;
-  if(unit==='bara') return (pa+101325)/100000;
-  if(unit==='psig') return pa/6894.76;
-  if(unit==='psia') return (pa+101325)/6894.76;
+  if(unit==='kpa')  return (pa/1000);
+  if(unit==='bar')  return (pa/100000);
+  if(unit==='psig') return (pa/6894.76);
+  if(unit==='psia') return ((pa+101325)/6894.76);
   return pa/1000;
 }
-function pUnitDecimals(){return (pPressUnit==='bar'||pPressUnit==='barg'||pPressUnit==='bara')?3:pPressUnit==='kpa'?1:2;}
+function pUnitDecimals(){return pPressUnit==='bar'?3:pPressUnit==='kpa'?1:2;}
 function pSetPressUnit(u){pPressUnit=u;pShowProps();}
-var pFlowUnit='ls'; // 'ls'=L/s | 'ms'=m³/s | 'mh'=m³/h | 'lh'=L/hr | 'gpm'=GPM
-var Q_UNIT_LABEL={ls:'L/s',mh:'m³/h',lh:'L/hr',gpm:'GPM',ms:'m³/s'};
-function pToQms(val,unit){
+var pFlowUnit='ls'; // 'ls'=L/s | 'ms'=m³/s | 'mh'=m³/h | 'gpm'=GPM
+var Q_UNIT_LABEL={ls:'L/s',ms:'m³/s',mh:'m³/h',gpm:'GPM'};
+function pToQms(val,unit){ // user value → m³/s (internal)
   unit=unit||pFlowUnit;
   var v=parseFloat(val);if(isNaN(v)) return null;
   if(unit==='ls')  return v/1000;
   if(unit==='ms')  return v;
   if(unit==='mh')  return v/3600;
-  if(unit==='lh')  return v/3600000;
   if(unit==='gpm') return v*6.30902e-5;
   return v/1000;
 }
-function pFromQms(qms,unit){
+function pFromQms(qms,unit){ // m³/s → display value
   unit=unit||pFlowUnit;
   if(unit==='ls')  return qms*1000;
   if(unit==='ms')  return qms;
   if(unit==='mh')  return qms*3600;
-  if(unit==='lh')  return qms*3600000;
   if(unit==='gpm') return qms/6.30902e-5;
   return qms*1000;
 }
-function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='lh'?0:pFlowUnit==='mh'?2:3;}
+function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='mh'?2:3;}
 function pSetFlowUnit(u){pFlowUnit=u;pShowProps();}
-function pToggleVisc(){
-  var dyn=document.getElementById('visc-dyn-row'),kin=document.getElementById('visc-kin-row');
-  var bd=document.getElementById('vbtn-dyn'),bk=document.getElementById('vbtn-kin');
-  if(!dyn) return;
-  var isDyn=pViscMode==='dynamic';
-  dyn.style.display=isDyn?'':'none';kin.style.display=isDyn?'none':'';
-  bd.style.background=isDyn?'rgba(108,99,255,0.25)':'none';bd.style.borderColor=isDyn?'var(--accent)':'var(--border)';bd.style.color=isDyn?'var(--accent)':'var(--text2)';
-  bk.style.background=isDyn?'none':'rgba(108,99,255,0.25)';bk.style.borderColor=isDyn?'var(--border)':'var(--accent)';bk.style.color=isDyn?'var(--text2)':'var(--accent)';
-}
 
 function openPipeOverlay(){
   const ov=document.getElementById('pipe-overlay');
@@ -16710,47 +16689,10 @@ function pRender(){
     const R=sel?18:14;
     if(sel){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.stroke();}
     if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+7,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();}
-    if(nd.type==='source'){
-      // Pump icon: circle + triangle rotor
-      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-      pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-      pCtx.fillStyle='white';pCtx.lineWidth=1.5;pCtx.strokeStyle='white';
-      // rotor blades
-      for(var bi=0;bi<3;bi++){var ba=bi*Math.PI*2/3-Math.PI/2;pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x+Math.cos(ba)*R*0.7,nd.y+Math.sin(ba)*R*0.7);pCtx.stroke();}
-      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.22,0,Math.PI*2);pCtx.fill();
-    } else if(nd.type==='junc'){
-      const bt=nd.bendType||'none';
-      const bRD=NODE_BEND[bt]?.R||0;
-      if(bRD>0){
-        // Radius elbow: draw curved bracket
-        pCtx.fillStyle=fill;pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);pCtx.fill();pCtx.stroke();
-        // arc curve indicator
-        pCtx.strokeStyle='white';pCtx.lineWidth=2;pCtx.beginPath();
-        pCtx.arc(nd.x+R*0.3,nd.y+R*0.3,R*0.55,-Math.PI,0);pCtx.stroke();
-        pCtx.strokeStyle='white';pCtx.lineWidth=1.5;
-        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.25,nd.y-R*0.5);pCtx.lineTo(nd.x-R*0.25,nd.y+R*0.3);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.25,nd.y+R*0.3);pCtx.lineTo(nd.x+R*0.5,nd.y+R*0.3);pCtx.stroke();
-      } else if(bt==='miter'){
-        // Sharp 90° mitered elbow
-        pCtx.fillStyle=fill;pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);pCtx.fill();pCtx.stroke();
-        pCtx.strokeStyle='white';pCtx.lineWidth=2;
-        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.5,nd.y-R*0.5);pCtx.lineTo(nd.x-R*0.5,nd.y+R*0.3);pCtx.lineTo(nd.x+R*0.5,nd.y+R*0.3);pCtx.stroke();
-      } else {
-        // Default junction (T or straight)
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-        pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-        pCtx.fillStyle='white';pCtx.font='bold 10px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
-        pCtx.fillText('J',nd.x,nd.y);
-      }
-    } else {
-      // Outlet
-      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-      pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-      pCtx.fillStyle='white';pCtx.font='bold 11px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
-      pCtx.fillText('O',nd.x,nd.y);
-    }
+    pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
+    pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
+    pCtx.fillStyle='white';pCtx.font='bold 11px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
+    pCtx.fillText(nd.type==='source'?'S':nd.type==='outlet'?'O':'J',nd.x,nd.y);
     pCtx.fillStyle=dark?'#e2e8f0':'#0f172a';pCtx.font='bold 12px Assistant,sans-serif';pCtx.textBaseline='top';
     pCtx.fillText(nd.label,nd.x,nd.y+R+3);
     if(res&&res.nP[nd.id]!==undefined){
@@ -16782,33 +16724,6 @@ function pShowProps(){
     var qHint=n.type==='source'?'חיובי=כניסה לרשת':n.type==='outlet'?'חיובי=יציאה מרשת':'חיובי=הזנה, שלילי=צריכה';
     html+=`<div class="pp-row"><label class="pp-lbl">ספיקה (${Q_UNIT_LABEL[pFlowUnit]}) — ${qHint}</label>
       <input class="pp-inp" type="number" value="${qDisp}" placeholder="לא ידועה" step="any" oninput="pUpNode('Q',this.value===''?null:pToQms(this.value))"></div>`;
-    if(n.type==='junc'){
-      const bendOpts=Object.entries(NODE_BEND).map(([k,v])=>`<option value="${k}"${(n.bendType||'none')===k?' selected':''}>${v.label}</option>`).join('');
-      const bRD=NODE_BEND[n.bendType||'none']?.R||0;
-      const bK=NODE_BEND[n.bendType||'none']?.K||0;
-      html+=`<div class="pp-row" style="border-top:1px solid var(--border);padding-top:7px;margin-top:4px">
-        <label class="pp-lbl" style="font-weight:700;color:var(--accent)">סוג חיבור / מרפק</label>
-        <select class="pp-inp" onchange="pUpNode('bendType',this.value);pRender()">${bendOpts}</select>
-        ${bK>0?`<div style="font-size:11px;color:var(--accent);margin-top:4px">K = ${bK}${bRD>0?' | R/D = '+bRD:''}</div>`:''}
-      </div>`;
-      // Show angles to connected pipes
-      const connPipes=pS.pipes.filter(p=>p.n1id===n.id||p.n2id===n.id);
-      if(connPipes.length>=2){
-        var angLines='';
-        for(var ci=0;ci<connPipes.length;ci++){
-          const cp=connPipes[ci];
-          const other=pS.nodes.find(nd2=>nd2.id===(cp.n1id===n.id?cp.n2id:cp.n1id));
-          if(other){const deg=Math.round(Math.atan2(other.y-n.y,other.x-n.x)*180/Math.PI);angLines+=`<div style="font-size:11px;color:var(--text2)">${cp.label}: ${deg}°</div>`;}
-        }
-        if(connPipes.length>=2){
-          const p1=connPipes[0],p2=connPipes[1];
-          const o1=pS.nodes.find(nd2=>nd2.id===(p1.n1id===n.id?p1.n2id:p1.n1id));
-          const o2=pS.nodes.find(nd2=>nd2.id===(p2.n1id===n.id?p2.n2id:p2.n1id));
-          if(o1&&o2){const a1=Math.atan2(o1.y-n.y,o1.x-n.x),a2=Math.atan2(o2.y-n.y,o2.x-n.x);var theta=Math.abs((a2-a1)*180/Math.PI);if(theta>180)theta=360-theta;angLines=`<div style="font-size:12px;font-weight:700;color:var(--accent);margin-top:4px">זווית בין צינורות: ${Math.round(theta)}°</div>`+angLines;}
-        }
-        html+=`<div class="pp-row">${angLines}</div>`;
-      }
-    }
     panel.innerHTML=html;
   } else {
     const p=el.obj;
@@ -16882,22 +16797,12 @@ function pPipeR(pipe,Q){
   const Re=pRho*v*D/(pMu||0.001);
   const f=pFrFactor(Re,D,e);
   const Kfit=(pipe.fittings||[]).reduce((s,ft)=>s+ft.K*(ft.qty||1),0);
-  const n1=pS.nodes.find(n=>n.id===pipe.n1id),n2=pS.nodes.find(n=>n.id===pipe.n2id);
-  const Kn1=NODE_BEND[n1?.bendType||'none']?.K||0;
-  const Kn2=NODE_BEND[n2?.bendType||'none']?.K||0;
-  const Ktotal=Kfit+Kn1+Kn2;
-  return {R:(f*L/D+Ktotal)*pRho/(2*A*A),v,Re,f,Kfit,Kn1,Kn2};
+  return {R:(f*L/D+Kfit)*pRho/(2*A*A),v,Re,f,Kfit};
 }
 
 function pCalc(){
   pRho=parseFloat(document.getElementById('p-rho').value)||1000;
-  if(pViscMode==='kinematic'){
-    var nuVal=parseFloat(document.getElementById('p-nu').value)||1.0;
-    var nuMs=pNuUnit==='st'?nuVal*1e-4:pNuUnit==='cst'?nuVal*1e-6:nuVal; // m²/s
-    pMu=nuMs*pRho;
-  } else {
-    pMu=parseFloat(document.getElementById('p-mu').value)||0.001;
-  }
+  pMu=parseFloat(document.getElementById('p-mu').value)||0.001;
   const {nodes,pipes}=pS;
   if(nodes.length<2){alert('יש להוסיף לפחות 2 צמתים');return;}
   if(pipes.length<1){alert('יש להוסיף לפחות צינור אחד');return;}
@@ -17195,8 +17100,8 @@ body>*:not(.canvas-area){display:none!important;}
       <button class="ptool active" id="ptool-select" onclick="setPipeTool('select')">↖ בחירה / גרירה</button>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl">הוסף צמתים</div>
-      <button class="ptool" id="ptool-source" onclick="setPipeTool('source')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 12 L12 4"/><path d="M12 12 L19.2 16"/><path d="M12 12 L4.8 16"/><circle cx="12" cy="12" r="3" fill="#22c55e" stroke="none"/></svg> מקור לחץ (משאבה)</button>
-      <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg> צומת / מרפק</button>
+      <button class="ptool" id="ptool-source" onclick="setPipeTool('source')">🟢 מקור לחץ</button>
+      <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc')">🔵 צומת</button>
       <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')">🟠 פתח יציאה</button>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl">חיבורים</div>
@@ -17209,8 +17114,6 @@ body>*:not(.canvas-area){display:none!important;}
         <select class="p-inp" id="p-unit" onchange="pSetPressUnit(this.value)">
           <option value="kpa">kPa</option>
           <option value="bar">bar</option>
-          <option value="barg">bar (gauge)</option>
-          <option value="bara">bar (abs)</option>
           <option value="psig">PSI gauge</option>
           <option value="psia">PSI (abs)</option>
         </select>
@@ -17220,9 +17123,8 @@ body>*:not(.canvas-area){display:none!important;}
         <select class="p-inp" id="q-unit" onchange="pSetFlowUnit(this.value)">
           <option value="ls">L/s</option>
           <option value="mh">m³/h</option>
-          <option value="lh">L/hr</option>
-          <option value="gpm">GPM</option>
           <option value="ms">m³/s</option>
+          <option value="gpm">GPM</option>
         </select>
       </div>
       <div class="ptool-sep"></div>
@@ -17231,27 +17133,9 @@ body>*:not(.canvas-area){display:none!important;}
         <div class="p-inp-lbl">צפיפות ρ (kg/m³)</div>
         <input class="p-inp" id="p-rho" type="number" value="1000" min="100" max="20000">
       </div>
-      <div class="p-inp-row" style="gap:3px">
-        <div style="display:flex;gap:3px;align-items:center">
-          <button onclick="pViscMode='dynamic';pToggleVisc()" id="vbtn-dyn" style="flex:1;font-size:10px;padding:2px 4px;border-radius:5px;border:1px solid var(--accent);background:rgba(108,99,255,0.25);color:var(--accent);cursor:pointer">μ דינמית</button>
-          <button onclick="pViscMode='kinematic';pToggleVisc()" id="vbtn-kin" style="flex:1;font-size:10px;padding:2px 4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer">ν קינמטית</button>
-        </div>
-      </div>
-      <div class="p-inp-row" id="visc-dyn-row">
-        <div class="p-inp-lbl">צמיגות דינמית μ (Pa·s)</div>
+      <div class="p-inp-row">
+        <div class="p-inp-lbl">צמיגות μ (Pa·s)</div>
         <input class="p-inp" id="p-mu" type="number" value="0.001" step="0.0001" min="0.00001">
-      </div>
-      <div class="p-inp-row" id="visc-kin-row" style="display:none">
-        <div class="p-inp-lbl">צמיגות קינמטית ν</div>
-        <div style="display:flex;gap:3px">
-          <input class="p-inp" id="p-nu" type="number" value="1.0" step="0.1" min="0.001" style="flex:1">
-          <select class="p-inp" id="p-nu-unit" onchange="pNuUnit=this.value" style="width:50px;font-size:10px">
-            <option value="cst">cSt</option>
-            <option value="st">St</option>
-            <option value="m2s">m²/s</option>
-          </select>
-        </div>
-        <div style="font-size:9px;color:var(--text2);margin-top:2px">1 cSt = 1 mm²/s | מים@20°C ≈ 1 cSt</div>
       </div>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl" style="font-size:9px;line-height:1.5;opacity:0.75;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
