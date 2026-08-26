@@ -2364,24 +2364,16 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <button class="tbtn" id="tbtn-delete" onclick="setTool('delete')" data-tip="מחק" data-tip-key="tipDelete">
       <img src="../assets/icons/toolbar/מחק.png" style="object-fit:contain;">
     </button>
-  </div>
-
-  <!-- ENGINEERING TOOLBAR -->
-  <div class="toolbar" id="eng-toolbar" style="right:84px;">
-    <div class="toolbar-handle" id="eng-toolbar-handle"></div>
-    <div class="tb-resize tb-resize-nw" data-etb="nw"></div>
-    <div class="tb-resize tb-resize-ne" data-etb="ne"></div>
-    <div class="tb-resize tb-resize-sw" data-etb="sw"></div>
-    <div class="tb-resize tb-resize-se" data-etb="se"></div>
-    <button class="tbtn" onclick="openPipeSidebar()" data-tip="מחשב צנרת" style="border-bottom:none">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="1" y="8" width="22" height="4" rx="1.5"/>
-        <path d="M8 8V5M16 8V5"/>
-        <path d="M8 12v3M16 12v3"/>
-        <circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="8" cy="12" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="16" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+    <div class="tsep"></div>
+    <button class="tbtn" id="tbtn-pipe" onclick="openPopup('pipe',this)" data-tip="מחשב צנרת" style="border-bottom:none">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="9" width="22" height="6" rx="2"/>
+        <line x1="7" y1="9" x2="7" y2="4"/><line x1="17" y1="9" x2="17" y2="4"/>
+        <line x1="7" y1="15" x2="7" y2="20"/><line x1="17" y1="15" x2="17" y2="20"/>
+        <circle cx="7" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+        <circle cx="17" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+        <circle cx="7" cy="20" r="1.5" fill="currentColor" stroke="none"/>
+        <circle cx="17" cy="20" r="1.5" fill="currentColor" stroke="none"/>
       </svg>
     </button>
   </div>
@@ -2433,6 +2425,10 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div id="props-main-title" data-lang-key="props" style="padding:12px 12px 10px;font-size:17px;font-weight:800;color:#c8c8d8;letter-spacing:0.8px;border-bottom:1px solid rgba(108,99,255,0.25);flex-shrink:0;text-align:center;">מאפיינים</div>
     <div class="no-sel" id="no-sel">הוסף אלמנט לדף כדי לערוך</div>
     <div id="sel-props" style="display:none">
+      <!-- PIPE ELEMENT PROPS — shown when pipe node or pipe segment selected -->
+      <div id="pg-pipe" class="pg" style="display:none;padding:14px 12px">
+        <div id="pg-pipe-content"></div>
+      </div>
       <!-- ANGLES — for shapes -->
       <div class="pg" id="pg-angles" style="display:none">
         <label class="pl" data-lang-key="pgAnglesTitle">הצגת זוויות</label>
@@ -2874,6 +2870,27 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
   <button class="pop-item" onclick="pickShape('arrow')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="20" x2="20" y2="4"/><path d="M20 4l-5 2 3 3z" fill="currentColor" stroke="none"/></svg><span data-lang-key="shapeArrow">חץ</span></button>
   <button class="pop-item" onclick="pickShape('curve')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18 C6 4 10 4 12 12 S18 20 20 6" stroke-linecap="round"/></svg><span data-lang-key="shapeCurve">קו מעוגל</span></button>
   <button class="pop-item" onclick="pickShape('freehand')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3 L21 7 L8 20 L3 21 L4 16 Z" stroke-linejoin="round"/><line x1="14" y1="6" x2="18" y2="10" stroke-width="1" opacity="0.5"/></svg><span data-lang-key="shapeFreehand">עפרון חופשי</span></button>
+</div>
+
+<!-- POPUP: PIPE HYDRAULICS -->
+<div class="popup" id="pop-pipe" style="display:none">
+  <div class="popup-title">🔧 מחשב צנרת</div>
+  <button class="pop-item" onclick="pickPipeTool('source')">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#22c55e" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="#22c55e" stroke="none"/></svg>
+    <span>מקור לחץ</span>
+  </button>
+  <button class="pop-item" onclick="pickPipeTool('junc')">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg>
+    <span>צומת / מרפק</span>
+  </button>
+  <button class="pop-item" onclick="pickPipeTool('outlet')">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#f97316" stroke-width="2.2"><polygon points="12,4 21,20 3,20"/></svg>
+    <span>פתח יציאה</span>
+  </button>
+  <button class="pop-item" onclick="pickPipeTool('pipe')">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+    <span>צינור</span>
+  </button>
 </div>
 
 <!-- POPUP: 3D SHAPES -->
@@ -4205,6 +4222,7 @@ function _updFhCursor() {
 
 // ===== TOOL =====
 function setTool(t){
+  if(pipeMode) exitPipeMode();
   // Close the eq symbol keyboard and cancel any active text editing when leaving text mode
   if(t!=='text'){
     const _skb=document.getElementById('eq-sym-kb');
@@ -6921,7 +6939,15 @@ function hitHandle(mx,my,el){
 
 // ===== MOUSE =====
 cv.addEventListener('mousedown',e=>{
-  if(pipeMode){pDown(e);return;}
+  if(pipeMode){
+    if(pTool!=='select'){pDown(e);return;}
+    // In select mode: only intercept if clicking on a pipe element
+    const r=pCv.getBoundingClientRect();
+    var rx2=(e.clientX-r.left)*(pCv.width/r.width),ry2=(e.clientY-r.top)*(pCv.height/r.height);
+    if(pNodeAt(rx2,ry2)||pPipeAt(rx2,ry2)){pDown(e);return;}
+    // Clicked empty space — deselect pipe element, fall through to normal handler
+    pS.selEl=null;pS.multiSel=[];pS.selRect=null;pHidePipeMainPanel();pRender();
+  }
   const{x:mx,y:my}=cvPos(e);
 
   // MathLive placement mode — place equation editor at click position
@@ -7377,7 +7403,7 @@ cv.addEventListener('mousedown',e=>{
 });
 
 cv.addEventListener('mousemove',e=>{
-  if(pipeMode){pMove(e);return;}
+  if(pipeMode&&(pS.dragNode||pS.dragWP||pS.rotatingNode||pS.pipeStart||pS.selRect||pTool!=='select')){pMove(e);return;}
   const{x:mx,y:my}=cvPos(e);
   {const _sp=document.getElementById('st-pos');if(_sp)_sp.textContent=`X:${Math.round(mx)} Y:${Math.round(my)}`;}
 
@@ -7833,7 +7859,7 @@ cv.addEventListener('mousemove',e=>{
 });
 
 cv.addEventListener('mouseup',e=>{
-  if(pipeMode){pUp();return;}
+  if(pipeMode&&(pS.dragNode||pS.dragWP||pS.rotatingNode||pS.pipeStart||pS.selRect)){pUp();return;}
   const{x:mx,y:my}=cvPos(e);
   if(_eqGrpResizing){
     _eqGrpResizing=false;_eqGrpResizeCorner=null;_eqGrpResizeBBox=null;_eqGrpResizeGroupId=null;
@@ -10389,6 +10415,7 @@ function buildSw(cid,colors,prop){
 }
 
 function updProps(){
+  if(pipeMode&&pS.selEl) return; // pipe manages its own panel
   const s=getSel();
   const panel=document.getElementById('props-panel');
   if(panel)panel.classList.toggle('visible',!!s);
@@ -16494,10 +16521,10 @@ var pipeMode=false;
 var pCv,pCtx,pRho=1000,pMu=0.001,pViscMode='dynamic',pNuUnit='cst';
 var pGridMode='grid'; // 'grid'|'dots'|'none'
 var pGridSize=40;     // pixels per grid cell
-var pSnapGrid=true;   // snap nodes to grid
+var pSnapGrid=false;  // snap to grid (disabled — free placement like other elements)
 var pAutoCalc=true;   // auto-update L when nodes dragged
 var pScale=0.01;      // meters per pixel (default: 1px = 1cm)
-var pOrtho=true;      // force 90° orthogonal pipe routing
+var pOrtho=false;     // orthogonal routing (disabled)
 var pJuncPreset={bendType:'none',bendAngle:90,bendRD:1.5};
 var pPressUnit='kpa'; // 'kpa'|'bar'|'barg'|'bara'|'psig'|'psia'
 var P_UNIT_LABEL={kpa:'kPa',bar:'bar',barg:'bar (gauge)',bara:'bar (abs)',psig:'PSI gauge',psia:'PSI (abs)'};
@@ -16523,7 +16550,7 @@ function pFromPA(pa,unit){
   return pa/1000;
 }
 function pUnitDecimals(){return (pPressUnit==='bar'||pPressUnit==='barg'||pPressUnit==='bara')?3:pPressUnit==='kpa'?1:2;}
-function pSetPressUnit(u){pPressUnit=u;pShowProps();var sp=document.getElementById('pipe-source-panel');if(sp&&sp.classList.contains('open'))pShowSourcePanelById();}
+function pSetPressUnit(u){pPressUnit=u;pShowProps();}
 var pFlowUnit='ls'; // 'ls'=L/s | 'ms'=m³/s | 'mh'=m³/h | 'lh'=L/hr | 'gpm'=GPM
 var Q_UNIT_LABEL={ls:'L/s',mh:'m³/h',lh:'L/hr',gpm:'GPM',ms:'m³/s'};
 function pToQms(val,unit){
@@ -16546,7 +16573,7 @@ function pFromQms(qms,unit){
   return qms*1000;
 }
 function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='lh'?0:pFlowUnit==='mh'?2:3;}
-function pSetFlowUnit(u){pFlowUnit=u;pShowProps();var sp=document.getElementById('pipe-source-panel');if(sp&&sp.classList.contains('open'))pShowSourcePanelById();}
+function pSetFlowUnit(u){pFlowUnit=u;pShowProps();}
 function pJuncHighlight(key){
   ['miter','bend','tee_b','none'].forEach(function(k){
     var b=document.getElementById('jb-'+k);
@@ -16588,7 +16615,107 @@ function pJbUpdateK(){
 }
 function pToggleVisc(){pShowProps();}
 
+// ===== PIPE TOOLBAR INTEGRATION =====
+function pickPipeTool(type){
+  closePopup();
+  if(!pipeMode){
+    pipeMode=true;
+    pCv=cv; pCtx=ctx;
+    document.removeEventListener('keydown',_pKeyDown);
+    document.addEventListener('keydown',_pKeyDown);
+    pLoadPipeImgs();
+  }
+  pTool=type; pS.pipeStart=null;
+  if(pCv) pCv.style.cursor='crosshair';
+  // Mark toolbar button active
+  var pb=document.getElementById('tbtn-pipe');
+  if(pb) pb.classList.add('active');
+  pShowProps(); // renders pre-placement panel
+  redraw();
+}
+function exitPipeMode(){
+  pipeMode=false;
+  pTool='select';
+  pS.selEl=null; pS.multiSel=[];
+  pS.pipeStart=null; pS.selRect=null;
+  document.removeEventListener('keydown',_pKeyDown);
+  if(cv) cv.style.cursor='';
+  var pb=document.getElementById('tbtn-pipe');
+  if(pb) pb.classList.remove('active');
+  pHidePipeMainPanel();
+  pHideSourcePanel();
+  redraw();
+}
+function pRenderMainPanel(html){
+  var panel=document.getElementById('props-panel');
+  if(!panel) return;
+  panel.classList.add('visible');
+  document.getElementById('no-sel').style.display='none';
+  document.getElementById('sel-props').style.display='block';
+  // Hide all .pg sections except pipe
+  document.querySelectorAll('#sel-props>.pg').forEach(function(pg){
+    pg.style.display=pg.id==='pg-pipe'?'block':'none';
+  });
+  var content=document.getElementById('pg-pipe-content');
+  if(content) content.innerHTML=html;
+}
+function pHidePipeMainPanel(){
+  var pgPipe=document.getElementById('pg-pipe');
+  if(pgPipe) pgPipe.style.display='none';
+  // Restore props panel to normal state
+  var s=typeof getSel==='function'?getSel():null;
+  var panel=document.getElementById('props-panel');
+  if(panel) panel.classList.toggle('visible',!!s);
+  document.getElementById('no-sel').style.display=s?'none':'flex';
+  document.getElementById('sel-props').style.display=s?'block':'none';
+  if(s) document.querySelectorAll('#sel-props>.pg').forEach(function(pg){pg.style.display='';});
+}
+
 // ===== SOURCE PANEL =====
+function pBuildSourceHtml(node){
+  var isDyn=pViscMode==='dynamic';
+  var muDisp=isDyn?pMu.toFixed(6):(pMu/pRho*1e6).toFixed(3);
+  var pUnitOpts=Object.entries(P_UNIT_LABEL).map(function(e){return'<option value="'+e[0]+'"'+(pPressUnit===e[0]?' selected':'')+'>'+e[1]+'</option>';}).join('');
+  var qUnitOpts=Object.entries(Q_UNIT_LABEL).map(function(e){return'<option value="'+e[0]+'"'+(pFlowUnit===e[0]?' selected':'')+'>'+e[1]+'</option>';}).join('');
+  var pDisp='',qDisp='',labelVal=pSourcePreset.label;
+  var nid=node?node.id:'';
+  if(node){
+    labelVal=node.label;
+    pDisp=node.P!=null?pFromPA(node.P).toFixed(pUnitDecimals()):'';
+    qDisp=node.Q!=null?pFromQms(node.Q).toFixed(pQDecimals()):'';
+  } else {
+    pDisp=pSourcePreset.P!=null?pFromPA(pSourcePreset.P).toFixed(pUnitDecimals()):'';
+    qDisp=pSourcePreset.Q!=null?pFromQms(pSourcePreset.Q).toFixed(pQDecimals()):'';
+  }
+  var acDyn='border:1px solid var(--accent);background:rgba(108,99,255,0.25);color:var(--accent)';
+  var inac='border:1px solid var(--border);background:none;color:var(--text2)';
+  return '<div class="pp-title">🟢 מקור לחץ</div>'+
+    '<div class="pp-row"><label class="pp-lbl">תווית</label>'+
+    '<input class="pp-inp" value="'+labelVal+'" oninput="pSrcUpd(\'label\',this.value,\''+nid+'\')"></div>'+
+    '<div class="pp-row"><label class="pp-lbl">לחץ ('+P_UNIT_LABEL[pPressUnit]+')</label>'+
+    '<input class="pp-inp" type="number" value="'+pDisp+'" placeholder="לא ידוע" step="any" oninput="pSrcUpd(\'P\',this.value===\'\'?null:pToPA(parseFloat(this.value)),\''+nid+'\')"></div>'+
+    '<div class="pp-row"><label class="pp-lbl">ספיקה ('+Q_UNIT_LABEL[pFlowUnit]+') — חיובי=כניסה</label>'+
+    '<input class="pp-inp" type="number" value="'+qDisp+'" placeholder="לא ידועה" step="any" oninput="pSrcUpd(\'Q\',this.value===\'\'?null:pToQms(parseFloat(this.value)),\''+nid+'\')"></div>'+
+    '<div class="pp-row" style="border-top:1px solid var(--border);padding-top:10px;margin-top:6px">'+
+    '<label class="pp-lbl" style="font-weight:700;color:var(--accent);margin-bottom:8px;display:block">⚙ יחידות ונוזל</label>'+
+    '<label class="pp-lbl">יחידות לחץ</label>'+
+    '<select class="pp-inp" onchange="pSetPressUnit(this.value)" style="margin-bottom:8px">'+pUnitOpts+'</select>'+
+    '<label class="pp-lbl">יחידות ספיקה</label>'+
+    '<select class="pp-inp" onchange="pSetFlowUnit(this.value)" style="margin-bottom:8px">'+qUnitOpts+'</select>'+
+    '<label class="pp-lbl">צפיפות ρ (kg/m³)</label>'+
+    '<input class="pp-inp" type="number" value="'+pRho+'" min="1" max="20000" step="1" onchange="pRho=parseFloat(this.value)||1000" style="margin-bottom:8px">'+
+    '<label class="pp-lbl">צמיגות</label>'+
+    '<div style="display:flex;gap:5px;margin-bottom:8px">'+
+    '<button onclick="pViscMode=\'dynamic\';pShowProps()" style="flex:1;font-size:13px;padding:6px 4px;border-radius:6px;cursor:pointer;'+(isDyn?acDyn:inac)+'">μ דינמית</button>'+
+    '<button onclick="pViscMode=\'kinematic\';pShowProps()" style="flex:1;font-size:13px;padding:6px 4px;border-radius:6px;cursor:pointer;'+(!isDyn?acDyn:inac)+'">ν קינמטית</button>'+
+    '</div>'+
+    (isDyn?
+      '<input class="pp-inp" type="number" value="'+muDisp+'" step="0.0001" min="0.00001" placeholder="μ (Pa·s)" onchange="pMu=parseFloat(this.value)||0.001">'+
+      '<div style="font-size:12px;color:var(--text2);margin-top:3px">Pa·s | מים@20°C ≈ 0.001</div>':
+      '<input class="pp-inp" type="number" value="'+muDisp+'" step="0.1" min="0.001" placeholder="ν (cSt)" onchange="pMu=(parseFloat(this.value)||1)*1e-6*pRho">'+
+      '<div style="font-size:12px;color:var(--text2);margin-top:3px">cSt (mm²/s) | מים@20°C ≈ 1 cSt</div>'
+    )+'</div>';
+}
 var pSourcePreset={label:'מקור',P:200000,Q:null};
 var pSPNodeId=null;
 function pShowSourcePanel(node){
@@ -16719,39 +16846,14 @@ function _pKeyDown(e){
   if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();pDeleteSelected();}
   if(e.key==='Escape'){pS.pipeStart=null;pS.selRect=null;pS.multiSel=[];pS.selEl=null;pShowProps();pRender();}
 }
-function openPipeSidebar(){
-  pipeMode=true;
-  pCv=cv; pCtx=ctx;
-  document.getElementById('pipe-sidebar').classList.add('open');
-  document.removeEventListener('keydown',_pKeyDown);
-  document.addEventListener('keydown',_pKeyDown);
-  pLoadPipeImgs();
-  redraw();
-}
-function openPipeOverlay(){openPipeSidebar();} // backward compat
-function closePipeSidebar(){
-  pipeMode=false;
-  document.getElementById('pipe-sidebar').classList.remove('open');
-  pHideSourcePanel();
-  document.removeEventListener('keydown',_pKeyDown);
-  cv.style.cursor='';
-  pS.pipeStart=null;pS.selRect=null;
-  redraw();
-}
+function openPipeSidebar(){openPopup('pipe',document.getElementById('tbtn-pipe')||document.body);} // redirect to popup
+function openPipeOverlay(){openPipeSidebar();}
+function closePipeSidebar(){exitPipeMode();}
 function pResize(){} // no-op in integrated mode
 
 function setPipeTool(t){
   pTool=t;pS.pipeStart=null;
-  document.querySelectorAll('.ptool').forEach(b=>b.classList.remove('active'));
-  const btn=document.getElementById('ptool-'+t);if(btn)btn.classList.add('active');
-  var jp=document.getElementById('junc-picker');if(jp&&t!=='junc')jp.style.display='none';
-  if(pCv) pCv.style.cursor=t==='select'?'default':t==='delete'?'not-allowed':'crosshair';
-  if(t==='source'){
-    pShowSourcePanel(null);
-  } else {
-    var sel=pS.selEl;
-    if(!(sel&&sel.type==='node'&&sel.obj&&sel.obj.type==='source')) pHideSourcePanel();
-  }
+  if(pCv) pCv.style.cursor=t==='select'?'default':'crosshair';
   pRender();
 }
 
@@ -17142,17 +17244,24 @@ function pDrawPipeLayer(){
 
 // ===== PROPERTIES PANEL =====
 function pShowProps(){
-  const panel=document.getElementById('pipe-props-content');
+  pHideSourcePanel();
   const el=pS.selEl;
   if(!el){
-    panel.innerHTML='<p style="color:var(--text2);font-size:13px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p>';
-    if(pTool==='source') pShowSourcePanelById(); else pHideSourcePanel();
+    if(pTool==='source'){
+      pRenderMainPanel(pBuildSourceHtml(null));
+    } else if(pipeMode){
+      pRenderMainPanel('<p style="color:var(--text2);font-size:14px;text-align:center;margin-top:24px;line-height:1.9;">לחץ על הקנבס<br>להוספת אלמנט</p>');
+    } else {
+      pHidePipeMainPanel();
+    }
     return;
   }
   if(el.type==='node'){
     const n=el.obj;
-    if(n.type==='source'){pShowSourcePanel(n);panel.innerHTML='';return;}
-    pHideSourcePanel();
+    if(n.type==='source'){
+      pRenderMainPanel(pBuildSourceHtml(n));
+      return;
+    }
     const tl=n.type==='outlet'?'🟠 פתח יציאה':'🔵 צומת';
     let html=`<div class="pp-title">${tl}</div>
       <div class="pp-row"><label class="pp-lbl">תווית</label>
@@ -17163,7 +17272,7 @@ function pShowProps(){
         <input class="pp-inp" type="number" value="${pDisp}" placeholder="לא ידוע" step="any" oninput="pUpNode('P',this.value===''?null:pToPA(this.value))"></div>`;
     }
     var qDisp=n.Q!=null?pFromQms(n.Q).toFixed(pQDecimals()):'';
-    var qHint=n.type==='source'?'חיובי=כניסה לרשת':n.type==='outlet'?'חיובי=יציאה מרשת':'חיובי=הזנה, שלילי=צריכה';
+    var qHint=n.type==='outlet'?'חיובי=יציאה מרשת':'חיובי=הזנה, שלילי=צריכה';
     html+=`<div class="pp-row"><label class="pp-lbl">ספיקה (${Q_UNIT_LABEL[pFlowUnit]}) — ${qHint}</label>
       <input class="pp-inp" type="number" value="${qDisp}" placeholder="לא ידועה" step="any" oninput="pUpNode('Q',this.value===''?null:pToQms(this.value))"></div>`;
     if(n.type==='junc'){
@@ -17208,13 +17317,12 @@ function pShowProps(){
         html+=`<div class="pp-row">${angLines}</div>`;
       }
     }
-    panel.innerHTML=html;
+    pRenderMainPanel(html);
   } else {
-    pHideSourcePanel();
     const p=el.obj;
     const matOpts=Object.entries(PIPE_MAT).map(([k,v])=>`<option value="${k}"${p.mat===k?' selected':''}>${v.label}</option>`).join('');
     const eVal=((p.roughness??PIPE_MAT[p.mat]?.e??1.5e-6)*1000).toFixed(4);
-    panel.innerHTML=`<div class="pp-title">━ צינור</div>
+    pRenderMainPanel(`<div class="pp-title">━ צינור</div>
       <div class="pp-row"><label class="pp-lbl">תווית</label>
         <input class="pp-inp" value="${p.label}" oninput="pUpPipe('label',this.value)"></div>
       <div class="pp-row"><label class="pp-lbl">קוטר D (mm)</label>
@@ -17233,7 +17341,7 @@ function pShowProps(){
         </div>
         <div id="pp-fit-list" style="margin-top:6px;display:flex;flex-direction:column;gap:3px">${(p.fittings||[]).map((ft,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;background:var(--surface2);border-radius:5px;padding:3px 7px"><span>${PIPE_FITTINGS[ft.type]?.label||ft.type}</span><span style="display:flex;align-items:center;gap:6px"><span style="color:var(--accent)">K=${ft.K}</span><input type="number" value="${ft.qty||1}" min="1" max="20" style="width:34px;font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:1px 3px" oninput="pSetFitQty('${p.id}',${i},parseInt(this.value)||1)"><button onclick="pRemFitting('${p.id}',${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;line-height:1">×</button></span></div>`).join('')}</div>
         ${(p.fittings||[]).length?`<div style="font-size:11px;color:var(--accent);margin-top:4px;text-align:left">ΣK = ${(p.fittings||[]).reduce((s,ft)=>s+ft.K*(ft.qty||1),0).toFixed(2)}</div>`:''}
-      </div>`;
+      </div>`);
   }
 }
 function pUpNode(k,v){if(pS.selEl?.type==='node'){pS.selEl.obj[k]=v;pRender();}}
