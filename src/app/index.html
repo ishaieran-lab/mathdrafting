@@ -16604,27 +16604,29 @@ function pZoomReset(){pZoom=1;pZoomOX=0;pZoomOY=0;document.getElementById('pzoom
 function pWorld(rx,ry){return{x:(rx-pZoomOX)/pZoom,y:(ry-pZoomOY)/pZoom};}
 
 // ===== SIDEBAR DRAG-RESIZE =====
-(function(){
-  function initDragHandle(handleId, targetId, side){
+var _pDragReady=false;
+function pSetupDragHandles(){
+  if(_pDragReady) return;
+  _pDragReady=true;
+  function makeHandle(handleId,targetId,growDir){
+    // growDir: 'right' = dragging right grows target, 'left' = dragging left grows target
     var handle=document.getElementById(handleId);
     var target=document.getElementById(targetId);
-    if(!handle||!target) return;
+    if(!handle||!target){_pDragReady=false;return;}
     var dragging=false,startX,startW;
     handle.addEventListener('mousedown',function(e){
       dragging=true;startX=e.clientX;startW=target.offsetWidth;
       handle.classList.add('p-dragging');
       document.body.style.cursor='col-resize';
       document.body.style.userSelect='none';
-      e.preventDefault();
+      e.preventDefault();e.stopPropagation();
     });
     document.addEventListener('mousemove',function(e){
       if(!dragging) return;
-      var dx=side==='left'?(startX-e.clientX):(e.clientX-startX);
-      var newW=Math.max(0,Math.min(600,startW+dx));
+      var dx=growDir==='right'?(e.clientX-startX):(startX-e.clientX);
+      var newW=Math.max(60,Math.min(650,startW+dx));
       target.style.width=newW+'px';
       target.style.flexShrink='0';
-      if(newW<20) target.style.overflow='hidden';
-      else target.style.overflow='';
       pResize();
     });
     document.addEventListener('mouseup',function(){
@@ -16633,9 +16635,12 @@ function pWorld(rx,ry){return{x:(rx-pZoomOX)/pZoom,y:(ry-pZoomOY)/pZoom};}
       document.body.style.cursor='';document.body.style.userSelect='';
     });
   }
-  initDragHandle('p-drag-left','pipe-tools','left');
-  initDragHandle('p-drag-right','pipe-props','right');
-})();
+  // In RTL flex: pipe-tools is on the RIGHT, pipe-props on the LEFT
+  // p-drag-left handle sits between canvas(center) and pipe-tools(right) → drag LEFT to grow tools
+  makeHandle('p-drag-left','pipe-tools','left');
+  // p-drag-right sits between pipe-props(left) and canvas(center) → drag RIGHT to grow props
+  makeHandle('p-drag-right','pipe-props','right');
+}
 
 // ===== PIPE KEYBOARD =====
 function pDeleteSelected(){
@@ -16680,6 +16685,7 @@ function openPipeOverlay(){
   pCv.addEventListener('wheel',pWheel,{passive:false});
   document.removeEventListener('keydown',_pKeyDown);
   document.addEventListener('keydown',_pKeyDown);
+  pSetupDragHandles();
   pResize();
 }
 function pWheel(e){
