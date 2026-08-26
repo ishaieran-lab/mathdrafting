@@ -16834,8 +16834,12 @@ function pRender(){
       fill=`rgb(${r2},60,${b2})`;stroke='#1e293b';
     }
     const R=sel?18:14;
-    if(sel){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.stroke();}
-    if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+7,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();}
+    // Generic sel/pipeStart rings — skipped for elbow junctions (they draw their own)
+    var isElbow=nd.type==='junc'&&(nd.bendType==='miter'||nd.bendType==='bend');
+    if(!isElbow){
+      if(sel){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.stroke();}
+      if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+7,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();}
+    }
     if(nd.type==='source'){
       // Pump: outer circle
       pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
@@ -16850,50 +16854,100 @@ function pRender(){
         pCtx.lineTo(nd.x+Math.cos(ba)*R*0.62,nd.y+Math.sin(ba)*R*0.62);pCtx.stroke();}
       pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.2,0,Math.PI*2);pCtx.fill();
     } else if(nd.type==='junc'){
-      const bt=nd.bendType||'none';const bRD=NODE_BEND[bt]?.R||0;
-      // Find connected pipe directions for elbow orientation
-      const connPipes=pS.pipes.filter(function(pp){return pp.n1id===nd.id||pp.n2id===nd.id;});
-      var dirs=connPipes.map(function(pp){
-        var other=pS.nodes.find(function(nn){return nn.id===(pp.n1id===nd.id?pp.n2id:pp.n1id);});
-        if(!other) return 0;
-        return Math.atan2(other.y-nd.y,other.x-nd.x);
+      var bt=nd.bendType||'none';
+      var nx=nd.x,ny=nd.y;
+      // Find actual pipe directions from node
+      var connPipes2=pS.pipes.filter(function(pp){return pp.n1id===nd.id||pp.n2id===nd.id;});
+      var dirs2=[];
+      connPipes2.forEach(function(pp){
+        var oth=pS.nodes.find(function(nn){return nn.id===(pp.n1id===nd.id?pp.n2id:pp.n1id);});
+        if(oth) dirs2.push(Math.atan2(oth.y-ny,oth.x-nx));
       });
-      if((bt==='miter'||bRD>0)&&connPipes.length>=2){
-        // Draw elbow fitting
-        var d1=dirs[0],d2=dirs[1];
-        var pipeW=10;
-        pCtx.lineCap='round';
-        // Junction disc (fitting body)
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-        pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-        if(bRD>0){
-          // Curved arc indicator inside disc
-          var mid=(d1+d2)/2;
-          pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=2.5;
-          pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.52,d1,d2,(d2-d1+Math.PI*4)%(Math.PI*2)>Math.PI);
-          pCtx.stroke();
-          pCtx.fillStyle='white';
-          pCtx.beginPath();pCtx.arc(nd.x+Math.cos(d1)*R*0.52,nd.y+Math.sin(d1)*R*0.52,2.5,0,Math.PI*2);pCtx.fill();
-          pCtx.beginPath();pCtx.arc(nd.x+Math.cos(d2)*R*0.52,nd.y+Math.sin(d2)*R*0.52,2.5,0,Math.PI*2);pCtx.fill();
-        } else {
-          // Miter: two line stubs
-          pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=2.5;
-          pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x+Math.cos(d1)*R*0.6,nd.y+Math.sin(d1)*R*0.6);pCtx.stroke();
-          pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x+Math.cos(d2)*R*0.6,nd.y+Math.sin(d2)*R*0.6);pCtx.stroke();
-          pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,3,0,Math.PI*2);pCtx.fill();
+      if(bt==='miter'||bt==='bend'){
+        // === REALISTIC ELBOW FITTING ===
+        // Resolve drawing directions
+        var bendRad2=(nd.bendAngle||90)*Math.PI/180;
+        var ed1=dirs2.length>=1?dirs2[0]:Math.PI; // default: pipe goes left
+        var ed2=dirs2.length>=2?dirs2[1]:ed1-bendRad2; // default: second pipe at bend angle
+        // Normalise arc span to shortest path
+        var span=ed2-ed1;
+        while(span<=-Math.PI)span+=Math.PI*2;while(span>Math.PI)span-=Math.PI*2;
+        var isCCW=span<0;
+        var oR=R,iR=R*0.38; // outer / inner radius of donut sector
+        var arcMid=ed1+span/2;
+        // Gradient: perpendicular to arc midpoint = highlight/shadow
+        var gpx=Math.cos(arcMid+Math.PI/2)*oR,gpy=Math.sin(arcMid+Math.PI/2)*oR;
+        var grd=pCtx.createLinearGradient(nx-gpx,ny-gpy,nx+gpx,ny+gpy);
+        if(dark){grd.addColorStop(0,'#a5b4fc');grd.addColorStop(0.45,'#6366f1');grd.addColorStop(1,'#312e81');}
+        else{grd.addColorStop(0,'#e0e7ff');grd.addColorStop(0.45,'#818cf8');grd.addColorStop(1,'#4338ca');}
+        // --- Donut sector fill ---
+        pCtx.beginPath();
+        pCtx.arc(nx,ny,oR,ed1,ed2,isCCW);
+        pCtx.arc(nx,ny,iR,ed2,ed1,!isCCW);
+        pCtx.closePath();
+        pCtx.fillStyle=grd;pCtx.fill();
+        // Outer wall highlight
+        pCtx.beginPath();pCtx.arc(nx,ny,oR,ed1,ed2,isCCW);
+        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#c7d2fe':'#312e81');pCtx.lineWidth=sel?3:2;pCtx.stroke();
+        // Inner wall shadow
+        pCtx.beginPath();pCtx.arc(nx,ny,iR,ed1,ed2,isCCW);
+        pCtx.strokeStyle=dark?'rgba(30,27,75,0.8)':'rgba(196,181,253,0.6)';pCtx.lineWidth=1.5;pCtx.stroke();
+        // Radial side edges
+        [[ed1,false],[ed2,true]].forEach(function(pair){
+          var d=pair[0];
+          var ox=nx+Math.cos(d)*oR,oy=ny+Math.sin(d)*oR;
+          var ix=nx+Math.cos(d)*iR,iy=ny+Math.sin(d)*iR;
+          pCtx.beginPath();pCtx.moveTo(ox,oy);pCtx.lineTo(ix,iy);
+          pCtx.strokeStyle=dark?'#c7d2fe':'#312e81';pCtx.lineWidth=2;pCtx.stroke();
+        });
+        // End flanges (pipe collars)
+        var arcCR=(oR+iR)/2,hw=(oR-iR)/2;
+        [ed1,ed2].forEach(function(d){
+          var ex2=nx+Math.cos(d)*arcCR,ey2=ny+Math.sin(d)*arcCR;
+          var fnx=-Math.sin(d)*hw*1.35,fny=Math.cos(d)*hw*1.35;
+          pCtx.beginPath();pCtx.moveTo(ex2+fnx,ey2+fny);pCtx.lineTo(ex2-fnx,ey2-fny);
+          pCtx.strokeStyle=dark?'#e0e7ff':'#1e1b4b';pCtx.lineWidth=3.5;pCtx.lineCap='round';pCtx.stroke();
+          pCtx.beginPath();pCtx.arc(ex2,ey2,2.5,0,Math.PI*2);
+          pCtx.fillStyle=dark?'#e0e7ff':'#1e1b4b';pCtx.fill();
+        });
+        // Miter: sharp corner dot
+        if(bt==='miter'){
+          pCtx.fillStyle=dark?'#e0e7ff':'#1e1b4b';
+          pCtx.beginPath();pCtx.arc(nx,ny,3.5,0,Math.PI*2);pCtx.fill();
+        }
+        // Selection ring
+        if(sel){
+          pCtx.beginPath();pCtx.arc(nx,ny,oR+6,0,Math.PI*2);
+          pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);
+        }
+        // Hover ring
+        if(pS.pipeStart?.id===nd.id){
+          pCtx.beginPath();pCtx.arc(nx,ny,oR+8,0,Math.PI*2);
+          pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();
         }
       } else if(bt==='tee_b'||bt==='tee_s'){
-        // T-junction: circle with T symbol
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-        pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-        pCtx.strokeStyle='white';pCtx.lineWidth=2;
-        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.55,nd.y);pCtx.lineTo(nd.x+R*0.55,nd.y);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x,nd.y+R*0.55);pCtx.stroke();
+        // T fitting: metallic disc with T symbol
+        var grdT=pCtx.createRadialGradient(nx-R*0.3,ny-R*0.3,R*0.05,nx,ny,R);
+        if(dark){grdT.addColorStop(0,'#818cf8');grdT.addColorStop(1,'#3730a3');}
+        else{grdT.addColorStop(0,'#a5b4fc');grdT.addColorStop(1,'#4f46e5');}
+        pCtx.beginPath();pCtx.arc(nx,ny,R,0,Math.PI*2);
+        pCtx.fillStyle=grdT;pCtx.fill();
+        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#c7d2fe':'#312e81');pCtx.lineWidth=2;pCtx.stroke();
+        pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=3;pCtx.lineCap='round';
+        pCtx.beginPath();pCtx.moveTo(nx-R*0.6,ny);pCtx.lineTo(nx+R*0.6,ny);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx,ny);pCtx.lineTo(nx,ny+R*0.6);pCtx.stroke();
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);}
       } else {
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-        pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
+        // Plain junction
+        var grdN=pCtx.createRadialGradient(nx-R*0.3,ny-R*0.3,R*0.05,nx,ny,R);
+        if(dark){grdN.addColorStop(0,'#818cf8');grdN.addColorStop(1,'#3730a3');}
+        else{grdN.addColorStop(0,'#a5b4fc');grdN.addColorStop(1,'#4f46e5');}
+        pCtx.beginPath();pCtx.arc(nx,ny,R,0,Math.PI*2);
+        pCtx.fillStyle=grdN;pCtx.fill();
+        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#c7d2fe':'#312e81');pCtx.lineWidth=2;pCtx.stroke();
         pCtx.fillStyle='white';pCtx.font='bold 10px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
-        pCtx.fillText('J',nd.x,nd.y);
+        pCtx.fillText('J',nx,ny);
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);}
       }
     } else {
       // Outlet: hexagon shape
