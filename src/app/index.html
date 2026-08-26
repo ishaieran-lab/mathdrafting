@@ -1562,6 +1562,15 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .fp-proto.visible{display:flex;}
 /* ===== PIPE HYDRAULICS ===== */
 #pipe-overlay{position:fixed;inset:0;background:var(--bg);z-index:10001;display:none;flex-direction:column;font-family:'Assistant',sans-serif;}
+#pipe-tools,#pipe-props{transition:width 0.2s,padding 0.2s,min-width 0.2s;}
+#pipe-tools.p-collapsed{width:0!important;padding:0!important;overflow:hidden!important;min-width:0!important;}
+#pipe-props.p-collapsed{width:0!important;padding:0!important;overflow:hidden!important;min-width:0!important;}
+.p-side-toggle{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:18px;height:44px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;border-radius:4px;}
+.p-side-toggle:hover{background:var(--surface2);color:var(--text);}
+.pzoom-bar{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 10px;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
+.pzoom-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:16px;font-weight:bold;display:flex;align-items:center;justify-content:center;line-height:1;}
+.pzoom-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+#pzoom-label{font-size:12px;color:var(--text2);min-width:38px;text-align:center;}
 #pipe-hdr{height:54px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;}
 #pipe-hdr-title{font-size:15px;font-weight:700;color:var(--text);flex:1;}
 .p-hdr-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:13px;font-family:'Assistant',sans-serif;transition:all 0.12s;}
@@ -2347,17 +2356,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <button class="tbtn" onclick="openPopup('shapes3d',this)" data-tip="צורות תלת-מימד" data-tip-key="tipShapes3d">
       <img src="../assets/icons/toolbar/תלת ממד.png?v=2" style="object-fit:contain;">
     </button>
-    <button class="tbtn" onclick="openPipeOverlay()" data-tip="מחשב צנרת">
-      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="1" y="8" width="22" height="4" rx="1.5"/>
-        <path d="M8 8V5M16 8V5"/>
-        <path d="M8 12v3M16 12v3"/>
-        <circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="8" cy="12" r="1.2" fill="currentColor" stroke="none"/>
-        <circle cx="16" cy="12" r="1.2" fill="currentColor" stroke="none"/>
-      </svg>
-    </button>
     <div class="tsep"></div>
     <!-- קבוצה 4: צבע ומחיקה -->
     <button class="tbtn" id="tbtn-fill" onclick="setTool('fill')" data-tip="מילוי" data-tip-key="tipFill">
@@ -2368,6 +2366,26 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     </button>
     <button class="tbtn" id="tbtn-delete" onclick="setTool('delete')" data-tip="מחק" data-tip-key="tipDelete">
       <img src="../assets/icons/toolbar/מחק.png" style="object-fit:contain;">
+    </button>
+  </div>
+
+  <!-- ENGINEERING TOOLBAR -->
+  <div class="toolbar" id="eng-toolbar" style="right:84px;">
+    <div class="toolbar-handle" id="eng-toolbar-handle"></div>
+    <div class="tb-resize tb-resize-nw" data-etb="nw"></div>
+    <div class="tb-resize tb-resize-ne" data-etb="ne"></div>
+    <div class="tb-resize tb-resize-sw" data-etb="sw"></div>
+    <div class="tb-resize tb-resize-se" data-etb="se"></div>
+    <button class="tbtn" onclick="openPipeOverlay()" data-tip="מחשב צנרת" style="border-bottom:none">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="1" y="8" width="22" height="4" rx="1.5"/>
+        <path d="M8 8V5M16 8V5"/>
+        <path d="M8 12v3M16 12v3"/>
+        <circle cx="8" cy="8" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="16" cy="8" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="8" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="16" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+      </svg>
     </button>
   </div>
 
@@ -16574,6 +16592,36 @@ function pToggleVisc(){
   bk.style.background=isDyn?'none':'rgba(108,99,255,0.25)';bk.style.borderColor=isDyn?'var(--border)':'var(--accent)';bk.style.color=isDyn?'var(--text2)':'var(--accent)';
 }
 
+// ===== PIPE ZOOM =====
+var pZoom=1,pZoomOX=0,pZoomOY=0;
+function pZoomChange(delta){
+  var prev=pZoom;
+  pZoom=Math.max(0.15,Math.min(6,pZoom+delta));
+  var cx=pCv?pCv.width/2:0,cy=pCv?pCv.height/2:0;
+  pZoomOX=cx-(cx-pZoomOX)*(pZoom/prev);
+  pZoomOY=cy-(cy-pZoomOY)*(pZoom/prev);
+  document.getElementById('pzoom-label').textContent=Math.round(pZoom*100)+'%';
+  pRender();
+}
+function pZoomReset(){pZoom=1;pZoomOX=0;pZoomOY=0;document.getElementById('pzoom-label').textContent='100%';pRender();}
+function pWorld(rx,ry){return{x:(rx-pZoomOX)/pZoom,y:(ry-pZoomOY)/pZoom};}
+
+// ===== SIDEBAR TOGGLE =====
+function pToggleSide(which){
+  if(which==='tools'){
+    var el=document.getElementById('pipe-tools');
+    var btn=document.getElementById('ptoggle-tools');
+    var collapsed=el.classList.toggle('p-collapsed');
+    btn.textContent=collapsed?'▶':'◀';
+  } else {
+    var el2=document.getElementById('pipe-props');
+    var btn2=document.getElementById('ptoggle-props');
+    var collapsed2=el2.classList.toggle('p-collapsed');
+    btn2.textContent=collapsed2?'◀':'▶';
+  }
+  pResize();
+}
+
 // ===== PIPE KEYBOARD =====
 function pDeleteSelected(){
   // Delete multi-selection first
@@ -16613,9 +16661,23 @@ function openPipeOverlay(){
   pCv.addEventListener('mousemove',pMove);
   pCv.addEventListener('mouseup',pUp);
   pCv.addEventListener('mouseleave',pUp);
+  pCv.removeEventListener('wheel',pWheel);
+  pCv.addEventListener('wheel',pWheel,{passive:false});
   document.removeEventListener('keydown',_pKeyDown);
   document.addEventListener('keydown',_pKeyDown);
   pResize();
+}
+function pWheel(e){
+  e.preventDefault();
+  var r=pCv.getBoundingClientRect();
+  var mx=e.clientX-r.left,my=e.clientY-r.top;
+  var delta=e.deltaY>0?-0.15:0.15;
+  var prev=pZoom;
+  pZoom=Math.max(0.15,Math.min(6,pZoom+delta));
+  pZoomOX=mx-(mx-pZoomOX)*(pZoom/prev);
+  pZoomOY=my-(my-pZoomOY)*(pZoom/prev);
+  document.getElementById('pzoom-label').textContent=Math.round(pZoom*100)+'%';
+  pRender();
 }
 function closePipeOverlay(){document.getElementById('pipe-overlay').style.display='none';document.removeEventListener('keydown',_pKeyDown);}
 function pResize(){
@@ -16676,6 +16738,7 @@ function ptLineDist(px,py,ax,ay,bx,by){
 function pDown(e){
   const r=pCv.getBoundingClientRect();
   var rx=e.clientX-r.left,ry=e.clientY-r.top;
+  var _w=pWorld(rx,ry);rx=_w.x;ry=_w.y; // convert to world coords
   var sx=pSnap(rx),sy=pSnap(ry);
   if(pTool==='select'){
     const nd=pNodeAt(rx,ry);
@@ -16743,10 +16806,13 @@ function pDown(e){
       iconRotation:0};
     pS.nodes.push(nd);pS.selEl={type:'node',obj:nd};pS.results=null;
     pShowProps();pRender();
+    setPipeTool('select'); // auto-switch to select after placing
   }
 }
 function pMove(e){
-  const r=pCv.getBoundingClientRect(),rx=e.clientX-r.left,ry=e.clientY-r.top;
+  const r=pCv.getBoundingClientRect();
+  var _wm=pWorld(e.clientX-r.left,e.clientY-r.top);
+  var rx=_wm.x,ry=_wm.y;
   // Rotation drag
   if(pS.rotatingNode&&pTool==='select'){
     var nd=pS.rotatingNode;
@@ -16796,6 +16862,8 @@ function pRender(){
   const W=pCv.width,H=pCv.height;
   const dark=!document.body.classList.contains('light-theme');
   pCtx.clearRect(0,0,W,H);
+  pCtx.save();
+  pCtx.setTransform(pZoom,0,0,pZoom,pZoomOX,pZoomOY);
   // Background
   if(pGridMode==='grid'){
     pCtx.strokeStyle=dark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
@@ -17089,12 +17157,14 @@ function pRender(){
     }
     pCtx.restore();
   }
-  // Rubber-band selection rect
+  pCtx.restore(); // end zoom transform
+  // Rubber-band — world coords → screen coords for drawing
   if(pS.selRect){
-    var rx2=pS.selRect.ox,ry2=pS.selRect.oy,rw2=pS.selRect.w,rh2=pS.selRect.h;
+    var sx1=pS.selRect.ox*pZoom+pZoomOX,sy1=pS.selRect.oy*pZoom+pZoomOY;
+    var sw1=pS.selRect.w*pZoom,sh1=pS.selRect.h*pZoom;
     pCtx.strokeStyle='rgba(99,102,241,0.8)';pCtx.lineWidth=1.5;pCtx.setLineDash([5,3]);
-    pCtx.strokeRect(rx2,ry2,rw2,rh2);
-    pCtx.fillStyle='rgba(99,102,241,0.08)';pCtx.fillRect(rx2,ry2,rw2,rh2);
+    pCtx.strokeRect(sx1,sy1,sw1,sh1);
+    pCtx.fillStyle='rgba(99,102,241,0.08)';pCtx.fillRect(sx1,sy1,sw1,sh1);
     pCtx.setLineDash([]);
   }
 }
@@ -17461,6 +17531,32 @@ function pClearAll(){
     handle.style.cursor = 'grab';
   });
 })();
+
+// Engineering toolbar drag
+(function(){
+  const etb=document.getElementById('eng-toolbar');
+  const ehandle=document.getElementById('eng-toolbar-handle');
+  if(!etb||!ehandle) return;
+  let dragging=false,dragStartX,dragStartY,startLeft,startTop;
+  function initPos(){
+    const r=etb.getBoundingClientRect();
+    const pr=(etb.offsetParent||document.body).getBoundingClientRect();
+    etb.style.right='auto';etb.style.transform='none';
+    etb.style.left=(r.left-pr.left)+'px';etb.style.top=(r.top-pr.top)+'px';
+  }
+  ehandle.addEventListener('mousedown',function(e){
+    if(!etb.style.left) initPos();
+    dragging=true;dragStartX=e.clientX;dragStartY=e.clientY;
+    startLeft=parseFloat(etb.style.left);startTop=parseFloat(etb.style.top);
+    ehandle.style.cursor='grabbing';e.preventDefault();
+  });
+  document.addEventListener('mousemove',function(e){
+    if(!dragging) return;
+    etb.style.left=(startLeft+e.clientX-dragStartX)+'px';
+    etb.style.top=(startTop+e.clientY-dragStartY)+'px';
+  });
+  document.addEventListener('mouseup',function(){dragging=false;ehandle.style.cursor='grab';});
+})();
 </script>
 <style media="print">
 body>*:not(.canvas-area){display:none!important;}
@@ -17542,7 +17638,7 @@ body>*:not(.canvas-area){display:none!important;}
     <button class="p-hdr-btn primary" onclick="pCalc()">▶ חשב מפל לחץ</button>
   </div>
   <div id="pipe-body">
-    <div id="pipe-tools">
+    <div id="pipe-tools" style="position:relative;">
       <div class="ptool-lbl">כלים</div>
       <button class="ptool active" id="ptool-select" onclick="setPipeTool('select')">↖ בחירה / גרירה</button>
       <div class="ptool-sep"></div>
@@ -17719,8 +17815,18 @@ body>*:not(.canvas-area){display:none!important;}
       <div class="ptool-sep"></div>
       <div class="ptool-lbl" style="font-size:9px;line-height:1.5;opacity:0.75;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
     </div>
-    <div id="pipe-cvwrap">
+    <div id="pipe-cvwrap" style="position:relative;">
+      <!-- Toggle buttons on canvas edges -->
+      <button class="p-side-toggle" id="ptoggle-tools" onclick="pToggleSide('tools')" style="right:0;transform:translateY(-50%)" title="הסתר/הצג כלים">◀</button>
+      <button class="p-side-toggle" id="ptoggle-props" onclick="pToggleSide('props')" style="left:0;transform:translateY(-50%)" title="הסתר/הצג מאפיינים">▶</button>
       <canvas id="pipe-cv"></canvas>
+      <!-- Zoom controls -->
+      <div class="pzoom-bar">
+        <button class="pzoom-btn" onclick="pZoomChange(-0.2)" title="הקטן">−</button>
+        <span id="pzoom-label">100%</span>
+        <button class="pzoom-btn" onclick="pZoomChange(0.2)" title="הגדל">+</button>
+        <button class="pzoom-btn" onclick="pZoomReset()" title="אפס זום" style="font-size:11px;width:32px;border-radius:8px;">1:1</button>
+      </div>
     </div>
     <div id="pipe-props">
       <div id="pipe-props-content"><p style="color:var(--text2);font-size:12px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p></div>
