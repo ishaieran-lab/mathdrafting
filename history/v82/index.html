@@ -1574,8 +1574,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .ptool:hover{background:var(--surface2);border-color:var(--border);}
 .ptool.active{background:rgba(108,99,255,0.15);border-color:rgba(108,99,255,0.4);color:var(--accent);font-weight:600;}
 .ptool-sep{height:1px;background:var(--border);margin:4px 0;flex-shrink:0;}
-#junc-picker button:hover{border-color:var(--accent)!important;background:rgba(108,99,255,0.1)!important;}
-#junc-picker button.jb-active{border-color:var(--accent)!important;background:rgba(108,99,255,0.2)!important;}
 .ptool-lbl{font-size:10px;color:var(--text2);padding:4px 4px 1px;font-weight:700;letter-spacing:0.5px;text-align:right;}
 .p-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;outline:none;box-sizing:border-box;font-family:'Assistant',sans-serif;}
 .p-inp:focus{border-color:var(--accent);}
@@ -16456,13 +16454,6 @@ var NODE_BEND={
 var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null};
 var pTool='select';
 var pCv,pCtx,pRho=1000,pMu=0.001,pViscMode='dynamic',pNuUnit='cst';
-var pGridMode='grid'; // 'grid'|'dots'|'none'
-var pGridSize=40;     // pixels per grid cell
-var pSnapGrid=true;   // snap nodes to grid
-var pAutoCalc=true;   // auto-update L when nodes dragged
-var pScale=0.01;      // meters per pixel (default: 1px = 1cm)
-var pOrtho=true;      // force 90° orthogonal pipe routing
-var pJuncPreset={bendType:'none'}; // preset for next junction placement
 var pPressUnit='kpa'; // 'kpa'|'bar'|'barg'|'bara'|'psig'|'psia'
 var P_UNIT_LABEL={kpa:'kPa',bar:'bar',barg:'bar (gauge)',bara:'bar (abs)',psig:'PSI gauge',psia:'PSI (abs)'};
 function pToPA(val,unit){
@@ -16511,12 +16502,6 @@ function pFromQms(qms,unit){
 }
 function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='lh'?0:pFlowUnit==='mh'?2:3;}
 function pSetFlowUnit(u){pFlowUnit=u;pShowProps();}
-function pJuncHighlight(key){
-  ['miter','r15','r20','none'].forEach(function(k){
-    var b=document.getElementById('jb-'+k);
-    if(b) b.classList.toggle('jb-active',k===key);
-  });
-}
 function pToggleVisc(){
   var dyn=document.getElementById('visc-dyn-row'),kin=document.getElementById('visc-kin-row');
   var bd=document.getElementById('vbtn-dyn'),bk=document.getElementById('vbtn-kin');
@@ -16553,36 +16538,10 @@ function setPipeTool(t){
   pTool=t;pS.pipeStart=null;
   document.querySelectorAll('.ptool').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('ptool-'+t);if(btn)btn.classList.add('active');
-  var jp=document.getElementById('junc-picker');if(jp&&t!=='junc')jp.style.display='none';
   pCv.style.cursor=t==='select'?'default':t==='delete'?'not-allowed':'crosshair';
   pRender();
 }
 
-function pSnap(v){return pSnapGrid?Math.round(v/pGridSize)*pGridSize:v;}
-function pSnapXY(x,y){return {x:pSnap(x),y:pSnap(y)};}
-function pAutoUpdatePipes(movedNode){
-  if(!pAutoCalc) return;
-  for(var i=0;i<pS.pipes.length;i++){
-    var p=pS.pipes[i];
-    if(p.n1id!==movedNode.id&&p.n2id!==movedNode.id) continue;
-    var n1=pS.nodes.find(function(n){return n.id===p.n1id;});
-    var n2=pS.nodes.find(function(n){return n.id===p.n2id;});
-    if(!n1||!n2) continue;
-    var dx=n2.x-n1.x,dy=n2.y-n1.y;
-    if(pOrtho){
-      // L-shaped orthogonal routing: horizontal first, then vertical
-      var wx=n2.x,wy=n1.y;
-      var L1=Math.abs(dx),L2=Math.abs(dy);
-      // choose shorter horizontal leg first
-      if(Math.abs(dy)<Math.abs(dx)){wx=n1.x;wy=n2.y;L1=Math.abs(dy);L2=Math.abs(dx);}
-      p.wx=wx;p.wy=wy;
-      p.L=Math.max(0.1,Math.round((L1+L2)*pScale*10)/10);
-    } else {
-      p.wx=null;p.wy=null;
-      p.L=Math.max(0.1,Math.round(Math.hypot(dx,dy)*pScale*10)/10);
-    }
-  }
-}
 function pNodeAt(x,y){return pS.nodes.find(n=>Math.hypot(n.x-x,n.y-y)<16)||null;}
 function pPipeAt(x,y){
   for(const p of pS.pipes){
@@ -16599,39 +16558,40 @@ function ptLineDist(px,py,ax,ay,bx,by){
 }
 
 function pDown(e){
-  const r=pCv.getBoundingClientRect();
-  var rx=e.clientX-r.left,ry=e.clientY-r.top;
-  var sx=pSnap(rx),sy=pSnap(ry);
+  const r=pCv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
   if(pTool==='select'){
-    const nd=pNodeAt(rx,ry);
-    const wpPipe=pS.pipes.find(p=>p.wx!=null&&Math.hypot(p.wx-rx,p.wy-ry)<10);
-    if(wpPipe&&!nd){pS.dragWP=wpPipe;pS.dragOX=rx-wpPipe.wx;pS.dragOY=ry-wpPipe.wy;pS.selEl={type:'pipe',obj:wpPipe};pShowProps();pRender();return;}
-    const pp=nd?null:pPipeAt(rx,ry);
+    const nd=pNodeAt(x,y);
+    // Check waypoint hit first
+    const wpPipe=pS.pipes.find(p=>p.wx!=null&&Math.hypot(p.wx-x,p.wy-y)<10);
+    if(wpPipe&&!nd){pS.dragWP=wpPipe;pS.dragOX=x-wpPipe.wx;pS.dragOY=y-wpPipe.wy;pS.selEl={type:'pipe',obj:wpPipe};pShowProps();pRender();return;}
+    const pp=nd?null:pPipeAt(x,y);
     pS.selEl=nd?{type:'node',obj:nd}:pp?{type:'pipe',obj:pp}:null;
-    if(nd){pS.dragNode=nd;pS.dragOX=rx-nd.x;pS.dragOY=ry-nd.y;}
+    if(nd){pS.dragNode=nd;pS.dragOX=x-nd.x;pS.dragOY=y-nd.y;}
     pShowProps();pRender();return;
   }
   if(pTool==='delete'){
-    const nd=pNodeAt(rx,ry);
+    const nd=pNodeAt(x,y);
     if(nd){pS.pipes=pS.pipes.filter(p=>p.n1id!==nd.id&&p.n2id!==nd.id);pS.nodes=pS.nodes.filter(n=>n.id!==nd.id);}
-    else{const pp=pPipeAt(rx,ry);if(pp)pS.pipes=pS.pipes.filter(p=>p.id!==pp.id);}
+    else{const pp=pPipeAt(x,y);if(pp)pS.pipes=pS.pipes.filter(p=>p.id!==pp.id);}
     pS.selEl=null;pS.results=null;pShowProps();pRender();return;
   }
   if(pTool==='pipe'){
-    const nd=pNodeAt(rx,ry);
+    const nd=pNodeAt(x,y);
     if(!pS.pipeStart){if(nd){pS.pipeStart=nd;pS.pipeWP=null;pRender();}}
     else{
       if(nd&&nd.id!==pS.pipeStart.id){
         const ex=pS.pipes.find(p=>(p.n1id===pS.pipeStart.id&&p.n2id===nd.id)||(p.n2id===pS.pipeStart.id&&p.n1id===nd.id));
         if(!ex){
-          const np={id:'p'+(pS.nextId++),n1id:pS.pipeStart.id,n2id:nd.id,D:0.05,L:1,mat:'pvc',label:'צינור '+(pS.pipes.length+1),fittings:[]};
+          const dx=nd.x-pS.pipeStart.x,dy=nd.y-pS.pipeStart.y;
+          const L=Math.max(1,Math.round(Math.sqrt(dx*dx+dy*dy)/4)/10);
+          const np={id:'p'+(pS.nextId++),n1id:pS.pipeStart.id,n2id:nd.id,D:0.05,L,mat:'pvc',label:'צינור '+(pS.pipes.length+1),fittings:[]};
+          if(pS.pipeWP){np.wx=pS.pipeWP.x;np.wy=pS.pipeWP.y;}
           pS.pipes.push(np);
-          pAutoUpdatePipes(nd);pAutoUpdatePipes(pS.pipeStart);
-          if(!pOrtho&&pS.pipeWP){np.wx=pS.pipeWP.x;np.wy=pS.pipeWP.y;}
         }
         pS.pipeStart=null;pS.pipeWP=null;pS.results=null;pRender();
-      } else if(!nd&&!pOrtho){
-        pS.pipeWP={x:rx,y:ry};pRender();
+      } else if(!nd){
+        // Set waypoint on empty canvas
+        pS.pipeWP={x,y};pRender();
       }
     }
     return;
@@ -16639,28 +16599,19 @@ function pDown(e){
   if(['source','junc','outlet'].includes(pTool)){
     const label=pTool==='source'?'מקור':pTool==='outlet'?'יציאה ':'צומת ';
     const cnt=pS.nodes.filter(n=>n.type===pTool).length;
-    const nd={id:'n'+(pS.nextId++),x:sx,y:sy,type:pTool,label:label+(cnt>0?cnt+1:''),
-      P:pTool==='source'?200000:pTool==='outlet'?0:null,Q:null,
-      bendType:pTool==='junc'?pJuncPreset.bendType:'none'};
+    const nd={id:'n'+(pS.nextId++),x,y,type:pTool,label:label+(cnt>0?cnt+1:''),
+      P:pTool==='source'?200000:pTool==='outlet'?0:null,Q:null};
     pS.nodes.push(nd);pS.selEl={type:'node',obj:nd};pS.results=null;
     pShowProps();pRender();
   }
 }
 function pMove(e){
-  const r=pCv.getBoundingClientRect(),rx=e.clientX-r.left,ry=e.clientY-r.top;
-  if(pS.dragNode&&pTool==='select'){
-    var nx=pSnap(rx-pS.dragOX),ny=pSnap(ry-pS.dragOY);
-    pS.dragNode.x=nx;pS.dragNode.y=ny;
-    pAutoUpdatePipes(pS.dragNode);
-    pRender();
-  }
-  if(pS.dragWP&&pTool==='select'){pS.dragWP.wx=rx-pS.dragOX;pS.dragWP.wy=ry-pS.dragOY;pRender();}
-  if(pS.pipeStart&&pTool==='pipe'){pS._mouseX=rx;pS._mouseY=ry;pRender();}
+  const r=pCv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+  if(pS.dragNode&&pTool==='select'){pS.dragNode.x=x-pS.dragOX;pS.dragNode.y=y-pS.dragOY;pRender();}
+  if(pS.dragWP&&pTool==='select'){pS.dragWP.wx=x-pS.dragOX;pS.dragWP.wy=y-pS.dragOY;pRender();}
+  if(pS.pipeStart&&pTool==='pipe'){pS._mouseX=x;pS._mouseY=y;pRender();}
 }
-function pUp(){
-  if(pS.dragNode){pS.results=null;} // invalidate results after move
-  pS.dragNode=null;pS.dragWP=null;
-}
+function pUp(){pS.dragNode=null;pS.dragWP=null;}
 
 // ===== RENDER =====
 function pRender(){
@@ -16668,20 +16619,11 @@ function pRender(){
   const W=pCv.width,H=pCv.height;
   const dark=!document.body.classList.contains('light-theme');
   pCtx.clearRect(0,0,W,H);
-  // Background
-  if(pGridMode==='grid'){
-    pCtx.strokeStyle=dark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
-    pCtx.lineWidth=1;
-    for(let gx=0;gx<W;gx+=pGridSize){pCtx.beginPath();pCtx.moveTo(gx,0);pCtx.lineTo(gx,H);pCtx.stroke();}
-    for(let gy=0;gy<H;gy+=pGridSize){pCtx.beginPath();pCtx.moveTo(0,gy);pCtx.lineTo(W,gy);pCtx.stroke();}
-    // Accent every 5 cells
-    pCtx.strokeStyle=dark?'rgba(255,255,255,0.13)':'rgba(0,0,0,0.13)';
-    for(let gx=0;gx<W;gx+=pGridSize*5){pCtx.beginPath();pCtx.moveTo(gx,0);pCtx.lineTo(gx,H);pCtx.stroke();}
-    for(let gy=0;gy<H;gy+=pGridSize*5){pCtx.beginPath();pCtx.moveTo(0,gy);pCtx.lineTo(W,gy);pCtx.stroke();}
-  } else if(pGridMode==='dots'){
-    pCtx.fillStyle=dark?'rgba(255,255,255,0.18)':'rgba(0,0,0,0.18)';
-    for(let gx=0;gx<W;gx+=pGridSize){for(let gy=0;gy<H;gy+=pGridSize){pCtx.beginPath();pCtx.arc(gx,gy,1.2,0,Math.PI*2);pCtx.fill();}}
-  }
+  // Grid
+  pCtx.strokeStyle=dark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.05)';
+  pCtx.lineWidth=1;
+  for(let x=0;x<W;x+=40){pCtx.beginPath();pCtx.moveTo(x,0);pCtx.lineTo(x,H);pCtx.stroke();}
+  for(let y=0;y<H;y+=40){pCtx.beginPath();pCtx.moveTo(0,y);pCtx.lineTo(W,y);pCtx.stroke();}
 
   const res=pS.results;
   // Pipes
@@ -16689,33 +16631,22 @@ function pRender(){
     const a=pS.nodes.find(n=>n.id===pipe.n1id),b=pS.nodes.find(n=>n.id===pipe.n2id);
     if(!a||!b) continue;
     const sel=pS.selEl?.type==='pipe'&&pS.selEl?.obj?.id===pipe.id;
-    const pipeColor=sel?'#f59e0b':(dark?'#3b82f6':'#1d4ed8');
-    const innerColor=sel?'rgba(251,191,36,0.25)':(dark?'rgba(59,130,246,0.25)':'rgba(29,78,216,0.18)');
-    const wallW=sel?10:8; // pipe wall outer width
     pCtx.save();
     pCtx.lineCap='round';
-    // Draw pipe segments as tube cross-section
-    function drawPipeSeg(x1,y1,x2,y2){
-      var dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);if(len<1)return;
-      var nx=-dy/len*(wallW/2),ny=dx/len*(wallW/2);
-      // fill body
-      pCtx.beginPath();
-      pCtx.moveTo(x1+nx,y1+ny);pCtx.lineTo(x2+nx,y2+ny);
-      pCtx.lineTo(x2-nx,y2-ny);pCtx.lineTo(x1-nx,y1-ny);
-      pCtx.closePath();pCtx.fillStyle=innerColor;pCtx.fill();
-      // wall lines
-      pCtx.strokeStyle=pipeColor;pCtx.lineWidth=2;
-      pCtx.beginPath();pCtx.moveTo(x1+nx,y1+ny);pCtx.lineTo(x2+nx,y2+ny);pCtx.stroke();
-      pCtx.beginPath();pCtx.moveTo(x1-nx,y1-ny);pCtx.lineTo(x2-nx,y2-ny);pCtx.stroke();
-    }
+    pCtx.strokeStyle=sel?'#f59e0b':(dark?'#3b82f6':'#1d4ed8');
+    pCtx.lineWidth=sel?8:6;
+    pCtx.beginPath();pCtx.moveTo(a.x,a.y);
+    if(pipe.wx!=null){pCtx.lineTo(pipe.wx,pipe.wy);}
+    pCtx.lineTo(b.x,b.y);pCtx.stroke();
+    pCtx.strokeStyle=dark?'rgba(147,197,253,0.35)':'rgba(219,234,254,0.7)';
+    pCtx.lineWidth=2;
+    pCtx.beginPath();pCtx.moveTo(a.x,a.y);
+    if(pipe.wx!=null){pCtx.lineTo(pipe.wx,pipe.wy);}
+    pCtx.lineTo(b.x,b.y);pCtx.stroke();
+    // Waypoint handle
     if(pipe.wx!=null){
-      drawPipeSeg(a.x,a.y,pipe.wx,pipe.wy);
-      drawPipeSeg(pipe.wx,pipe.wy,b.x,b.y);
-      // Waypoint handle — draw as elbow fitting circle
-      pCtx.fillStyle=sel?'#f59e0b':(dark?'#6366f1':'#4338ca');
-      pCtx.strokeStyle=sel?'#d97706':(dark?'#818cf8':'#6366f1');
-      pCtx.lineWidth=2;
-      pCtx.beginPath();pCtx.arc(pipe.wx,pipe.wy,7,0,Math.PI*2);pCtx.fill();pCtx.stroke();
+      pCtx.fillStyle=sel?'#f59e0b':'#a78bfa';
+      pCtx.beginPath();pCtx.arc(pipe.wx,pipe.wy,6,0,Math.PI*2);pCtx.fill();
       // Angle indicator
       const ang1=Math.atan2(pipe.wy-a.y,pipe.wx-a.x);
       const ang2=Math.atan2(b.y-pipe.wy,b.x-pipe.wx);
@@ -16723,9 +16654,7 @@ function pRender(){
       if(bendDeg>180) bendDeg=360-bendDeg;
       pCtx.fillStyle=dark?'#c4b5fd':'#7c3aed';
       pCtx.font='bold 10px Assistant,sans-serif';pCtx.textAlign='center';
-      pCtx.fillText(Math.round(bendDeg)+'°',pipe.wx,pipe.wy-12);
-    } else {
-      drawPipeSeg(a.x,a.y,b.x,b.y);
+      pCtx.fillText(Math.round(bendDeg)+'°',pipe.wx,pipe.wy-10);
     }
     // Labels
     const cx=pipe.wx!=null?(a.x+pipe.wx)/2:(a.x+b.x)/2;
@@ -16749,25 +16678,19 @@ function pRender(){
   }
   // Pipe-in-progress preview
   if(pS.pipeStart&&pTool==='pipe'&&pS._mouseX!=null){
-    pCtx.save();pCtx.strokeStyle='rgba(168,85,247,0.7)';pCtx.setLineDash([7,4]);pCtx.lineWidth=2.5;
-    pCtx.beginPath();pCtx.arc(pS.pipeStart.x,pS.pipeStart.y,22,0,Math.PI*2);pCtx.stroke();
+    pCtx.save();pCtx.strokeStyle='rgba(168,85,247,0.6)';pCtx.setLineDash([6,4]);pCtx.lineWidth=2;
+    pCtx.beginPath();pCtx.arc(pS.pipeStart.x,pS.pipeStart.y,20,0,Math.PI*2);pCtx.stroke();
     pCtx.beginPath();pCtx.moveTo(pS.pipeStart.x,pS.pipeStart.y);
-    if(pOrtho){
-      // L-shaped preview
-      var px=pS.pipeStart.x,py=pS.pipeStart.y,mx=pS._mouseX,my=pS._mouseY;
-      var wx2=mx,wy2=py;
-      if(Math.abs(my-py)<Math.abs(mx-px)){wx2=px;wy2=my;}
-      pCtx.lineTo(wx2,wy2);pCtx.lineTo(mx,my);pCtx.stroke();
-      pCtx.fillStyle='#a78bfa';pCtx.setLineDash([]);
-      pCtx.beginPath();pCtx.arc(wx2,wy2,5,0,Math.PI*2);pCtx.fill();
-    } else if(pS.pipeWP){
-      pCtx.lineTo(pS.pipeWP.x,pS.pipeWP.y);pCtx.lineTo(pS._mouseX,pS._mouseY);pCtx.stroke();
+    if(pS.pipeWP){pCtx.lineTo(pS.pipeWP.x,pS.pipeWP.y);}
+    pCtx.lineTo(pS._mouseX,pS._mouseY);pCtx.stroke();
+    if(pS.pipeWP){
       pCtx.fillStyle='#a78bfa';pCtx.setLineDash([]);
       pCtx.beginPath();pCtx.arc(pS.pipeWP.x,pS.pipeWP.y,5,0,Math.PI*2);pCtx.fill();
+      pCtx.fillStyle=dark?'#c4b5fd':'#7c3aed';pCtx.font='10px Assistant,sans-serif';pCtx.textAlign='center';
+      pCtx.fillText('נקודת כיפוף',pS.pipeWP.x,pS.pipeWP.y-10);
     } else {
-      pCtx.lineTo(pS._mouseX,pS._mouseY);pCtx.stroke();
-      pCtx.fillStyle=dark?'#94a3b8':'#64748b';pCtx.setLineDash([]);pCtx.font='10px Assistant,sans-serif';pCtx.textAlign='center';pCtx.textBaseline='alphabetic';
-      pCtx.fillText('לחץ על צומת ליסיום',pS._mouseX,pS._mouseY-14);
+      pCtx.fillStyle=dark?'#94a3b8':'#64748b';pCtx.font='10px Assistant,sans-serif';pCtx.textAlign='center';
+      pCtx.fillText('לחץ לכיפוף / צומת ליסיום',pS._mouseX,pS._mouseY-14);
     }
     pCtx.restore();
   }
@@ -16788,69 +16711,42 @@ function pRender(){
     if(sel){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.stroke();}
     if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+7,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();}
     if(nd.type==='source'){
-      // Pump: outer circle
+      // Pump icon: circle + triangle rotor
       pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
       pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-      // Inner ring
-      pCtx.strokeStyle='rgba(255,255,255,0.5)';pCtx.lineWidth=1;
-      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.65,0,Math.PI*2);pCtx.stroke();
-      // Rotor blades
-      pCtx.strokeStyle='white';pCtx.lineWidth=2;
-      for(var bi=0;bi<3;bi++){var ba=bi*Math.PI*2/3-Math.PI/6;
-        pCtx.beginPath();pCtx.moveTo(nd.x+Math.cos(ba)*R*0.18,nd.y+Math.sin(ba)*R*0.18);
-        pCtx.lineTo(nd.x+Math.cos(ba)*R*0.62,nd.y+Math.sin(ba)*R*0.62);pCtx.stroke();}
-      pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.2,0,Math.PI*2);pCtx.fill();
+      pCtx.fillStyle='white';pCtx.lineWidth=1.5;pCtx.strokeStyle='white';
+      // rotor blades
+      for(var bi=0;bi<3;bi++){var ba=bi*Math.PI*2/3-Math.PI/2;pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x+Math.cos(ba)*R*0.7,nd.y+Math.sin(ba)*R*0.7);pCtx.stroke();}
+      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.22,0,Math.PI*2);pCtx.fill();
     } else if(nd.type==='junc'){
-      const bt=nd.bendType||'none';const bRD=NODE_BEND[bt]?.R||0;
-      // Find connected pipe directions for elbow orientation
-      const connPipes=pS.pipes.filter(function(pp){return pp.n1id===nd.id||pp.n2id===nd.id;});
-      var dirs=connPipes.map(function(pp){
-        var other=pS.nodes.find(function(nn){return nn.id===(pp.n1id===nd.id?pp.n2id:pp.n1id);});
-        if(!other) return 0;
-        return Math.atan2(other.y-nd.y,other.x-nd.x);
-      });
-      if((bt==='miter'||bRD>0)&&connPipes.length>=2){
-        // Draw elbow fitting
-        var d1=dirs[0],d2=dirs[1];
-        var pipeW=10;
-        pCtx.lineCap='round';
-        // Junction disc (fitting body)
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-        pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-        if(bRD>0){
-          // Curved arc indicator inside disc
-          var mid=(d1+d2)/2;
-          pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=2.5;
-          pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.52,d1,d2,(d2-d1+Math.PI*4)%(Math.PI*2)>Math.PI);
-          pCtx.stroke();
-          pCtx.fillStyle='white';
-          pCtx.beginPath();pCtx.arc(nd.x+Math.cos(d1)*R*0.52,nd.y+Math.sin(d1)*R*0.52,2.5,0,Math.PI*2);pCtx.fill();
-          pCtx.beginPath();pCtx.arc(nd.x+Math.cos(d2)*R*0.52,nd.y+Math.sin(d2)*R*0.52,2.5,0,Math.PI*2);pCtx.fill();
-        } else {
-          // Miter: two line stubs
-          pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=2.5;
-          pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x+Math.cos(d1)*R*0.6,nd.y+Math.sin(d1)*R*0.6);pCtx.stroke();
-          pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x+Math.cos(d2)*R*0.6,nd.y+Math.sin(d2)*R*0.6);pCtx.stroke();
-          pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,3,0,Math.PI*2);pCtx.fill();
-        }
-      } else if(bt==='tee_b'||bt==='tee_s'){
-        // T-junction: circle with T symbol
-        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
-        pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
+      const bt=nd.bendType||'none';
+      const bRD=NODE_BEND[bt]?.R||0;
+      if(bRD>0){
+        // Radius elbow: draw curved bracket
+        pCtx.fillStyle=fill;pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;
+        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);pCtx.fill();pCtx.stroke();
+        // arc curve indicator
+        pCtx.strokeStyle='white';pCtx.lineWidth=2;pCtx.beginPath();
+        pCtx.arc(nd.x+R*0.3,nd.y+R*0.3,R*0.55,-Math.PI,0);pCtx.stroke();
+        pCtx.strokeStyle='white';pCtx.lineWidth=1.5;
+        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.25,nd.y-R*0.5);pCtx.lineTo(nd.x-R*0.25,nd.y+R*0.3);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.25,nd.y+R*0.3);pCtx.lineTo(nd.x+R*0.5,nd.y+R*0.3);pCtx.stroke();
+      } else if(bt==='miter'){
+        // Sharp 90° mitered elbow
+        pCtx.fillStyle=fill;pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;
+        pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);pCtx.fill();pCtx.stroke();
         pCtx.strokeStyle='white';pCtx.lineWidth=2;
-        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.55,nd.y);pCtx.lineTo(nd.x+R*0.55,nd.y);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(nd.x,nd.y+R*0.55);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nd.x-R*0.5,nd.y-R*0.5);pCtx.lineTo(nd.x-R*0.5,nd.y+R*0.3);pCtx.lineTo(nd.x+R*0.5,nd.y+R*0.3);pCtx.stroke();
       } else {
+        // Default junction (T or straight)
         pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
         pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
         pCtx.fillStyle='white';pCtx.font='bold 10px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
         pCtx.fillText('J',nd.x,nd.y);
       }
     } else {
-      // Outlet: hexagon shape
-      pCtx.beginPath();
-      for(var hi=0;hi<6;hi++){var ha=hi*Math.PI/3-Math.PI/6;pCtx.lineTo(nd.x+Math.cos(ha)*R,nd.y+Math.sin(ha)*R);}
-      pCtx.closePath();
+      // Outlet
+      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
       pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
       pCtx.fillStyle='white';pCtx.font='bold 11px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
       pCtx.fillText('O',nd.x,nd.y);
@@ -17300,28 +17196,7 @@ body>*:not(.canvas-area){display:none!important;}
       <div class="ptool-sep"></div>
       <div class="ptool-lbl">הוסף צמתים</div>
       <button class="ptool" id="ptool-source" onclick="setPipeTool('source')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 12 L12 4"/><path d="M12 12 L19.2 16"/><path d="M12 12 L4.8 16"/><circle cx="12" cy="12" r="3" fill="#22c55e" stroke="none"/></svg> מקור לחץ (משאבה)</button>
-      <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc');document.getElementById('junc-picker').style.display=''" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg> צומת / מרפק</button>
-      <div id="junc-picker" style="display:none;margin:4px 0 0 0;background:var(--surface2);border-radius:8px;padding:7px 6px;border:1px solid var(--border)">
-        <div style="font-size:10px;color:var(--text2);margin-bottom:5px">בחר סוג חיבור:</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-          <button onclick="pJuncPreset.bendType='miter';pJuncHighlight('miter')" id="jb-miter" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="10" y1="10" x2="10" y2="26" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><line x1="10" y1="26" x2="26" y2="26" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><rect x="7" y="7" width="6" height="6" rx="1" fill="#6366f1"/><rect x="23" y="23" width="6" height="6" rx="1" fill="#6366f1"/></svg>
-            <span style="font-size:9px">90° חד</span>
-          </button>
-          <button onclick="pJuncPreset.bendType='r15';pJuncHighlight('r15')" id="jb-r15" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="10" y1="8" x2="10" y2="22" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><path d="M10 22 Q10 28 16 28" stroke="#6366f1" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="16" y1="28" x2="28" y2="28" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/></svg>
-            <span style="font-size:9px">ברך R/D=1.5</span>
-          </button>
-          <button onclick="pJuncPreset.bendType='r20';pJuncHighlight('r20')" id="jb-r20" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="10" y1="8" x2="10" y2="20" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><path d="M10 20 Q10 28 18 28" stroke="#6366f1" stroke-width="4" fill="none" stroke-linecap="round"/><line x1="18" y1="28" x2="28" y2="28" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/></svg>
-            <span style="font-size:9px">ברך R/D=2</span>
-          </button>
-          <button onclick="pJuncPreset.bendType='none';pJuncHighlight('none')" id="jb-none" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="0" y="0" width="36" height="36" rx="4" fill="var(--surface)"/><line x1="4" y1="18" x2="32" y2="18" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><line x1="18" y1="4" x2="18" y2="32" stroke="#6366f1" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="18" r="4" fill="#6366f1"/></svg>
-            <span style="font-size:9px">T / ישר</span>
-          </button>
-        </div>
-      </div>
+      <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg> צומת / מרפק</button>
       <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')">🟠 פתח יציאה</button>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl">חיבורים</div>
@@ -17377,44 +17252,6 @@ body>*:not(.canvas-area){display:none!important;}
           </select>
         </div>
         <div style="font-size:9px;color:var(--text2);margin-top:2px">1 cSt = 1 mm²/s | מים@20°C ≈ 1 cSt</div>
-      </div>
-      <div class="ptool-sep"></div>
-      <div class="ptool-lbl">רקע ורשת</div>
-      <div class="p-inp-row">
-        <div class="p-inp-lbl">סוג רקע</div>
-        <select class="p-inp" onchange="pGridMode=this.value;pRender()">
-          <option value="grid">משבצות</option>
-          <option value="dots">נקודות</option>
-          <option value="none">חלק</option>
-        </select>
-      </div>
-      <div class="p-inp-row">
-        <div class="p-inp-lbl">גודל תא (px)</div>
-        <select class="p-inp" onchange="pGridSize=parseInt(this.value);pRender()">
-          <option value="20">20</option>
-          <option value="40" selected>40</option>
-          <option value="60">60</option>
-          <option value="80">80</option>
-          <option value="100">100</option>
-        </select>
-      </div>
-      <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
-        <input type="checkbox" id="cb-snap" checked onchange="pSnapGrid=this.checked" style="accent-color:var(--accent)">
-        <label for="cb-snap" style="font-size:11px;color:var(--text);cursor:pointer">הצמד לרשת</label>
-      </div>
-      <div class="ptool-sep"></div>
-      <div class="ptool-lbl">חישוב אוטומטי</div>
-      <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
-        <input type="checkbox" id="cb-autocalc" checked onchange="pAutoCalc=this.checked" style="accent-color:var(--accent)">
-        <label for="cb-autocalc" style="font-size:11px;color:var(--text);cursor:pointer">עדכן L בגרירה</label>
-      </div>
-      <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
-        <input type="checkbox" id="cb-ortho" checked onchange="pOrtho=this.checked" style="accent-color:var(--accent)">
-        <label for="cb-ortho" style="font-size:11px;color:var(--text);cursor:pointer">ניתוב 90° אוטומטי</label>
-      </div>
-      <div class="p-inp-row">
-        <div class="p-inp-lbl">קנה מידה (m/px)</div>
-        <input class="p-inp" type="number" value="0.01" step="0.001" min="0.001" max="10" onchange="pScale=parseFloat(this.value)||0.01">
       </div>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl" style="font-size:9px;line-height:1.5;opacity:0.75;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
