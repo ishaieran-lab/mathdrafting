@@ -1561,7 +1561,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .fp-proto{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#3a3a3a;font-size:11px;text-align:center;padding:24px 16px;line-height:1.7;}
 .fp-proto.visible{display:flex;}
 /* ===== PIPE HYDRAULICS ===== */
-#pipe-overlay{position:fixed;inset:0;background:var(--bg);z-index:2000;display:none;flex-direction:column;font-family:'Assistant',sans-serif;}
+#pipe-overlay{position:fixed;inset:0;background:var(--bg);z-index:10001;display:none;flex-direction:column;font-family:'Assistant',sans-serif;}
 #pipe-hdr{height:54px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;}
 #pipe-hdr-title{font-size:15px;font-weight:700;color:var(--text);flex:1;}
 .p-hdr-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:13px;font-family:'Assistant',sans-serif;transition:all 0.12s;}
@@ -16421,8 +16421,7 @@ redraw();
 </script>
 <script>
 // ===== PIPE HYDRAULICS MODULE =====
-(function(){
-const PIPE_MAT={
+var PIPE_MAT={
   pvc:    {label:'PVC / PE',         e:1.5e-6},
   copper: {label:'נחושת',             e:1.5e-6},
   steel:  {label:'פלדה',              e:4.6e-5},
@@ -16430,9 +16429,9 @@ const PIPE_MAT={
   iron:   {label:'ברזל יצוק',        e:2.6e-4},
   concrete:{label:'בטון',             e:1.5e-3},
 };
-let pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,dragNode:null,dragOX:0,dragOY:0,results:null};
-let pTool='select';
-let pCv,pCtx,pRho=1000,pMu=0.001;
+var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,dragNode:null,dragOX:0,dragOY:0,results:null};
+var pTool='select';
+var pCv,pCtx,pRho=1000,pMu=0.001;
 
 function openPipeOverlay(){
   const ov=document.getElementById('pipe-overlay');
@@ -16575,8 +16574,8 @@ function pRender(){
     pCtx.beginPath();pCtx.arc(pS.pipeStart.x,pS.pipeStart.y,20,0,Math.PI*2);pCtx.stroke();pCtx.restore();
   }
   // Nodes
-  const pRange=res?()=>{const vs=Object.values(res.nP);return{min:Math.min(...vs),rng:Math.max(...vs)-Math.min(...vs)};}():null;
-  const pr=pRange?pRange():null;
+  var pr=null;
+  if(res){var vs=Object.values(res.nP);var pMin=Math.min.apply(null,vs),pMax=Math.max.apply(null,vs);pr={min:pMin,rng:pMax-pMin};}
   for(const nd of pS.nodes){
     const sel=pS.selEl?.type==='node'&&pS.selEl?.obj?.id===nd.id;
     pCtx.save();
@@ -16749,15 +16748,6 @@ function pClearAll(){
   pShowProps();setPipeTool('select');pRender();
 }
 
-window.openPipeOverlay=openPipeOverlay;
-window.closePipeOverlay=closePipeOverlay;
-window.setPipeTool=setPipeTool;
-window.pUpNode=pUpNode;
-window.pUpPipe=pUpPipe;
-window.pCalc=pCalc;
-window.pClearAll=pClearAll;
-window.pShowProps=pShowProps;
-})();
 </script>
 <script>
 (function(){
