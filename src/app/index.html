@@ -16457,6 +16457,27 @@ function pFromPA(pa,unit){
 }
 function pUnitDecimals(){return pPressUnit==='bar'?3:pPressUnit==='kpa'?1:2;}
 function pSetPressUnit(u){pPressUnit=u;pShowProps();}
+var pFlowUnit='ls'; // 'ls'=L/s | 'ms'=m³/s | 'mh'=m³/h | 'gpm'=GPM
+var Q_UNIT_LABEL={ls:'L/s',ms:'m³/s',mh:'m³/h',gpm:'GPM'};
+function pToQms(val,unit){ // user value → m³/s (internal)
+  unit=unit||pFlowUnit;
+  var v=parseFloat(val);if(isNaN(v)) return null;
+  if(unit==='ls')  return v/1000;
+  if(unit==='ms')  return v;
+  if(unit==='mh')  return v/3600;
+  if(unit==='gpm') return v*6.30902e-5;
+  return v/1000;
+}
+function pFromQms(qms,unit){ // m³/s → display value
+  unit=unit||pFlowUnit;
+  if(unit==='ls')  return qms*1000;
+  if(unit==='ms')  return qms;
+  if(unit==='mh')  return qms*3600;
+  if(unit==='gpm') return qms/6.30902e-5;
+  return qms*1000;
+}
+function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='mh'?2:3;}
+function pSetFlowUnit(u){pFlowUnit=u;pShowProps();}
 
 function openPipeOverlay(){
   const ov=document.getElementById('pipe-overlay');
@@ -16642,9 +16663,13 @@ function pShowProps(){
         <input class="pp-inp" value="${n.label}" oninput="pUpNode('label',this.value)"></div>`;
     if(n.type!=='junc'){
       var pDisp=n.P!=null?pFromPA(n.P).toFixed(pUnitDecimals()):'';
-      html+=`<div class="pp-row"><label class="pp-lbl">לחץ (${P_UNIT_LABEL[pPressUnit]})</label>
-        <input class="pp-inp" type="number" value="${pDisp}" placeholder="ידוע" step="any" oninput="pUpNode('P',this.value===''?null:pToPA(this.value))"></div>`;
+      html+=`<div class="pp-row"><label class="pp-lbl">לחץ (${P_UNIT_LABEL[pPressUnit]}) — אופציונלי</label>
+        <input class="pp-inp" type="number" value="${pDisp}" placeholder="לא ידוע" step="any" oninput="pUpNode('P',this.value===''?null:pToPA(this.value))"></div>`;
     }
+    var qDisp=n.Q!=null?pFromQms(n.Q).toFixed(pQDecimals()):'';
+    var qHint=n.type==='source'?'חיובי=כניסה לרשת':n.type==='outlet'?'חיובי=יציאה מרשת':'חיובי=הזנה, שלילי=צריכה';
+    html+=`<div class="pp-row"><label class="pp-lbl">ספיקה (${Q_UNIT_LABEL[pFlowUnit]}) — ${qHint}</label>
+      <input class="pp-inp" type="number" value="${qDisp}" placeholder="לא ידועה" step="any" oninput="pUpNode('Q',this.value===''?null:pToQms(this.value))"></div>`;
     panel.innerHTML=html;
   } else {
     const p=el.obj;
@@ -16710,6 +16735,11 @@ function pCalc(){
     const nF=freeIdx.length;if(!nF) break;
     const G=Array.from({length:nF},()=>new Array(nF).fill(0));
     const b=new Array(nF).fill(0);
+    // External flow demands at free nodes
+    freeIdx.forEach((gi,fi)=>{
+      const nd=nodes[gi];
+      if(nd.Q!=null&&!isNaN(nd.Q)) b[fi]+=nd.Q; // m³/s into node
+    });
     pipes.forEach((pipe,pi)=>{
       const i1=nMap[pipe.n1id],i2=nMap[pipe.n2id],c=C[pi];
       const fi1=freeIdx.indexOf(i1),fi2=freeIdx.indexOf(i2);
@@ -16752,20 +16782,33 @@ function pShowResults(nP,pQ){
   if(!res) return;
   res.style.display='block';
   let h='<div class="pr-title">📊 תוצאות חישוב</div>';
-  h+='<table class="pr-table"><tr><th>צינור</th><th>ΔP (kPa)</th><th>Q (L/s)</th><th>v (m/s)</th></tr>';
+  h+=`<table class="pr-table"><tr><th>צינור</th><th>ΔP (${P_UNIT_LABEL[pPressUnit]})</th><th>Q (${Q_UNIT_LABEL[pFlowUnit]})</th><th>v (m/s)</th></tr>`;
   pS.pipes.forEach(pipe=>{
     const Q=pQ[pipe.id]||0;
-    const a=pS.nodes.find(n=>n.id===pipe.n1id),b=pS.nodes.find(n=>n.id===pipe.n2id);
-    const dP=a&&b?((nP[a.id]||0)-(nP[b.id]||0))/1000:0;
+    const a=pS.nodes.find(n=>n.id===pipe.n1id),b_n=pS.nodes.find(n=>n.id===pipe.n2id);
+    const dPa=a&&b_n?((nP[a.id]||0)-(nP[b_n.id]||0)):0;
+    const dPd=pFromPA(Math.abs(dPa)).toFixed(pUnitDecimals());
     const {v}=pPipeR(pipe,Q||0.001);
-    h+=`<tr><td>${pipe.label}</td><td>${dP.toFixed(2)}</td><td>${(Math.abs(Q)*1000).toFixed(3)}</td><td>${v.toFixed(2)}</td></tr>`;
+    const Qd=pFromQms(Math.abs(Q)).toFixed(pQDecimals());
+    const dir=Q>=0?'→':'←';
+    h+=`<tr><td>${pipe.label}</td><td>${dPd}</td><td>${dir} ${Qd}</td><td>${v.toFixed(2)}</td></tr>`;
   });
-  h+='</table><table class="pr-table" style="margin-top:6px"><tr><th>צומת</th><th>לחץ ('+P_UNIT_LABEL[pPressUnit]+')</th></tr>';
+  h+=`</table><table class="pr-table" style="margin-top:6px"><tr><th>צומת</th><th>לחץ (${P_UNIT_LABEL[pPressUnit]})</th><th>Q (${Q_UNIT_LABEL[pFlowUnit]})</th></tr>`;
   pS.nodes.forEach(nd=>{
     var Pd=pFromPA(nP[nd.id]||0);
     var Pk=(nP[nd.id]||0)/1000;
     const col=Pk>150?'#22c55e':Pk>50?'#f59e0b':'#ef4444';
-    h+=`<tr><td>${nd.label}</td><td style="color:${col};font-weight:700">${Pd.toFixed(pUnitDecimals())}</td></tr>`;
+    // Compute net flow at node from pipes
+    var Qnet=0;
+    pS.pipes.forEach(pipe=>{
+      const q=pQ[pipe.id]||0;
+      if(pipe.n2id===nd.id) Qnet+=q;
+      if(pipe.n1id===nd.id) Qnet-=q;
+    });
+    if(nd.Q!=null&&!isNaN(nd.Q)) Qnet+=nd.Q;
+    const Qd=pFromQms(Math.abs(Qnet)).toFixed(pQDecimals());
+    const qDir=Qnet>=0?'↑':'↓';
+    h+=`<tr><td>${nd.label}</td><td style="color:${col};font-weight:700">${Pd.toFixed(pUnitDecimals())}</td><td>${qDir} ${Qd}</td></tr>`;
   });
   h+='</table>';
   res.innerHTML=h;
@@ -16982,6 +17025,15 @@ body>*:not(.canvas-area){display:none!important;}
           <option value="bar">bar</option>
           <option value="psig">PSI gauge</option>
           <option value="psia">PSI (abs)</option>
+        </select>
+      </div>
+      <div class="ptool-lbl">יחידות ספיקה</div>
+      <div class="p-inp-row">
+        <select class="p-inp" id="q-unit" onchange="pSetFlowUnit(this.value)">
+          <option value="ls">L/s</option>
+          <option value="mh">m³/h</option>
+          <option value="ms">m³/s</option>
+          <option value="gpm">GPM</option>
         </select>
       </div>
       <div class="ptool-sep"></div>
