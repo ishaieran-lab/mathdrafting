@@ -1561,40 +1561,45 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .fp-proto{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#3a3a3a;font-size:11px;text-align:center;padding:24px 16px;line-height:1.7;}
 .fp-proto.visible{display:flex;}
 /* ===== PIPE HYDRAULICS SIDEBAR ===== */
-#pipe-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--surface);border-right:1px solid var(--border);box-shadow:4px 0 24px rgba(0,0,0,0.5);z-index:1000;display:none;flex-direction:column;font-family:'Assistant',sans-serif;direction:rtl;overflow:hidden;}
+#pipe-sidebar{position:fixed;top:0;left:0;bottom:0;width:310px;background:var(--surface);border-right:1px solid var(--border);box-shadow:4px 0 24px rgba(0,0,0,0.5);z-index:1000;display:none;flex-direction:column;font-family:'Assistant',sans-serif;direction:rtl;overflow:hidden;}
 #pipe-sidebar.open{display:flex;}
-#pipe-sb-hdr{display:flex;align-items:center;padding:0 10px;gap:6px;height:50px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface);}
-#pipe-sb-title{font-size:13px;font-weight:700;color:var(--accent);flex:1;}
-.p-hdr-btn{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;font-family:'Assistant',sans-serif;transition:all 0.12s;}
+#pipe-sb-hdr{display:flex;align-items:center;padding:0 12px;gap:6px;height:56px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface);}
+#pipe-sb-title{font-size:16px;font-weight:700;color:var(--accent);flex:1;}
+.p-hdr-btn{padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px;font-family:'Assistant',sans-serif;transition:all 0.12s;}
 .p-hdr-btn:hover{border-color:var(--accent);color:var(--accent);}
 .p-hdr-btn.primary{background:var(--accent);color:white;border-color:var(--accent);}
 .p-hdr-btn.primary:hover{opacity:0.85;}
 #pipe-sb-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-#pipe-sb-tools{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:3px;}
-#pipe-sb-props{flex-shrink:0;border-top:1px solid var(--border);padding:10px;overflow-y:auto;max-height:48%;}
+#pipe-sb-tools{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:4px;}
+#pipe-sb-props{flex-shrink:0;border-top:1px solid var(--border);padding:12px;overflow-y:auto;max-height:48%;}
 #pipe-tools{display:contents;}
 #pipe-props{display:contents;}
-.ptool{width:100%;padding:9px 12px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;font-size:14px;font-family:'Assistant',sans-serif;text-align:right;transition:all 0.12s;}
+.ptool{width:100%;padding:12px 14px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;font-size:17px;font-family:'Assistant',sans-serif;text-align:right;transition:all 0.12s;}
 .ptool:hover{background:var(--surface2);border-color:var(--border);}
 .ptool.active{background:rgba(108,99,255,0.15);border-color:rgba(108,99,255,0.4);color:var(--accent);font-weight:600;}
-.ptool-sep{height:1px;background:var(--border);margin:4px 0;flex-shrink:0;}
+.ptool-sep{height:1px;background:var(--border);margin:6px 0;flex-shrink:0;}
 #junc-picker button:hover{border-color:var(--accent);background:rgba(108,99,255,0.1);}
 .jb-active{border-color:var(--accent)!important;background:rgba(108,99,255,0.2)!important;color:var(--accent)!important;}
-.ptool-lbl{font-size:10px;color:var(--text2);padding:4px 4px 1px;font-weight:700;letter-spacing:0.5px;text-align:right;}
-.p-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;outline:none;box-sizing:border-box;font-family:'Assistant',sans-serif;}
+.ptool-lbl{font-size:13px;color:var(--text2);padding:5px 4px 2px;font-weight:700;letter-spacing:0.5px;text-align:right;}
+.p-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:14px;outline:none;box-sizing:border-box;font-family:'Assistant',sans-serif;}
 .p-inp:focus{border-color:var(--accent);}
-.p-inp-row{margin-bottom:5px;}
-.p-inp-lbl{font-size:10px;color:var(--text2);margin-bottom:2px;display:block;text-align:right;}
-.pp-title{font-size:13px;font-weight:700;color:var(--accent);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px;}
-.pp-row{margin-bottom:7px;}
-.pp-lbl{font-size:10px;color:var(--text2);display:block;margin-bottom:2px;text-align:right;}
-.pp-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;outline:none;box-sizing:border-box;font-family:'Assistant',sans-serif;}
+.p-inp-row{margin-bottom:7px;}
+.p-inp-lbl{font-size:13px;color:var(--text2);margin-bottom:3px;display:block;text-align:right;}
+.pp-title{font-size:16px;font-weight:700;color:var(--accent);padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.pp-row{margin-bottom:10px;}
+.pp-lbl{font-size:13px;color:var(--text2);display:block;margin-bottom:3px;text-align:right;}
+.pp-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:7px 10px;font-size:14px;outline:none;box-sizing:border-box;font-family:'Assistant',sans-serif;}
 .pp-inp:focus{border-color:var(--accent);}
 #pipe-results{display:none;border-top:1px solid var(--border);padding-top:8px;margin-top:4px;}
-.pr-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;}
-.pr-table{width:100%;border-collapse:collapse;font-size:11px;}
-.pr-table th{background:var(--surface2);color:var(--text2);padding:3px 5px;border:1px solid var(--border);text-align:center;}
-.pr-table td{padding:3px 5px;border:1px solid var(--border);text-align:center;color:var(--text);}
+.pr-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.pr-table{width:100%;border-collapse:collapse;font-size:13px;}
+.pr-table th{background:var(--surface2);color:var(--text2);padding:4px 6px;border:1px solid var(--border);text-align:center;}
+.pr-table td{padding:4px 6px;border:1px solid var(--border);text-align:center;color:var(--text);}
+/* Source floating panel */
+#pipe-source-panel{position:fixed;top:0;left:310px;bottom:0;width:270px;background:var(--surface);border-right:1px solid var(--border);box-shadow:6px 0 20px rgba(0,0,0,0.35);z-index:998;display:none;flex-direction:column;font-family:'Assistant',sans-serif;direction:rtl;overflow:hidden;}
+#pipe-source-panel.open{display:flex;}
+#pipe-sp-hdr{font-size:15px;font-weight:700;color:var(--accent);padding:14px 16px 12px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface);}
+#pipe-sp-body{padding:12px 14px;overflow-y:auto;flex:1;}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
@@ -16518,7 +16523,7 @@ function pFromPA(pa,unit){
   return pa/1000;
 }
 function pUnitDecimals(){return (pPressUnit==='bar'||pPressUnit==='barg'||pPressUnit==='bara')?3:pPressUnit==='kpa'?1:2;}
-function pSetPressUnit(u){pPressUnit=u;pShowProps();}
+function pSetPressUnit(u){pPressUnit=u;pShowProps();var sp=document.getElementById('pipe-source-panel');if(sp&&sp.classList.contains('open'))pShowSourcePanelById();}
 var pFlowUnit='ls'; // 'ls'=L/s | 'ms'=m³/s | 'mh'=m³/h | 'lh'=L/hr | 'gpm'=GPM
 var Q_UNIT_LABEL={ls:'L/s',mh:'m³/h',lh:'L/hr',gpm:'GPM',ms:'m³/s'};
 function pToQms(val,unit){
@@ -16541,7 +16546,7 @@ function pFromQms(qms,unit){
   return qms*1000;
 }
 function pQDecimals(){return pFlowUnit==='ms'?6:pFlowUnit==='lh'?0:pFlowUnit==='mh'?2:3;}
-function pSetFlowUnit(u){pFlowUnit=u;pShowProps();}
+function pSetFlowUnit(u){pFlowUnit=u;pShowProps();var sp=document.getElementById('pipe-source-panel');if(sp&&sp.classList.contains('open'))pShowSourcePanelById();}
 function pJuncHighlight(key){
   ['miter','bend','tee_b','none'].forEach(function(k){
     var b=document.getElementById('jb-'+k);
@@ -16582,6 +16587,75 @@ function pJbUpdateK(){
   if(el) el.textContent='K = '+k.toFixed(2)+(pJuncPreset.bendType==='bend'?' | R/D = '+pJuncPreset.bendRD:'');
 }
 function pToggleVisc(){pShowProps();}
+
+// ===== SOURCE PANEL =====
+var pSourcePreset={label:'מקור',P:200000,Q:null};
+var pSPNodeId=null;
+function pShowSourcePanel(node){
+  var panel=document.getElementById('pipe-source-panel');
+  if(!panel) return;
+  pSPNodeId=node?node.id:null;
+  panel.classList.add('open');
+  var isDyn=pViscMode==='dynamic';
+  var muDisp=isDyn?pMu.toFixed(6):(pMu/pRho*1e6).toFixed(3);
+  var pUnitOpts=Object.entries(P_UNIT_LABEL).map(function(e){return'<option value="'+e[0]+'"'+(pPressUnit===e[0]?' selected':'')+'>'+e[1]+'</option>';}).join('');
+  var qUnitOpts=Object.entries(Q_UNIT_LABEL).map(function(e){return'<option value="'+e[0]+'"'+(pFlowUnit===e[0]?' selected':'')+'>'+e[1]+'</option>';}).join('');
+  var pDisp='',qDisp='',labelVal=pSourcePreset.label;
+  var nid=node?node.id:'';
+  if(node){
+    labelVal=node.label;
+    pDisp=node.P!=null?pFromPA(node.P).toFixed(pUnitDecimals()):'';
+    qDisp=node.Q!=null?pFromQms(node.Q).toFixed(pQDecimals()):'';
+  } else {
+    pDisp=pSourcePreset.P!=null?pFromPA(pSourcePreset.P).toFixed(pUnitDecimals()):'';
+    qDisp=pSourcePreset.Q!=null?pFromQms(pSourcePreset.Q).toFixed(pQDecimals()):'';
+  }
+  var acDyn='border:1px solid var(--accent);background:rgba(108,99,255,0.25);color:var(--accent)';
+  var inacDyn='border:1px solid var(--border);background:none;color:var(--text2)';
+  document.getElementById('pipe-sp-body').innerHTML=
+    '<div class="pp-row"><label class="pp-lbl">תווית</label>'+
+    '<input class="pp-inp" value="'+labelVal+'" oninput="pSrcUpd(\'label\',this.value,\''+nid+'\')"></div>'+
+    '<div class="pp-row"><label class="pp-lbl">לחץ ('+P_UNIT_LABEL[pPressUnit]+')</label>'+
+    '<input class="pp-inp" type="number" value="'+pDisp+'" placeholder="לא ידוע" step="any" oninput="pSrcUpd(\'P\',this.value===\'\'?null:pToPA(parseFloat(this.value)),\''+nid+'\')"></div>'+
+    '<div class="pp-row"><label class="pp-lbl">ספיקה ('+Q_UNIT_LABEL[pFlowUnit]+') — חיובי=כניסה</label>'+
+    '<input class="pp-inp" type="number" value="'+qDisp+'" placeholder="לא ידועה" step="any" oninput="pSrcUpd(\'Q\',this.value===\'\'?null:pToQms(parseFloat(this.value)),\''+nid+'\')"></div>'+
+    '<div class="pp-row" style="border-top:1px solid var(--border);padding-top:10px;margin-top:6px">'+
+    '<label class="pp-lbl" style="font-weight:700;color:var(--accent);margin-bottom:8px;display:block">⚙ יחידות ונוזל</label>'+
+    '<label class="pp-lbl">יחידות לחץ</label>'+
+    '<select class="pp-inp" onchange="pSetPressUnit(this.value)" style="margin-bottom:8px">'+pUnitOpts+'</select>'+
+    '<label class="pp-lbl">יחידות ספיקה</label>'+
+    '<select class="pp-inp" onchange="pSetFlowUnit(this.value)" style="margin-bottom:8px">'+qUnitOpts+'</select>'+
+    '<label class="pp-lbl">צפיפות ρ (kg/m³)</label>'+
+    '<input class="pp-inp" type="number" value="'+pRho+'" min="1" max="20000" step="1" onchange="pRho=parseFloat(this.value)||1000" style="margin-bottom:8px">'+
+    '<label class="pp-lbl">צמיגות</label>'+
+    '<div style="display:flex;gap:5px;margin-bottom:8px">'+
+    '<button onclick="pViscMode=\'dynamic\';pShowSourcePanelById()" style="flex:1;font-size:13px;padding:6px 4px;border-radius:6px;cursor:pointer;'+( isDyn?acDyn:inacDyn)+'">μ דינמית</button>'+
+    '<button onclick="pViscMode=\'kinematic\';pShowSourcePanelById()" style="flex:1;font-size:13px;padding:6px 4px;border-radius:6px;cursor:pointer;'+(!isDyn?acDyn:inacDyn)+'">ν קינמטית</button>'+
+    '</div>'+
+    (isDyn?
+      '<input class="pp-inp" type="number" value="'+muDisp+'" step="0.0001" min="0.00001" placeholder="μ (Pa·s)" onchange="pMu=parseFloat(this.value)||0.001">'+
+      '<div style="font-size:12px;color:var(--text2);margin-top:3px">Pa·s | מים@20°C ≈ 0.001</div>':
+      '<input class="pp-inp" type="number" value="'+muDisp+'" step="0.1" min="0.001" placeholder="ν (cSt)" onchange="pMu=(parseFloat(this.value)||1)*1e-6*pRho">'+
+      '<div style="font-size:12px;color:var(--text2);margin-top:3px">cSt (mm²/s) | מים@20°C ≈ 1 cSt</div>'
+    )+'</div>';
+}
+function pShowSourcePanelById(){
+  var nd=pSPNodeId?pS.nodes.find(function(n){return n.id===pSPNodeId;}):null;
+  pShowSourcePanel(nd);
+}
+function pHideSourcePanel(){
+  var panel=document.getElementById('pipe-source-panel');
+  if(panel) panel.classList.remove('open');
+  pSPNodeId=null;
+}
+function pSrcUpd(field,val,nodeId){
+  if(nodeId){
+    var nd=pS.nodes.find(function(n){return n.id===nodeId;});
+    if(nd){nd[field]=val;pS.results=null;pRender();}
+  } else {
+    pSourcePreset[field]=val;
+  }
+}
 
 // ===== PIPE ICONS =====
 var pPipeImgs={};
@@ -16658,6 +16732,7 @@ function openPipeOverlay(){openPipeSidebar();} // backward compat
 function closePipeSidebar(){
   pipeMode=false;
   document.getElementById('pipe-sidebar').classList.remove('open');
+  pHideSourcePanel();
   document.removeEventListener('keydown',_pKeyDown);
   cv.style.cursor='';
   pS.pipeStart=null;pS.selRect=null;
@@ -16671,6 +16746,12 @@ function setPipeTool(t){
   const btn=document.getElementById('ptool-'+t);if(btn)btn.classList.add('active');
   var jp=document.getElementById('junc-picker');if(jp&&t!=='junc')jp.style.display='none';
   if(pCv) pCv.style.cursor=t==='select'?'default':t==='delete'?'not-allowed':'crosshair';
+  if(t==='source'){
+    pShowSourcePanel(null);
+  } else {
+    var sel=pS.selEl;
+    if(!(sel&&sel.type==='node'&&sel.obj&&sel.obj.type==='source')) pHideSourcePanel();
+  }
   pRender();
 }
 
@@ -16776,10 +16857,12 @@ function pDown(e){
     return;
   }
   if(['source','junc','outlet'].includes(pTool)){
-    const label=pTool==='source'?'מקור':pTool==='outlet'?'יציאה ':'צומת ';
+    const label=pTool==='outlet'?'יציאה ':'צומת ';
     const cnt=pS.nodes.filter(n=>n.type===pTool).length;
-    const nd={id:'n'+(pS.nextId++),x:sx,y:sy,type:pTool,label:label+(cnt>0?cnt+1:''),
-      P:pTool==='source'?200000:pTool==='outlet'?0:null,Q:null,
+    const nd={id:'n'+(pS.nextId++),x:sx,y:sy,type:pTool,
+      label:pTool==='source'?pSourcePreset.label+(cnt>0?' '+(cnt+1):''):label+(cnt>0?cnt+1:''),
+      P:pTool==='source'?pSourcePreset.P:pTool==='outlet'?0:null,
+      Q:pTool==='source'?pSourcePreset.Q:null,
       bendType:pTool==='junc'?pJuncPreset.bendType:'none',
       bendAngle:pTool==='junc'?pJuncPreset.bendAngle:90,
       bendRD:pTool==='junc'?pJuncPreset.bendRD:1.5,
@@ -17061,10 +17144,16 @@ function pDrawPipeLayer(){
 function pShowProps(){
   const panel=document.getElementById('pipe-props-content');
   const el=pS.selEl;
-  if(!el){panel.innerHTML='<p style="color:var(--text2);font-size:12px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p>';return;}
+  if(!el){
+    panel.innerHTML='<p style="color:var(--text2);font-size:13px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p>';
+    if(pTool==='source') pShowSourcePanelById(); else pHideSourcePanel();
+    return;
+  }
   if(el.type==='node'){
     const n=el.obj;
-    const tl=n.type==='source'?'🟢 מקור לחץ':n.type==='outlet'?'🟠 פתח יציאה':'🔵 צומת';
+    if(n.type==='source'){pShowSourcePanel(n);panel.innerHTML='';return;}
+    pHideSourcePanel();
+    const tl=n.type==='outlet'?'🟠 פתח יציאה':'🔵 צומת';
     let html=`<div class="pp-title">${tl}</div>
       <div class="pp-row"><label class="pp-lbl">תווית</label>
         <input class="pp-inp" value="${n.label}" oninput="pUpNode('label',this.value)"></div>`;
@@ -17077,32 +17166,6 @@ function pShowProps(){
     var qHint=n.type==='source'?'חיובי=כניסה לרשת':n.type==='outlet'?'חיובי=יציאה מרשת':'חיובי=הזנה, שלילי=צריכה';
     html+=`<div class="pp-row"><label class="pp-lbl">ספיקה (${Q_UNIT_LABEL[pFlowUnit]}) — ${qHint}</label>
       <input class="pp-inp" type="number" value="${qDisp}" placeholder="לא ידועה" step="any" oninput="pUpNode('Q',this.value===''?null:pToQms(this.value))"></div>`;
-    if(n.type==='source'){
-      var isDyn=pViscMode==='dynamic';
-      var pUnitOpts=Object.entries(P_UNIT_LABEL).map(([k,v])=>`<option value="${k}"${pPressUnit===k?' selected':''}>${v}</option>`).join('');
-      var qUnitOpts=Object.entries(Q_UNIT_LABEL).map(([k,v])=>`<option value="${k}"${pFlowUnit===k?' selected':''}>${v}</option>`).join('');
-      var muDisp=isDyn?pMu.toFixed(6):(pMu/pRho*1e6).toFixed(3);
-      html+=`<div class="pp-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:6px">
-        <label class="pp-lbl" style="font-weight:700;color:var(--accent);margin-bottom:5px;display:block">⚙ יחידות ונוזל</label>
-        <label class="pp-lbl">יחידות לחץ</label>
-        <select class="pp-inp" onchange="pSetPressUnit(this.value)" style="margin-bottom:6px">${pUnitOpts}</select>
-        <label class="pp-lbl">יחידות ספיקה</label>
-        <select class="pp-inp" onchange="pSetFlowUnit(this.value)" style="margin-bottom:6px">${qUnitOpts}</select>
-        <label class="pp-lbl">צפיפות ρ (kg/m³)</label>
-        <input class="pp-inp" type="number" value="${pRho}" min="1" max="20000" step="1" onchange="pRho=parseFloat(this.value)||1000" style="margin-bottom:6px">
-        <label class="pp-lbl">צמיגות</label>
-        <div style="display:flex;gap:4px;margin-bottom:5px">
-          <button onclick="pViscMode='dynamic';pShowProps()" style="flex:1;font-size:10px;padding:3px 4px;border-radius:5px;border:1px solid ${isDyn?'var(--accent)':'var(--border)'};background:${isDyn?'rgba(108,99,255,0.2)':'none'};color:${isDyn?'var(--accent)':'var(--text2)'};cursor:pointer">μ דינמית</button>
-          <button onclick="pViscMode='kinematic';pShowProps()" style="flex:1;font-size:10px;padding:3px 4px;border-radius:5px;border:1px solid ${!isDyn?'var(--accent)':'var(--border)'};background:${!isDyn?'rgba(108,99,255,0.2)':'none'};color:${!isDyn?'var(--accent)':'var(--text2)'};cursor:pointer">ν קינמטית</button>
-        </div>
-        ${isDyn?
-          `<input class="pp-inp" type="number" value="${muDisp}" step="0.0001" min="0.00001" placeholder="μ (Pa·s)" onchange="pMu=parseFloat(this.value)||0.001">
-           <div style="font-size:9px;color:var(--text2);margin-top:2px">Pa·s | מים@20°C ≈ 0.001</div>`:
-          `<input class="pp-inp" type="number" value="${muDisp}" step="0.1" min="0.001" placeholder="ν (cSt)" onchange="pMu=(parseFloat(this.value)||1)*1e-6*pRho">
-           <div style="font-size:9px;color:var(--text2);margin-top:2px">cSt (mm²/s) | מים@20°C ≈ 1 cSt</div>`
-        }
-      </div>`;
-    }
     if(n.type==='junc'){
       const bendOpts=Object.entries(NODE_BEND).map(([k,v])=>`<option value="${k}"${(n.bendType||'none')===k?' selected':''}>${v.label}</option>`).join('');
       const bK=pNodeBendK(n);
@@ -17147,6 +17210,7 @@ function pShowProps(){
     }
     panel.innerHTML=html;
   } else {
+    pHideSourcePanel();
     const p=el.obj;
     const matOpts=Object.entries(PIPE_MAT).map(([k,v])=>`<option value="${k}"${p.mat===k?' selected':''}>${v.label}</option>`).join('');
     const eVal=((p.roughness??PIPE_MAT[p.mat]?.e??1.5e-6)*1000).toFixed(4);
@@ -17598,24 +17662,24 @@ body>*:not(.canvas-area){display:none!important;}
       <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')" style="display:flex;align-items:center;gap:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><polygon points="12,2 22,20 2,20"/></svg> פתח יציאה</button>
       <button class="ptool" id="ptool-pipe" onclick="setPipeTool('pipe')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="8" viewBox="0 0 32 8"><line x1="0" y1="4" x2="32" y2="4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> צינור</button>
       <div class="ptool-sep"></div>
-      <div class="p-inp-row" style="display:flex;gap:6px;align-items:center;padding:4px 0">
-        <input type="checkbox" id="cb-snap" checked onchange="pSnapGrid=this.checked" style="accent-color:var(--accent);width:15px;height:15px">
-        <label for="cb-snap" style="font-size:13px;color:var(--text);cursor:pointer">הצמד לרשת</label>
+      <div class="p-inp-row" style="display:flex;gap:8px;align-items:center;padding:4px 0">
+        <input type="checkbox" id="cb-snap" checked onchange="pSnapGrid=this.checked" style="accent-color:var(--accent);width:17px;height:17px">
+        <label for="cb-snap" style="font-size:16px;color:var(--text);cursor:pointer">הצמד לרשת</label>
       </div>
-      <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
-        <input type="checkbox" id="cb-autocalc" checked onchange="pAutoCalc=this.checked" style="accent-color:var(--accent)">
-        <label for="cb-autocalc" style="font-size:11px;color:var(--text);cursor:pointer">עדכן L בגרירה</label>
+      <div class="p-inp-row" style="display:flex;gap:6px;align-items:center">
+        <input type="checkbox" id="cb-autocalc" checked onchange="pAutoCalc=this.checked" style="accent-color:var(--accent);width:16px;height:16px">
+        <label for="cb-autocalc" style="font-size:15px;color:var(--text);cursor:pointer">עדכן L בגרירה</label>
       </div>
-      <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
-        <input type="checkbox" id="cb-ortho" checked onchange="pOrtho=this.checked" style="accent-color:var(--accent)">
-        <label for="cb-ortho" style="font-size:11px;color:var(--text);cursor:pointer">ניתוב 90° אוטומטי</label>
+      <div class="p-inp-row" style="display:flex;gap:6px;align-items:center">
+        <input type="checkbox" id="cb-ortho" checked onchange="pOrtho=this.checked" style="accent-color:var(--accent);width:16px;height:16px">
+        <label for="cb-ortho" style="font-size:15px;color:var(--text);cursor:pointer">ניתוב 90° אוטומטי</label>
       </div>
       <div class="p-inp-row">
         <div class="p-inp-lbl">קנה מידה (m/px)</div>
         <input class="p-inp" type="number" value="0.01" step="0.001" min="0.001" max="10" onchange="pScale=parseFloat(this.value)||0.01">
       </div>
       <div class="ptool-sep"></div>
-      <div class="ptool-lbl" style="font-size:9px;line-height:1.5;opacity:0.75;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
+      <div class="ptool-lbl" style="font-size:12px;line-height:1.6;opacity:0.8;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
     </div>
     </div><!-- /pipe-sb-tools -->
     <div id="pipe-sb-props">
@@ -17626,6 +17690,12 @@ body>*:not(.canvas-area){display:none!important;}
     </div><!-- /pipe-sb-props -->
   </div><!-- /pipe-sb-body -->
 </div><!-- /pipe-sidebar -->
+
+<!-- ===== SOURCE NODE FLOATING PANEL ===== -->
+<div id="pipe-source-panel">
+  <div id="pipe-sp-hdr">⚡ מקור לחץ — הגדרות</div>
+  <div id="pipe-sp-body"></div>
+</div>
 
 </body>
 </html>
