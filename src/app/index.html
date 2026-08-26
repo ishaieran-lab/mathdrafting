@@ -1574,8 +1574,8 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .ptool:hover{background:var(--surface2);border-color:var(--border);}
 .ptool.active{background:rgba(108,99,255,0.15);border-color:rgba(108,99,255,0.4);color:var(--accent);font-weight:600;}
 .ptool-sep{height:1px;background:var(--border);margin:4px 0;flex-shrink:0;}
-#junc-picker button:hover{border-color:var(--accent)!important;background:rgba(108,99,255,0.1)!important;}
-#junc-picker button.jb-active{border-color:var(--accent)!important;background:rgba(108,99,255,0.2)!important;}
+#junc-picker button:hover{border-color:var(--accent);background:rgba(108,99,255,0.1);}
+.jb-active{border-color:var(--accent)!important;background:rgba(108,99,255,0.2)!important;color:var(--accent)!important;}
 .ptool-lbl{font-size:10px;color:var(--text2);padding:4px 4px 1px;font-weight:700;letter-spacing:0.5px;text-align:right;}
 .p-inp{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 8px;font-size:12px;outline:none;box-sizing:border-box;font-family:'Assistant',sans-serif;}
 .p-inp:focus{border-color:var(--accent);}
@@ -16533,20 +16533,28 @@ function pJuncHighlight(key){
   });
 }
 function pJbAngle(a){
+  pJuncPreset.bendAngle=a;
   document.querySelectorAll('.jb-angle-btn').forEach(function(b){
-    var active=parseInt(b.textContent)===a;
-    b.style.borderColor=active?'var(--accent)':'var(--border)';
-    b.style.background=active?'rgba(108,99,255,0.2)':'none';
-    b.style.color=active?'var(--accent)':'var(--text)';
+    b.classList.toggle('jb-active', parseInt(b.dataset.val)===a);
+  });
+  // sync custom input
+  var inp=document.getElementById('jb-angle-custom');
+  if(inp) inp.value=a;
+  pJbUpdateK();
+}
+function pJbAngleCustom(val){
+  var a=Math.max(1,Math.min(180,parseInt(val)||90));
+  pJuncPreset.bendAngle=a;
+  // deselect preset buttons (none match custom value unless coincidence)
+  document.querySelectorAll('.jb-angle-btn').forEach(function(b){
+    b.classList.toggle('jb-active', parseInt(b.dataset.val)===a);
   });
   pJbUpdateK();
 }
 function pJbRD(r){
+  pJuncPreset.bendRD=r;
   document.querySelectorAll('.jb-rd-btn').forEach(function(b){
-    var active=parseFloat(b.textContent)===r;
-    b.style.borderColor=active?'var(--accent)':'var(--border)';
-    b.style.background=active?'rgba(108,99,255,0.2)':'none';
-    b.style.color=active?'var(--accent)':'var(--text)';
+    b.classList.toggle('jb-active', parseFloat(b.dataset.val)===r);
   });
   pJbUpdateK();
 }
@@ -16935,13 +16943,21 @@ function pShowProps(){
         <select class="pp-inp" onchange="pUpNode('bendType',this.value);pRender();pShowProps()">${bendOpts}</select>
         ${(n.bendType==='bend'||n.bendType==='miter')?`
         <label class="pp-lbl" style="margin-top:6px">זווית כיפוף</label>
-        <div style="display:flex;gap:4px;margin-top:3px">${[45,90,135].map(a=>`<button onclick="pUpNode('bendAngle',${a});pRender()" style="flex:1;padding:4px 2px;border-radius:5px;border:1px solid ${(n.bendAngle||90)===a?'var(--accent)':'var(--border)'};background:${(n.bendAngle||90)===a?'rgba(108,99,255,0.2)':'none'};color:${(n.bendAngle||90)===a?'var(--accent)':'var(--text)'};cursor:pointer;font-size:11px">${a}°</button>`).join('')}</div>`:''
+        <div style="display:flex;gap:3px;margin-top:3px">
+          ${[45,90,135].map(a=>`<button onclick="pUpNode('bendAngle',${a});pShowProps()" class="pp-ang-btn" style="flex:1;padding:3px 2px;border-radius:5px;border:1px solid ${(n.bendAngle||90)===a?'var(--accent)':'var(--border)'};background:${(n.bendAngle||90)===a?'rgba(108,99,255,0.2)':'none'};color:${(n.bendAngle||90)===a?'var(--accent)':'var(--text)'};cursor:pointer;font-size:11px">${a}°</button>`).join('')}
+        </div>
+        <div style="display:flex;align-items:center;gap:5px;margin-top:4px">
+          <input type="number" min="1" max="180" value="${n.bendAngle||90}" oninput="pUpNode('bendAngle',Math.max(1,Math.min(180,parseInt(this.value)||90)))" style="width:50px;padding:3px 5px;border-radius:5px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:11px">
+          <span style="font-size:10px;color:var(--text2)">° (חופשי)</span>
+        </div>`:''
         }
         ${n.bendType==='bend'?`
         <label class="pp-lbl" style="margin-top:6px">רדיוס כיפוף R/D</label>
-        <div style="display:flex;gap:4px;margin-top:3px">${[1.5,2,3].map(r=>`<button onclick="pUpNode('bendRD',${r});pRender()" style="flex:1;padding:4px 2px;border-radius:5px;border:1px solid ${(n.bendRD||1.5)===r?'var(--accent)':'var(--border)'};background:${(n.bendRD||1.5)===r?'rgba(108,99,255,0.2)':'none'};color:${(n.bendRD||1.5)===r?'var(--accent)':'var(--text)'};cursor:pointer;font-size:11px">${r}</button>`).join('')}</div>`:''
+        <div style="display:flex;gap:3px;margin-top:3px">
+          ${[1.5,2,3].map(r=>`<button onclick="pUpNode('bendRD',${r});pShowProps()" style="flex:1;padding:3px 2px;border-radius:5px;border:1px solid ${(n.bendRD||1.5)===r?'var(--accent)':'var(--border)'};background:${(n.bendRD||1.5)===r?'rgba(108,99,255,0.2)':'none'};color:${(n.bendRD||1.5)===r?'var(--accent)':'var(--text)'};cursor:pointer;font-size:11px">${r}</button>`).join('')}
+        </div>`:''
         }
-        ${bK>0?`<div style="font-size:11px;color:var(--accent);margin-top:5px">K = ${bK.toFixed(2)}${n.bendType==='bend'?' | R/D = '+(n.bendRD||1.5):''}</div>`:''}
+        ${bK>0?`<div style="font-size:11px;color:var(--accent);margin-top:5px">K = ${bK.toFixed(2)}${n.bendType==='bend'?' | R/D = '+(n.bendRD||1.5):''} | זווית: ${n.bendAngle||90}°</div>`:''}
       </div>`;
       // Show angles to connected pipes
       const connPipes=pS.pipes.filter(p=>p.n1id===n.id||p.n2id===n.id);
@@ -17403,18 +17419,22 @@ body>*:not(.canvas-area){display:none!important;}
         <!-- Bend sub-panel: angle + R/D -->
         <div id="junc-bend-sub" style="display:none;margin-top:8px;border-top:1px solid var(--border);padding-top:7px">
           <div style="font-size:10px;color:var(--text2);margin-bottom:4px">זווית כיפוף:</div>
-          <div style="display:flex;gap:4px;margin-bottom:7px" id="jb-angle-row">
-            <button onclick="pJuncPreset.bendAngle=45;pJbAngle(45)" class="jb-angle-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">45°</button>
-            <button onclick="pJuncPreset.bendAngle=90;pJbAngle(90)" class="jb-angle-btn jb-active" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--accent);background:rgba(108,99,255,0.2);color:var(--accent);cursor:pointer;font-size:11px">90°</button>
-            <button onclick="pJuncPreset.bendAngle=135;pJbAngle(135)" class="jb-angle-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">135°</button>
+          <div style="display:flex;gap:4px;margin-bottom:5px">
+            <button onclick="pJbAngle(45)"  data-val="45"  class="jb-angle-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">45°</button>
+            <button onclick="pJbAngle(90)"  data-val="90"  class="jb-angle-btn jb-active" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">90°</button>
+            <button onclick="pJbAngle(135)" data-val="135" class="jb-angle-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">135°</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;margin-bottom:7px">
+            <input id="jb-angle-custom" type="number" min="1" max="180" value="90" oninput="pJbAngleCustom(this.value)" style="width:52px;padding:3px 5px;border-radius:5px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:11px">
+            <span style="font-size:10px;color:var(--text2)">° (הקלד זווית חופשית)</span>
           </div>
           <div style="font-size:10px;color:var(--text2);margin-bottom:4px">R/D (רדיוס כיפוף / קוטר):</div>
-          <div style="display:flex;gap:4px" id="jb-rd-row">
-            <button onclick="pJuncPreset.bendRD=1.5;pJbRD(1.5)" class="jb-rd-btn jb-active" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--accent);background:rgba(108,99,255,0.2);color:var(--accent);cursor:pointer;font-size:11px">1.5</button>
-            <button onclick="pJuncPreset.bendRD=2;pJbRD(2)" class="jb-rd-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">2</button>
-            <button onclick="pJuncPreset.bendRD=3;pJbRD(3)" class="jb-rd-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">3</button>
+          <div style="display:flex;gap:4px;margin-bottom:5px">
+            <button onclick="pJbRD(1.5)" data-val="1.5" class="jb-rd-btn jb-active" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">1.5</button>
+            <button onclick="pJbRD(2)"   data-val="2"   class="jb-rd-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">2</button>
+            <button onclick="pJbRD(3)"   data-val="3"   class="jb-rd-btn" style="flex:1;padding:4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">3</button>
           </div>
-          <div id="jb-k-display" style="font-size:10px;color:var(--accent);margin-top:5px;text-align:left">K = 0.40 | R/D = 1.5</div>
+          <div id="jb-k-display" style="font-size:10px;color:var(--accent);text-align:left">K = 0.40 | R/D = 1.5</div>
         </div>
       </div>
       <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')">🟠 פתח יציאה</button>
