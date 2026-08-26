@@ -16422,12 +16422,13 @@ redraw();
 <script>
 // ===== PIPE HYDRAULICS MODULE =====
 var PIPE_MAT={
-  pvc:    {label:'PVC / PE',         e:1.5e-6},
-  copper: {label:'נחושת',             e:1.5e-6},
-  steel:  {label:'פלדה',              e:4.6e-5},
-  galv:   {label:'פלדה מגולוונת',    e:1.5e-4},
-  iron:   {label:'ברזל יצוק',        e:2.6e-4},
-  concrete:{label:'בטון',             e:1.5e-3},
+  pvc:    {label:'PVC / PE',              e:1.5e-6},
+  copper: {label:'נחושת',                  e:1.5e-6},
+  al6061: {label:'אלומיניום 6061 (תעופה)', e:1.0e-6},
+  steel:  {label:'פלדה',                   e:4.6e-5},
+  galv:   {label:'פלדה מגולוונת',         e:1.5e-4},
+  iron:   {label:'ברזל יצוק',             e:2.6e-4},
+  concrete:{label:'בטון',                  e:1.5e-3},
 };
 var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,dragNode:null,dragOX:0,dragOY:0,results:null};
 var pTool='select';
