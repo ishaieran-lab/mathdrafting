@@ -16433,6 +16433,30 @@ var PIPE_MAT={
 var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,dragNode:null,dragOX:0,dragOY:0,results:null};
 var pTool='select';
 var pCv,pCtx,pRho=1000,pMu=0.001;
+var pPressUnit='kpa'; // 'kpa' | 'bar' | 'psig' | 'psia'
+var P_UNIT_LABEL={kpa:'kPa',bar:'bar',psig:'PSI gauge',psia:'PSI (abs)'};
+// Convert user-entered value → internal Pa (gauge)
+function pToPA(val,unit){
+  unit=unit||pPressUnit;
+  var v=parseFloat(val);
+  if(isNaN(v)) return null;
+  if(unit==='kpa')  return v*1000;
+  if(unit==='bar')  return v*100000;
+  if(unit==='psig') return v*6894.76;
+  if(unit==='psia') return v*6894.76-101325; // absolute → gauge
+  return v*1000;
+}
+// Convert internal Pa (gauge) → display value in current unit
+function pFromPA(pa,unit){
+  unit=unit||pPressUnit;
+  if(unit==='kpa')  return (pa/1000);
+  if(unit==='bar')  return (pa/100000);
+  if(unit==='psig') return (pa/6894.76);
+  if(unit==='psia') return ((pa+101325)/6894.76);
+  return pa/1000;
+}
+function pUnitDecimals(){return pPressUnit==='bar'?3:pPressUnit==='kpa'?1:2;}
+function pSetPressUnit(u){pPressUnit=u;pShowProps();}
 
 function openPipeOverlay(){
   const ov=document.getElementById('pipe-overlay');
@@ -16597,9 +16621,9 @@ function pRender(){
     pCtx.fillStyle=dark?'#e2e8f0':'#0f172a';pCtx.font='bold 12px Assistant,sans-serif';pCtx.textBaseline='top';
     pCtx.fillText(nd.label,nd.x,nd.y+R+3);
     if(res&&res.nP[nd.id]!==undefined){
-      const Pkpa=(res.nP[nd.id]/1000).toFixed(1);
+      var pDisp=pFromPA(res.nP[nd.id]).toFixed(pUnitDecimals());
       pCtx.fillStyle='#fbbf24';pCtx.font='bold 11px Assistant,sans-serif';pCtx.textBaseline='bottom';
-      pCtx.fillText(Pkpa+' kPa',nd.x,nd.y-R-3);
+      pCtx.fillText(pDisp+' '+P_UNIT_LABEL[pPressUnit],nd.x,nd.y-R-3);
     }
     pCtx.restore();
   }
@@ -16616,8 +16640,11 @@ function pShowProps(){
     let html=`<div class="pp-title">${tl}</div>
       <div class="pp-row"><label class="pp-lbl">תווית</label>
         <input class="pp-inp" value="${n.label}" oninput="pUpNode('label',this.value)"></div>`;
-    if(n.type!=='junc')html+=`<div class="pp-row"><label class="pp-lbl">לחץ (kPa)</label>
-        <input class="pp-inp" type="number" value="${n.P!=null?(n.P/1000).toFixed(1):''}" placeholder="ידוע" oninput="pUpNode('P',this.value===''?null:parseFloat(this.value)*1000)"></div>`;
+    if(n.type!=='junc'){
+      var pDisp=n.P!=null?pFromPA(n.P).toFixed(pUnitDecimals()):'';
+      html+=`<div class="pp-row"><label class="pp-lbl">לחץ (${P_UNIT_LABEL[pPressUnit]})</label>
+        <input class="pp-inp" type="number" value="${pDisp}" placeholder="ידוע" step="any" oninput="pUpNode('P',this.value===''?null:pToPA(this.value))"></div>`;
+    }
     panel.innerHTML=html;
   } else {
     const p=el.obj;
@@ -16733,11 +16760,12 @@ function pShowResults(nP,pQ){
     const {v}=pPipeR(pipe,Q||0.001);
     h+=`<tr><td>${pipe.label}</td><td>${dP.toFixed(2)}</td><td>${(Math.abs(Q)*1000).toFixed(3)}</td><td>${v.toFixed(2)}</td></tr>`;
   });
-  h+='</table><table class="pr-table" style="margin-top:6px"><tr><th>צומת</th><th>לחץ (kPa)</th></tr>';
+  h+='</table><table class="pr-table" style="margin-top:6px"><tr><th>צומת</th><th>לחץ ('+P_UNIT_LABEL[pPressUnit]+')</th></tr>';
   pS.nodes.forEach(nd=>{
-    const Pk=(nP[nd.id]||0)/1000;
+    var Pd=pFromPA(nP[nd.id]||0);
+    var Pk=(nP[nd.id]||0)/1000;
     const col=Pk>150?'#22c55e':Pk>50?'#f59e0b':'#ef4444';
-    h+=`<tr><td>${nd.label}</td><td style="color:${col};font-weight:700">${Pk.toFixed(1)}</td></tr>`;
+    h+=`<tr><td>${nd.label}</td><td style="color:${col};font-weight:700">${Pd.toFixed(pUnitDecimals())}</td></tr>`;
   });
   h+='</table>';
   res.innerHTML=h;
@@ -16946,6 +16974,16 @@ body>*:not(.canvas-area){display:none!important;}
       <button class="ptool" id="ptool-pipe" onclick="setPipeTool('pipe')">━ צינור</button>
       <div class="ptool-sep"></div>
       <button class="ptool" id="ptool-delete" onclick="setPipeTool('delete')" style="color:#ef4444">🗑 מחיקה</button>
+      <div class="ptool-sep"></div>
+      <div class="ptool-lbl">יחידות לחץ</div>
+      <div class="p-inp-row">
+        <select class="p-inp" id="p-unit" onchange="pSetPressUnit(this.value)">
+          <option value="kpa">kPa</option>
+          <option value="bar">bar</option>
+          <option value="psig">PSI gauge</option>
+          <option value="psia">PSI (abs)</option>
+        </select>
+      </div>
       <div class="ptool-sep"></div>
       <div class="ptool-lbl">נוזל</div>
       <div class="p-inp-row">
