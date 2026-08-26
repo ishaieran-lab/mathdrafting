@@ -16430,7 +16430,19 @@ var PIPE_MAT={
   iron:   {label:'ברזל יצוק',             e:2.6e-4},
   concrete:{label:'בטון',                  e:1.5e-3},
 };
-var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,dragNode:null,dragOX:0,dragOY:0,results:null};
+var PIPE_FITTINGS={
+  e90s: {label:'מרפק 90° (רגיל)',         K:0.9},
+  e90l: {label:'מרפק 90° (רדיוס ארוך)',   K:0.6},
+  e45:  {label:'מרפק 45°',                K:0.4},
+  tstr: {label:'T — זרימה ישרה',          K:0.6},
+  tbr:  {label:'T — הסתעפות',             K:1.0},
+  gate: {label:'שסתום שערי (פתוח)',       K:0.1},
+  ball: {label:'שסתום כדורי (פתוח)',      K:0.05},
+  chk:  {label:'שסתום חד-כיווני',         K:2.0},
+  entr: {label:'כניסה חדה',               K:0.5},
+  exit: {label:'יציאה',                   K:1.0},
+};
+var pS={nodes:[],pipes:[],nextId:1,selEl:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null};
 var pTool='select';
 var pCv,pCtx,pRho=1000,pMu=0.001;
 var pPressUnit='kpa'; // 'kpa' | 'bar' | 'psig' | 'psia'
@@ -16527,7 +16539,11 @@ function ptLineDist(px,py,ax,ay,bx,by){
 function pDown(e){
   const r=pCv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
   if(pTool==='select'){
-    const nd=pNodeAt(x,y),pp=nd?null:pPipeAt(x,y);
+    const nd=pNodeAt(x,y);
+    // Check waypoint hit first
+    const wpPipe=pS.pipes.find(p=>p.wx!=null&&Math.hypot(p.wx-x,p.wy-y)<10);
+    if(wpPipe&&!nd){pS.dragWP=wpPipe;pS.dragOX=x-wpPipe.wx;pS.dragOY=y-wpPipe.wy;pS.selEl={type:'pipe',obj:wpPipe};pShowProps();pRender();return;}
+    const pp=nd?null:pPipeAt(x,y);
     pS.selEl=nd?{type:'node',obj:nd}:pp?{type:'pipe',obj:pp}:null;
     if(nd){pS.dragNode=nd;pS.dragOX=x-nd.x;pS.dragOY=y-nd.y;}
     pShowProps();pRender();return;
@@ -16540,17 +16556,22 @@ function pDown(e){
   }
   if(pTool==='pipe'){
     const nd=pNodeAt(x,y);
-    if(!pS.pipeStart){if(nd){pS.pipeStart=nd;pRender();}}
+    if(!pS.pipeStart){if(nd){pS.pipeStart=nd;pS.pipeWP=null;pRender();}}
     else{
       if(nd&&nd.id!==pS.pipeStart.id){
         const ex=pS.pipes.find(p=>(p.n1id===pS.pipeStart.id&&p.n2id===nd.id)||(p.n2id===pS.pipeStart.id&&p.n1id===nd.id));
         if(!ex){
           const dx=nd.x-pS.pipeStart.x,dy=nd.y-pS.pipeStart.y;
           const L=Math.max(1,Math.round(Math.sqrt(dx*dx+dy*dy)/4)/10);
-          pS.pipes.push({id:'p'+(pS.nextId++),n1id:pS.pipeStart.id,n2id:nd.id,D:0.05,L,mat:'pvc',label:'צינור '+(pS.pipes.length+1)});
+          const np={id:'p'+(pS.nextId++),n1id:pS.pipeStart.id,n2id:nd.id,D:0.05,L,mat:'pvc',label:'צינור '+(pS.pipes.length+1),fittings:[]};
+          if(pS.pipeWP){np.wx=pS.pipeWP.x;np.wy=pS.pipeWP.y;}
+          pS.pipes.push(np);
         }
-        pS.pipeStart=null;pS.results=null;pRender();
-      } else if(!nd){pS.pipeStart=null;pRender();}
+        pS.pipeStart=null;pS.pipeWP=null;pS.results=null;pRender();
+      } else if(!nd){
+        // Set waypoint on empty canvas
+        pS.pipeWP={x,y};pRender();
+      }
     }
     return;
   }
@@ -16566,8 +16587,10 @@ function pDown(e){
 function pMove(e){
   const r=pCv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
   if(pS.dragNode&&pTool==='select'){pS.dragNode.x=x-pS.dragOX;pS.dragNode.y=y-pS.dragOY;pRender();}
+  if(pS.dragWP&&pTool==='select'){pS.dragWP.wx=x-pS.dragOX;pS.dragWP.wy=y-pS.dragOY;pRender();}
+  if(pS.pipeStart&&pTool==='pipe'){pS._mouseX=x;pS._mouseY=y;pRender();}
 }
-function pUp(){pS.dragNode=null;}
+function pUp(){pS.dragNode=null;pS.dragWP=null;}
 
 // ===== RENDER =====
 function pRender(){
@@ -16591,12 +16614,30 @@ function pRender(){
     pCtx.lineCap='round';
     pCtx.strokeStyle=sel?'#f59e0b':(dark?'#3b82f6':'#1d4ed8');
     pCtx.lineWidth=sel?8:6;
-    pCtx.beginPath();pCtx.moveTo(a.x,a.y);pCtx.lineTo(b.x,b.y);pCtx.stroke();
+    pCtx.beginPath();pCtx.moveTo(a.x,a.y);
+    if(pipe.wx!=null){pCtx.lineTo(pipe.wx,pipe.wy);}
+    pCtx.lineTo(b.x,b.y);pCtx.stroke();
     pCtx.strokeStyle=dark?'rgba(147,197,253,0.35)':'rgba(219,234,254,0.7)';
     pCtx.lineWidth=2;
-    pCtx.beginPath();pCtx.moveTo(a.x,a.y);pCtx.lineTo(b.x,b.y);pCtx.stroke();
+    pCtx.beginPath();pCtx.moveTo(a.x,a.y);
+    if(pipe.wx!=null){pCtx.lineTo(pipe.wx,pipe.wy);}
+    pCtx.lineTo(b.x,b.y);pCtx.stroke();
+    // Waypoint handle
+    if(pipe.wx!=null){
+      pCtx.fillStyle=sel?'#f59e0b':'#a78bfa';
+      pCtx.beginPath();pCtx.arc(pipe.wx,pipe.wy,6,0,Math.PI*2);pCtx.fill();
+      // Angle indicator
+      const ang1=Math.atan2(pipe.wy-a.y,pipe.wx-a.x);
+      const ang2=Math.atan2(b.y-pipe.wy,b.x-pipe.wx);
+      var bendDeg=Math.abs((ang2-ang1)*180/Math.PI);
+      if(bendDeg>180) bendDeg=360-bendDeg;
+      pCtx.fillStyle=dark?'#c4b5fd':'#7c3aed';
+      pCtx.font='bold 10px Assistant,sans-serif';pCtx.textAlign='center';
+      pCtx.fillText(Math.round(bendDeg)+'°',pipe.wx,pipe.wy-10);
+    }
     // Labels
-    const cx=(a.x+b.x)/2,cy=(a.y+b.y)/2;
+    const cx=pipe.wx!=null?(a.x+pipe.wx)/2:(a.x+b.x)/2;
+    const cy=pipe.wx!=null?(a.y+pipe.wy)/2:(a.y+b.y)/2;
     pCtx.textAlign='center';
     if(res&&res.pQ[pipe.id]!==undefined){
       const Q=res.pQ[pipe.id];
@@ -16614,10 +16655,23 @@ function pRender(){
     pCtx.fillText('D='+(pipe.D*1000).toFixed(0)+'mm  L='+pipe.L+'m',cx,cy+(res?16:6));
     pCtx.restore();
   }
-  // Pipe-in-progress hint
-  if(pS.pipeStart&&pTool==='pipe'){
-    pCtx.save();pCtx.strokeStyle='rgba(168,85,247,0.5)';pCtx.setLineDash([5,4]);pCtx.lineWidth=2;
-    pCtx.beginPath();pCtx.arc(pS.pipeStart.x,pS.pipeStart.y,20,0,Math.PI*2);pCtx.stroke();pCtx.restore();
+  // Pipe-in-progress preview
+  if(pS.pipeStart&&pTool==='pipe'&&pS._mouseX!=null){
+    pCtx.save();pCtx.strokeStyle='rgba(168,85,247,0.6)';pCtx.setLineDash([6,4]);pCtx.lineWidth=2;
+    pCtx.beginPath();pCtx.arc(pS.pipeStart.x,pS.pipeStart.y,20,0,Math.PI*2);pCtx.stroke();
+    pCtx.beginPath();pCtx.moveTo(pS.pipeStart.x,pS.pipeStart.y);
+    if(pS.pipeWP){pCtx.lineTo(pS.pipeWP.x,pS.pipeWP.y);}
+    pCtx.lineTo(pS._mouseX,pS._mouseY);pCtx.stroke();
+    if(pS.pipeWP){
+      pCtx.fillStyle='#a78bfa';pCtx.setLineDash([]);
+      pCtx.beginPath();pCtx.arc(pS.pipeWP.x,pS.pipeWP.y,5,0,Math.PI*2);pCtx.fill();
+      pCtx.fillStyle=dark?'#c4b5fd':'#7c3aed';pCtx.font='10px Assistant,sans-serif';pCtx.textAlign='center';
+      pCtx.fillText('נקודת כיפוף',pS.pipeWP.x,pS.pipeWP.y-10);
+    } else {
+      pCtx.fillStyle=dark?'#94a3b8':'#64748b';pCtx.font='10px Assistant,sans-serif';pCtx.textAlign='center';
+      pCtx.fillText('לחץ לכיפוף / צומת ליסיום',pS._mouseX,pS._mouseY-14);
+    }
+    pCtx.restore();
   }
   // Nodes
   var pr=null;
@@ -16685,11 +16739,47 @@ function pShowProps(){
       <div class="pp-row"><label class="pp-lbl">חומר</label>
         <select class="pp-inp" onchange="pUpPipe('mat',this.value);pShowProps()">${matOpts}</select></div>
       <div class="pp-row"><label class="pp-lbl">חספוס ε (mm)</label>
-        <input class="pp-inp" type="number" value="${eVal}" step="0.0001" oninput="pUpPipe('roughness',parseFloat(this.value)/1000)"></div>`;
+        <input class="pp-inp" type="number" value="${eVal}" step="0.0001" oninput="pUpPipe('roughness',parseFloat(this.value)/1000)"></div>
+      <div class="pp-row" style="border-top:1px solid var(--border);padding-top:7px;margin-top:4px">
+        <label class="pp-lbl" style="font-weight:700;color:var(--accent)">אביזרים (אבדות מינוריות)</label>
+        <div style="display:flex;gap:4px;margin-top:4px">
+          <select class="pp-inp" id="pp-fit-sel" style="flex:1;font-size:11px">${Object.entries(PIPE_FITTINGS).map(([k,v])=>`<option value="${k}">${v.label} (K=${v.K})</option>`).join('')}</select>
+          <button onclick="pAddFitting('${p.id}')" style="padding:4px 8px;border-radius:6px;border:1px solid var(--accent);background:rgba(108,99,255,0.15);color:var(--accent);cursor:pointer;font-size:12px;white-space:nowrap">+ הוסף</button>
+        </div>
+        <div id="pp-fit-list" style="margin-top:6px;display:flex;flex-direction:column;gap:3px">${(p.fittings||[]).map((ft,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;background:var(--surface2);border-radius:5px;padding:3px 7px"><span>${PIPE_FITTINGS[ft.type]?.label||ft.type}</span><span style="display:flex;align-items:center;gap:6px"><span style="color:var(--accent)">K=${ft.K}</span><input type="number" value="${ft.qty||1}" min="1" max="20" style="width:34px;font-size:11px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:1px 3px" oninput="pSetFitQty('${p.id}',${i},parseInt(this.value)||1)"><button onclick="pRemFitting('${p.id}',${i})" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:13px;line-height:1">×</button></span></div>`).join('')}</div>
+        ${(p.fittings||[]).length?`<div style="font-size:11px;color:var(--accent);margin-top:4px;text-align:left">ΣK = ${(p.fittings||[]).reduce((s,ft)=>s+ft.K*(ft.qty||1),0).toFixed(2)}</div>`:''}
+      </div>`;
   }
 }
 function pUpNode(k,v){if(pS.selEl?.type==='node'){pS.selEl.obj[k]=v;pRender();}}
 function pUpPipe(k,v){if(pS.selEl?.type==='pipe'){pS.selEl.obj[k]=v;pRender();}}
+
+function pAddFitting(pipeId){
+  var sel=document.getElementById('pp-fit-sel');
+  if(!sel) return;
+  var type=sel.value;
+  var pipe=pS.pipes.find(function(p){return p.id==pipeId;});
+  if(!pipe) return;
+  if(!pipe.fittings) pipe.fittings=[];
+  var existing=pipe.fittings.find(function(f){return f.type===type;});
+  if(existing){existing.qty=(existing.qty||1)+1;}
+  else{pipe.fittings.push({type:type,K:PIPE_FITTINGS[type].K,qty:1});}
+  pShowProps();
+}
+
+function pRemFitting(pipeId,idx){
+  var pipe=pS.pipes.find(function(p){return p.id==pipeId;});
+  if(!pipe||!pipe.fittings) return;
+  pipe.fittings.splice(idx,1);
+  pShowProps();
+}
+
+function pSetFitQty(pipeId,idx,qty){
+  var pipe=pS.pipes.find(function(p){return p.id==pipeId;});
+  if(!pipe||!pipe.fittings||!pipe.fittings[idx]) return;
+  pipe.fittings[idx].qty=qty<1?1:qty;
+  pShowProps();
+}
 
 // ===== HYDRAULIC CALCULATION =====
 function pFrFactor(Re,D,e){
@@ -16706,7 +16796,8 @@ function pPipeR(pipe,Q){
   const A=Math.PI*D*D/4,v=Math.abs(Q)/A;
   const Re=pRho*v*D/(pMu||0.001);
   const f=pFrFactor(Re,D,e);
-  return {R:f*L*pRho/(2*D*A*A),v,Re,f};
+  const Kfit=(pipe.fittings||[]).reduce((s,ft)=>s+ft.K*(ft.qty||1),0);
+  return {R:(f*L/D+Kfit)*pRho/(2*A*A),v,Re,f,Kfit};
 }
 
 function pCalc(){
