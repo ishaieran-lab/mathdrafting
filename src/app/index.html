@@ -1560,22 +1560,20 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 /* Proto placeholder */
 .fp-proto{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#3a3a3a;font-size:11px;text-align:center;padding:24px 16px;line-height:1.7;}
 .fp-proto.visible{display:flex;}
-/* ===== PIPE HYDRAULICS ===== */
-#pipe-overlay{position:fixed;inset:0;background:var(--bg);z-index:10001;display:none;flex-direction:column;font-family:'Assistant',sans-serif;}
-.p-drag-handle{width:5px;background:var(--border);cursor:col-resize;flex-shrink:0;transition:background 0.15s;user-select:none;}
-.p-drag-handle:hover,.p-drag-handle.p-dragging{background:var(--accent);}
-.pzoom-bar{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 10px;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
-.pzoom-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:16px;font-weight:bold;display:flex;align-items:center;justify-content:center;line-height:1;}
-.pzoom-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
-#pzoom-label{font-size:12px;color:var(--text2);min-width:38px;text-align:center;}
-#pipe-hdr{height:54px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;}
-#pipe-hdr-title{font-size:15px;font-weight:700;color:var(--text);flex:1;}
-.p-hdr-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:13px;font-family:'Assistant',sans-serif;transition:all 0.12s;}
+/* ===== PIPE HYDRAULICS SIDEBAR ===== */
+#pipe-sidebar{position:fixed;top:0;left:0;bottom:0;width:300px;background:var(--surface);border-right:1px solid var(--border);box-shadow:4px 0 24px rgba(0,0,0,0.5);z-index:1000;display:none;flex-direction:column;font-family:'Assistant',sans-serif;direction:rtl;overflow:hidden;}
+#pipe-sidebar.open{display:flex;}
+#pipe-sb-hdr{display:flex;align-items:center;padding:0 10px;gap:6px;height:50px;flex-shrink:0;border-bottom:1px solid var(--border);background:var(--surface);}
+#pipe-sb-title{font-size:13px;font-weight:700;color:var(--accent);flex:1;}
+.p-hdr-btn{padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;font-family:'Assistant',sans-serif;transition:all 0.12s;}
 .p-hdr-btn:hover{border-color:var(--accent);color:var(--accent);}
 .p-hdr-btn.primary{background:var(--accent);color:white;border-color:var(--accent);}
 .p-hdr-btn.primary:hover{opacity:0.85;}
-#pipe-body{flex:1;display:flex;overflow:hidden;}
-#pipe-tools{width:265px;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;padding:10px 10px;gap:3px;overflow-y:auto;flex-shrink:0;}
+#pipe-sb-body{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+#pipe-sb-tools{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:3px;}
+#pipe-sb-props{flex-shrink:0;border-top:1px solid var(--border);padding:10px;overflow-y:auto;max-height:48%;}
+#pipe-tools{display:contents;}
+#pipe-props{display:contents;}
 .ptool{width:100%;padding:9px 12px;border-radius:7px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;font-size:14px;font-family:'Assistant',sans-serif;text-align:right;transition:all 0.12s;}
 .ptool:hover{background:var(--surface2);border-color:var(--border);}
 .ptool.active{background:rgba(108,99,255,0.15);border-color:rgba(108,99,255,0.4);color:var(--accent);font-weight:600;}
@@ -1587,9 +1585,6 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .p-inp:focus{border-color:var(--accent);}
 .p-inp-row{margin-bottom:5px;}
 .p-inp-lbl{font-size:10px;color:var(--text2);margin-bottom:2px;display:block;text-align:right;}
-#pipe-cvwrap{flex:1;position:relative;overflow:hidden;background:var(--bg);}
-#pipe-cv{position:absolute;inset:0;width:100%;height:100%;}
-#pipe-props{width:215px;background:var(--surface);border-right:1px solid var(--border);padding:10px;overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column;gap:6px;}
 .pp-title{font-size:13px;font-weight:700;color:var(--accent);padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:4px;}
 .pp-row{margin-bottom:7px;}
 .pp-lbl{font-size:10px;color:var(--text2);display:block;margin-bottom:2px;text-align:right;}
@@ -2373,7 +2368,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
     <div class="tb-resize tb-resize-ne" data-etb="ne"></div>
     <div class="tb-resize tb-resize-sw" data-etb="sw"></div>
     <div class="tb-resize tb-resize-se" data-etb="se"></div>
-    <button class="tbtn" onclick="openPipeOverlay()" data-tip="מחשב צנרת" style="border-bottom:none">
+    <button class="tbtn" onclick="openPipeSidebar()" data-tip="מחשב צנרת" style="border-bottom:none">
       <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="1" y="8" width="22" height="4" rx="1.5"/>
         <path d="M8 8V5M16 8V5"/>
@@ -4529,6 +4524,7 @@ function redraw() {
     ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.stroke();
     ctx.restore();
   }
+  if(pipeMode) pDrawPipeLayer();
   _scheduleSave();
 }
 
@@ -6920,6 +6916,7 @@ function hitHandle(mx,my,el){
 
 // ===== MOUSE =====
 cv.addEventListener('mousedown',e=>{
+  if(pipeMode){pDown(e);return;}
   const{x:mx,y:my}=cvPos(e);
 
   // MathLive placement mode — place equation editor at click position
@@ -7375,6 +7372,7 @@ cv.addEventListener('mousedown',e=>{
 });
 
 cv.addEventListener('mousemove',e=>{
+  if(pipeMode){pMove(e);return;}
   const{x:mx,y:my}=cvPos(e);
   {const _sp=document.getElementById('st-pos');if(_sp)_sp.textContent=`X:${Math.round(mx)} Y:${Math.round(my)}`;}
 
@@ -7830,6 +7828,7 @@ cv.addEventListener('mousemove',e=>{
 });
 
 cv.addEventListener('mouseup',e=>{
+  if(pipeMode){pUp();return;}
   const{x:mx,y:my}=cvPos(e);
   if(_eqGrpResizing){
     _eqGrpResizing=false;_eqGrpResizeCorner=null;_eqGrpResizeBBox=null;_eqGrpResizeGroupId=null;
@@ -16486,6 +16485,7 @@ function pNodeBendK(nd){
 }
 var pS={nodes:[],pipes:[],nextId:1,selEl:null,multiSel:[],selRect:null,pipeStart:null,pipeWP:null,dragNode:null,dragWP:null,dragOX:0,dragOY:0,results:null,rotatingNode:null,rotOX:0,rotOY:0};
 var pTool='select';
+var pipeMode=false;
 var pCv,pCtx,pRho=1000,pMu=0.001,pViscMode='dynamic',pNuUnit='cst';
 var pGridMode='grid'; // 'grid'|'dots'|'none'
 var pGridSize=40;     // pixels per grid cell
@@ -16623,58 +16623,9 @@ function pLoadPipeImgs(){
   });
 }
 
-// ===== PIPE ZOOM =====
+// ===== PIPE ZOOM (stub — uses main canvas coord system) =====
 var pZoom=1,pZoomOX=0,pZoomOY=0;
-function pZoomChange(delta){
-  var prev=pZoom;
-  pZoom=Math.max(0.15,Math.min(6,pZoom+delta));
-  var cx=pCv?pCv.width/2:0,cy=pCv?pCv.height/2:0;
-  pZoomOX=cx-(cx-pZoomOX)*(pZoom/prev);
-  pZoomOY=cy-(cy-pZoomOY)*(pZoom/prev);
-  document.getElementById('pzoom-label').textContent=Math.round(pZoom*100)+'%';
-  pRender();
-}
-function pZoomReset(){pZoom=1;pZoomOX=0;pZoomOY=0;document.getElementById('pzoom-label').textContent='100%';pRender();}
-function pWorld(rx,ry){return{x:(rx-pZoomOX)/pZoom,y:(ry-pZoomOY)/pZoom};}
-
-// ===== SIDEBAR DRAG-RESIZE =====
-var _pDragReady=false;
-function pSetupDragHandles(){
-  if(_pDragReady) return;
-  _pDragReady=true;
-  function makeHandle(handleId,targetId,growDir){
-    // growDir: 'right' = dragging right grows target, 'left' = dragging left grows target
-    var handle=document.getElementById(handleId);
-    var target=document.getElementById(targetId);
-    if(!handle||!target){_pDragReady=false;return;}
-    var dragging=false,startX,startW;
-    handle.addEventListener('mousedown',function(e){
-      dragging=true;startX=e.clientX;startW=target.offsetWidth;
-      handle.classList.add('p-dragging');
-      document.body.style.cursor='col-resize';
-      document.body.style.userSelect='none';
-      e.preventDefault();e.stopPropagation();
-    });
-    document.addEventListener('mousemove',function(e){
-      if(!dragging) return;
-      var dx=growDir==='right'?(e.clientX-startX):(startX-e.clientX);
-      var newW=Math.max(60,Math.min(650,startW+dx));
-      target.style.width=newW+'px';
-      target.style.flexShrink='0';
-      pResize();
-    });
-    document.addEventListener('mouseup',function(){
-      if(!dragging) return;
-      dragging=false;handle.classList.remove('p-dragging');
-      document.body.style.cursor='';document.body.style.userSelect='';
-    });
-  }
-  // In RTL flex: pipe-tools is on the RIGHT, pipe-props on the LEFT
-  // p-drag-left handle sits between canvas(center) and pipe-tools(right) → drag LEFT to grow tools
-  makeHandle('p-drag-left','pipe-tools','left');
-  // p-drag-right sits between pipe-props(left) and canvas(center) → drag RIGHT to grow props
-  makeHandle('p-drag-right','pipe-props','right');
-}
+function pWorld(rx,ry){return{x:rx,y:ry};} // no separate zoom in integrated mode
 
 // ===== PIPE KEYBOARD =====
 function pDeleteSelected(){
@@ -16698,56 +16649,36 @@ function pDeleteSelected(){
 }
 function _pKeyDown(e){
   if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.target.tagName==='TEXTAREA') return;
-  if(document.getElementById('pipe-overlay').style.display!=='flex') return;
+  if(!pipeMode) return;
   if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();pDeleteSelected();}
   if(e.key==='Escape'){pS.pipeStart=null;pS.selRect=null;pS.multiSel=[];pS.selEl=null;pShowProps();pRender();}
 }
-function openPipeOverlay(){
-  const ov=document.getElementById('pipe-overlay');
-  ov.style.display='flex';
-  pCv=document.getElementById('pipe-cv');
-  pCtx=pCv.getContext('2d');
-  pCv.removeEventListener('mousedown',pDown);
-  pCv.removeEventListener('mousemove',pMove);
-  pCv.removeEventListener('mouseup',pUp);
-  pCv.removeEventListener('mouseleave',pUp);
-  pCv.addEventListener('mousedown',pDown);
-  pCv.addEventListener('mousemove',pMove);
-  pCv.addEventListener('mouseup',pUp);
-  pCv.addEventListener('mouseleave',pUp);
-  pCv.removeEventListener('wheel',pWheel);
-  pCv.addEventListener('wheel',pWheel,{passive:false});
+function openPipeSidebar(){
+  pipeMode=true;
+  pCv=cv; pCtx=ctx;
+  document.getElementById('pipe-sidebar').classList.add('open');
   document.removeEventListener('keydown',_pKeyDown);
   document.addEventListener('keydown',_pKeyDown);
-  pSetupDragHandles();
   pLoadPipeImgs();
-  pResize();
+  redraw();
 }
-function pWheel(e){
-  e.preventDefault();
-  var r=pCv.getBoundingClientRect();
-  var mx=e.clientX-r.left,my=e.clientY-r.top;
-  var delta=e.deltaY>0?-0.15:0.15;
-  var prev=pZoom;
-  pZoom=Math.max(0.15,Math.min(6,pZoom+delta));
-  pZoomOX=mx-(mx-pZoomOX)*(pZoom/prev);
-  pZoomOY=my-(my-pZoomOY)*(pZoom/prev);
-  document.getElementById('pzoom-label').textContent=Math.round(pZoom*100)+'%';
-  pRender();
+function openPipeOverlay(){openPipeSidebar();} // backward compat
+function closePipeSidebar(){
+  pipeMode=false;
+  document.getElementById('pipe-sidebar').classList.remove('open');
+  document.removeEventListener('keydown',_pKeyDown);
+  cv.style.cursor='';
+  pS.pipeStart=null;pS.selRect=null;
+  redraw();
 }
-function closePipeOverlay(){document.getElementById('pipe-overlay').style.display='none';document.removeEventListener('keydown',_pKeyDown);}
-function pResize(){
-  const w=document.getElementById('pipe-cvwrap');
-  pCv.width=w.clientWidth;pCv.height=w.clientHeight;pRender();
-}
-window.addEventListener('resize',()=>{if(document.getElementById('pipe-overlay').style.display==='flex')pResize();});
+function pResize(){} // no-op in integrated mode
 
 function setPipeTool(t){
   pTool=t;pS.pipeStart=null;
   document.querySelectorAll('.ptool').forEach(b=>b.classList.remove('active'));
   const btn=document.getElementById('ptool-'+t);if(btn)btn.classList.add('active');
   var jp=document.getElementById('junc-picker');if(jp&&t!=='junc')jp.style.display='none';
-  pCv.style.cursor=t==='select'?'default':t==='delete'?'not-allowed':'crosshair';
+  if(pCv) pCv.style.cursor=t==='select'?'default':t==='delete'?'not-allowed':'crosshair';
   pRender();
 }
 
@@ -16793,8 +16724,9 @@ function ptLineDist(px,py,ax,ay,bx,by){
 
 function pDown(e){
   const r=pCv.getBoundingClientRect();
-  var rx=e.clientX-r.left,ry=e.clientY-r.top;
-  var _w=pWorld(rx,ry);rx=_w.x;ry=_w.y; // convert to world coords
+  var rx=(e.clientX-r.left)*(pCv.width/r.width);
+  var ry=(e.clientY-r.top)*(pCv.height/r.height);
+  var _w=pWorld(rx,ry);rx=_w.x;ry=_w.y;
   var sx=pSnap(rx),sy=pSnap(ry);
   if(pTool==='select'){
     const nd=pNodeAt(rx,ry);
@@ -16867,7 +16799,7 @@ function pDown(e){
 }
 function pMove(e){
   const r=pCv.getBoundingClientRect();
-  var _wm=pWorld(e.clientX-r.left,e.clientY-r.top);
+  var _wm=pWorld((e.clientX-r.left)*(pCv.width/r.width),(e.clientY-r.top)*(pCv.height/r.height));
   var rx=_wm.x,ry=_wm.y;
   // Rotation drag
   if(pS.rotatingNode&&pTool==='select'){
@@ -16913,27 +16845,11 @@ function pUp(){
 }
 
 // ===== RENDER =====
-function pRender(){
+function pRender(){if(pipeMode)redraw();}
+function pDrawPipeLayer(){
   if(!pCtx) return;
-  const W=pCv.width,H=pCv.height;
   const dark=!document.body.classList.contains('light-theme');
-  pCtx.clearRect(0,0,W,H);
-  pCtx.save();
-  pCtx.setTransform(pZoom,0,0,pZoom,pZoomOX,pZoomOY);
-  // Background
-  if(pGridMode==='grid'){
-    pCtx.strokeStyle=dark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.07)';
-    pCtx.lineWidth=1;
-    for(let gx=0;gx<W;gx+=pGridSize){pCtx.beginPath();pCtx.moveTo(gx,0);pCtx.lineTo(gx,H);pCtx.stroke();}
-    for(let gy=0;gy<H;gy+=pGridSize){pCtx.beginPath();pCtx.moveTo(0,gy);pCtx.lineTo(W,gy);pCtx.stroke();}
-    // Accent every 5 cells
-    pCtx.strokeStyle=dark?'rgba(255,255,255,0.13)':'rgba(0,0,0,0.13)';
-    for(let gx=0;gx<W;gx+=pGridSize*5){pCtx.beginPath();pCtx.moveTo(gx,0);pCtx.lineTo(gx,H);pCtx.stroke();}
-    for(let gy=0;gy<H;gy+=pGridSize*5){pCtx.beginPath();pCtx.moveTo(0,gy);pCtx.lineTo(W,gy);pCtx.stroke();}
-  } else if(pGridMode==='dots'){
-    pCtx.fillStyle=dark?'rgba(255,255,255,0.18)':'rgba(0,0,0,0.18)';
-    for(let gx=0;gx<W;gx+=pGridSize){for(let gy=0;gy<H;gy+=pGridSize){pCtx.beginPath();pCtx.arc(gx,gy,1.2,0,Math.PI*2);pCtx.fill();}}
-  }
+  pCtx.save(); // protect main canvas state
 
   const res=pS.results;
   // Pipes
@@ -17139,16 +17055,14 @@ function pRender(){
     }
     pCtx.restore();
   }
-  pCtx.restore(); // end zoom transform
-  // Rubber-band — world coords → screen coords for drawing
+  // Rubber-band in canvas coords (no zoom transform)
   if(pS.selRect){
-    var sx1=pS.selRect.ox*pZoom+pZoomOX,sy1=pS.selRect.oy*pZoom+pZoomOY;
-    var sw1=pS.selRect.w*pZoom,sh1=pS.selRect.h*pZoom;
     pCtx.strokeStyle='rgba(99,102,241,0.8)';pCtx.lineWidth=1.5;pCtx.setLineDash([5,3]);
-    pCtx.strokeRect(sx1,sy1,sw1,sh1);
-    pCtx.fillStyle='rgba(99,102,241,0.08)';pCtx.fillRect(sx1,sy1,sw1,sh1);
+    pCtx.strokeRect(pS.selRect.ox,pS.selRect.oy,pS.selRect.w,pS.selRect.h);
+    pCtx.fillStyle='rgba(99,102,241,0.08)';pCtx.fillRect(pS.selRect.ox,pS.selRect.oy,pS.selRect.w,pS.selRect.h);
     pCtx.setLineDash([]);
   }
+  pCtx.restore(); // end pipe layer — restore main canvas state
 }
 
 // ===== PROPERTIES PANEL =====
@@ -17612,15 +17526,16 @@ body>*:not(.canvas-area){display:none!important;}
 </div>
 
 <!-- ===== PIPE HYDRAULICS OVERLAY ===== -->
-<div id="pipe-overlay">
-  <div id="pipe-hdr">
-    <button class="p-hdr-btn" onclick="closePipeOverlay()">← חזור</button>
-    <span id="pipe-hdr-title">🔧 מחשב מפל לחץ — רשת צנרת</span>
-    <button class="p-hdr-btn" onclick="pClearAll()">נקה הכל</button>
-    <button class="p-hdr-btn primary" onclick="pCalc()">▶ חשב מפל לחץ</button>
+<div id="pipe-sidebar">
+  <div id="pipe-sb-hdr">
+    <span id="pipe-sb-title">🔧 מחשב צנרת</span>
+    <button class="p-hdr-btn primary" onclick="pCalc()">▶ חשב</button>
+    <button class="p-hdr-btn" onclick="pClearAll()">נקה</button>
+    <button class="p-hdr-btn" onclick="closePipeSidebar()" title="סגור">✕</button>
   </div>
-  <div id="pipe-body">
-    <div id="pipe-tools" style="position:relative;">
+  <div id="pipe-sb-body">
+    <div id="pipe-sb-tools">
+    <div id="pipe-tools">
       <div class="ptool-lbl">כלים</div>
       <button class="ptool active" id="ptool-select" onclick="setPipeTool('select')">↖ בחירה / גרירה</button>
       <div class="ptool-sep"></div>
@@ -17770,24 +17685,15 @@ body>*:not(.canvas-area){display:none!important;}
       <div class="ptool-sep"></div>
       <div class="ptool-lbl" style="font-size:9px;line-height:1.5;opacity:0.75;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
     </div>
-    <div class="p-drag-handle" id="p-drag-left" title="גרור לשינוי גודל"></div>
-    <div id="pipe-cvwrap" style="position:relative;">
-      <canvas id="pipe-cv"></canvas>
-      <!-- Zoom controls -->
-      <div class="pzoom-bar">
-        <button class="pzoom-btn" onclick="pZoomChange(-0.2)" title="הקטן">−</button>
-        <span id="pzoom-label">100%</span>
-        <button class="pzoom-btn" onclick="pZoomChange(0.2)" title="הגדל">+</button>
-        <button class="pzoom-btn" onclick="pZoomReset()" title="אפס זום" style="font-size:11px;width:32px;border-radius:8px;">1:1</button>
+    </div><!-- /pipe-sb-tools -->
+    <div id="pipe-sb-props">
+      <div id="pipe-props">
+        <div id="pipe-props-content"><p style="color:var(--text2);font-size:12px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p></div>
+        <div id="pipe-results"></div>
       </div>
-    </div>
-    <div class="p-drag-handle" id="p-drag-right" title="גרור לשינוי גודל"></div>
-    <div id="pipe-props">
-      <div id="pipe-props-content"><p style="color:var(--text2);font-size:12px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p></div>
-      <div id="pipe-results"></div>
-    </div>
-  </div>
-</div>
+    </div><!-- /pipe-sb-props -->
+  </div><!-- /pipe-sb-body -->
+</div><!-- /pipe-sidebar -->
 
 </body>
 </html>
