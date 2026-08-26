@@ -1562,11 +1562,8 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 .fp-proto.visible{display:flex;}
 /* ===== PIPE HYDRAULICS ===== */
 #pipe-overlay{position:fixed;inset:0;background:var(--bg);z-index:10001;display:none;flex-direction:column;font-family:'Assistant',sans-serif;}
-#pipe-tools,#pipe-props{transition:width 0.2s,padding 0.2s,min-width 0.2s;}
-#pipe-tools.p-collapsed{width:0!important;padding:0!important;overflow:hidden!important;min-width:0!important;}
-#pipe-props.p-collapsed{width:0!important;padding:0!important;overflow:hidden!important;min-width:0!important;}
-.p-side-toggle{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:18px;height:44px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;border-radius:4px;}
-.p-side-toggle:hover{background:var(--surface2);color:var(--text);}
+.p-drag-handle{width:5px;background:var(--border);cursor:col-resize;flex-shrink:0;transition:background 0.15s;user-select:none;}
+.p-drag-handle:hover,.p-drag-handle.p-dragging{background:var(--accent);}
 .pzoom-bar{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:4px 10px;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
 .pzoom-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:16px;font-weight:bold;display:flex;align-items:center;justify-content:center;line-height:1;}
 .pzoom-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
@@ -16606,21 +16603,39 @@ function pZoomChange(delta){
 function pZoomReset(){pZoom=1;pZoomOX=0;pZoomOY=0;document.getElementById('pzoom-label').textContent='100%';pRender();}
 function pWorld(rx,ry){return{x:(rx-pZoomOX)/pZoom,y:(ry-pZoomOY)/pZoom};}
 
-// ===== SIDEBAR TOGGLE =====
-function pToggleSide(which){
-  if(which==='tools'){
-    var el=document.getElementById('pipe-tools');
-    var btn=document.getElementById('ptoggle-tools');
-    var collapsed=el.classList.toggle('p-collapsed');
-    btn.textContent=collapsed?'▶':'◀';
-  } else {
-    var el2=document.getElementById('pipe-props');
-    var btn2=document.getElementById('ptoggle-props');
-    var collapsed2=el2.classList.toggle('p-collapsed');
-    btn2.textContent=collapsed2?'◀':'▶';
+// ===== SIDEBAR DRAG-RESIZE =====
+(function(){
+  function initDragHandle(handleId, targetId, side){
+    var handle=document.getElementById(handleId);
+    var target=document.getElementById(targetId);
+    if(!handle||!target) return;
+    var dragging=false,startX,startW;
+    handle.addEventListener('mousedown',function(e){
+      dragging=true;startX=e.clientX;startW=target.offsetWidth;
+      handle.classList.add('p-dragging');
+      document.body.style.cursor='col-resize';
+      document.body.style.userSelect='none';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove',function(e){
+      if(!dragging) return;
+      var dx=side==='left'?(startX-e.clientX):(e.clientX-startX);
+      var newW=Math.max(0,Math.min(600,startW+dx));
+      target.style.width=newW+'px';
+      target.style.flexShrink='0';
+      if(newW<20) target.style.overflow='hidden';
+      else target.style.overflow='';
+      pResize();
+    });
+    document.addEventListener('mouseup',function(){
+      if(!dragging) return;
+      dragging=false;handle.classList.remove('p-dragging');
+      document.body.style.cursor='';document.body.style.userSelect='';
+    });
   }
-  pResize();
-}
+  initDragHandle('p-drag-left','pipe-tools','left');
+  initDragHandle('p-drag-right','pipe-props','right');
+})();
 
 // ===== PIPE KEYBOARD =====
 function pDeleteSelected(){
@@ -17815,10 +17830,8 @@ body>*:not(.canvas-area){display:none!important;}
       <div class="ptool-sep"></div>
       <div class="ptool-lbl" style="font-size:9px;line-height:1.5;opacity:0.75;">💡 הוסף מקור לחץ, צמתים, ופתחי יציאה. חבר ביניהם בצינורות. לחץ על אלמנט לעריכת המאפיינים שלו.</div>
     </div>
+    <div class="p-drag-handle" id="p-drag-left" title="גרור לשינוי גודל"></div>
     <div id="pipe-cvwrap" style="position:relative;">
-      <!-- Toggle buttons on canvas edges -->
-      <button class="p-side-toggle" id="ptoggle-tools" onclick="pToggleSide('tools')" style="right:0;transform:translateY(-50%)" title="הסתר/הצג כלים">◀</button>
-      <button class="p-side-toggle" id="ptoggle-props" onclick="pToggleSide('props')" style="left:0;transform:translateY(-50%)" title="הסתר/הצג מאפיינים">▶</button>
       <canvas id="pipe-cv"></canvas>
       <!-- Zoom controls -->
       <div class="pzoom-bar">
@@ -17828,6 +17841,7 @@ body>*:not(.canvas-area){display:none!important;}
         <button class="pzoom-btn" onclick="pZoomReset()" title="אפס זום" style="font-size:11px;width:32px;border-radius:8px;">1:1</button>
       </div>
     </div>
+    <div class="p-drag-handle" id="p-drag-right" title="גרור לשינוי גודל"></div>
     <div id="pipe-props">
       <div id="pipe-props-content"><p style="color:var(--text2);font-size:12px;text-align:center;margin-top:20px;">לחץ על אלמנט לעריכה</p></div>
       <div id="pipe-results"></div>
