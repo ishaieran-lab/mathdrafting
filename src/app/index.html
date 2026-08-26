@@ -4474,7 +4474,7 @@ function redraw() {
   }
   // empty state overlay
   const _es=document.getElementById('canvas-empty-state');
-  if(_es) _es.style.opacity=(els.length===0?'1':'0');
+  if(_es) _es.style.opacity=(els.length===0&&pS.nodes.length===0?'1':'0');
   // minimap
   _drawMinimap();
   // Draw flood fill layer (offscreen canvas) on top
@@ -16581,15 +16581,7 @@ function pJbUpdateK(){
   var el=document.getElementById('jb-k-display');
   if(el) el.textContent='K = '+k.toFixed(2)+(pJuncPreset.bendType==='bend'?' | R/D = '+pJuncPreset.bendRD:'');
 }
-function pToggleVisc(){
-  var dyn=document.getElementById('visc-dyn-row'),kin=document.getElementById('visc-kin-row');
-  var bd=document.getElementById('vbtn-dyn'),bk=document.getElementById('vbtn-kin');
-  if(!dyn) return;
-  var isDyn=pViscMode==='dynamic';
-  dyn.style.display=isDyn?'':'none';kin.style.display=isDyn?'none':'';
-  bd.style.background=isDyn?'rgba(108,99,255,0.25)':'none';bd.style.borderColor=isDyn?'var(--accent)':'var(--border)';bd.style.color=isDyn?'var(--accent)':'var(--text2)';
-  bk.style.background=isDyn?'none':'rgba(108,99,255,0.25)';bk.style.borderColor=isDyn?'var(--border)':'var(--accent)';bk.style.color=isDyn?'var(--text2)':'var(--accent)';
-}
+function pToggleVisc(){pShowProps();}
 
 // ===== PIPE ICONS =====
 var pPipeImgs={};
@@ -17085,6 +17077,32 @@ function pShowProps(){
     var qHint=n.type==='source'?'חיובי=כניסה לרשת':n.type==='outlet'?'חיובי=יציאה מרשת':'חיובי=הזנה, שלילי=צריכה';
     html+=`<div class="pp-row"><label class="pp-lbl">ספיקה (${Q_UNIT_LABEL[pFlowUnit]}) — ${qHint}</label>
       <input class="pp-inp" type="number" value="${qDisp}" placeholder="לא ידועה" step="any" oninput="pUpNode('Q',this.value===''?null:pToQms(this.value))"></div>`;
+    if(n.type==='source'){
+      var isDyn=pViscMode==='dynamic';
+      var pUnitOpts=Object.entries(P_UNIT_LABEL).map(([k,v])=>`<option value="${k}"${pPressUnit===k?' selected':''}>${v}</option>`).join('');
+      var qUnitOpts=Object.entries(Q_UNIT_LABEL).map(([k,v])=>`<option value="${k}"${pFlowUnit===k?' selected':''}>${v}</option>`).join('');
+      var muDisp=isDyn?pMu.toFixed(6):(pMu/pRho*1e6).toFixed(3);
+      html+=`<div class="pp-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:6px">
+        <label class="pp-lbl" style="font-weight:700;color:var(--accent);margin-bottom:5px;display:block">⚙ יחידות ונוזל</label>
+        <label class="pp-lbl">יחידות לחץ</label>
+        <select class="pp-inp" onchange="pSetPressUnit(this.value)" style="margin-bottom:6px">${pUnitOpts}</select>
+        <label class="pp-lbl">יחידות ספיקה</label>
+        <select class="pp-inp" onchange="pSetFlowUnit(this.value)" style="margin-bottom:6px">${qUnitOpts}</select>
+        <label class="pp-lbl">צפיפות ρ (kg/m³)</label>
+        <input class="pp-inp" type="number" value="${pRho}" min="1" max="20000" step="1" onchange="pRho=parseFloat(this.value)||1000" style="margin-bottom:6px">
+        <label class="pp-lbl">צמיגות</label>
+        <div style="display:flex;gap:4px;margin-bottom:5px">
+          <button onclick="pViscMode='dynamic';pShowProps()" style="flex:1;font-size:10px;padding:3px 4px;border-radius:5px;border:1px solid ${isDyn?'var(--accent)':'var(--border)'};background:${isDyn?'rgba(108,99,255,0.2)':'none'};color:${isDyn?'var(--accent)':'var(--text2)'};cursor:pointer">μ דינמית</button>
+          <button onclick="pViscMode='kinematic';pShowProps()" style="flex:1;font-size:10px;padding:3px 4px;border-radius:5px;border:1px solid ${!isDyn?'var(--accent)':'var(--border)'};background:${!isDyn?'rgba(108,99,255,0.2)':'none'};color:${!isDyn?'var(--accent)':'var(--text2)'};cursor:pointer">ν קינמטית</button>
+        </div>
+        ${isDyn?
+          `<input class="pp-inp" type="number" value="${muDisp}" step="0.0001" min="0.00001" placeholder="μ (Pa·s)" onchange="pMu=parseFloat(this.value)||0.001">
+           <div style="font-size:9px;color:var(--text2);margin-top:2px">Pa·s | מים@20°C ≈ 0.001</div>`:
+          `<input class="pp-inp" type="number" value="${muDisp}" step="0.1" min="0.001" placeholder="ν (cSt)" onchange="pMu=(parseFloat(this.value)||1)*1e-6*pRho">
+           <div style="font-size:9px;color:var(--text2);margin-top:2px">cSt (mm²/s) | מים@20°C ≈ 1 cSt</div>`
+        }
+      </div>`;
+    }
     if(n.type==='junc'){
       const bendOpts=Object.entries(NODE_BEND).map(([k,v])=>`<option value="${k}"${(n.bendType||'none')===k?' selected':''}>${v.label}</option>`).join('');
       const bK=pNodeBendK(n);
@@ -17208,14 +17226,8 @@ function pPipeR(pipe,Q){
 }
 
 function pCalc(){
-  pRho=parseFloat(document.getElementById('p-rho').value)||1000;
-  if(pViscMode==='kinematic'){
-    var nuVal=parseFloat(document.getElementById('p-nu').value)||1.0;
-    var nuMs=pNuUnit==='st'?nuVal*1e-4:pNuUnit==='cst'?nuVal*1e-6:nuVal; // m²/s
-    pMu=nuMs*pRho;
-  } else {
-    pMu=parseFloat(document.getElementById('p-mu').value)||0.001;
-  }
+  if(!pRho||pRho<1) pRho=1000;
+  if(!pMu||pMu<1e-9) pMu=0.001;
   const {nodes,pipes}=pS;
   if(nodes.length<2){alert('יש להוסיף לפחות 2 צמתים');return;}
   if(pipes.length<1){alert('יש להוסיף לפחות צינור אחד');return;}
@@ -17536,11 +17548,7 @@ body>*:not(.canvas-area){display:none!important;}
   <div id="pipe-sb-body">
     <div id="pipe-sb-tools">
     <div id="pipe-tools">
-      <div class="ptool-lbl">כלים</div>
-      <button class="ptool active" id="ptool-select" onclick="setPipeTool('select')">↖ בחירה / גרירה</button>
-      <div class="ptool-sep"></div>
-      <div class="ptool-lbl">הוסף צמתים</div>
-      <button class="ptool" id="ptool-source" onclick="setPipeTool('source')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 12 L12 4"/><path d="M12 12 L19.2 16"/><path d="M12 12 L4.8 16"/><circle cx="12" cy="12" r="3" fill="#22c55e" stroke="none"/></svg> מקור לחץ (משאבה)</button>
+      <button class="ptool" id="ptool-source" onclick="setPipeTool('source')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 12 L12 4"/><path d="M12 12 L19.2 16"/><path d="M12 12 L4.8 16"/><circle cx="12" cy="12" r="3" fill="#22c55e" stroke="none"/></svg> מקור לחץ</button>
       <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc');document.getElementById('junc-picker').style.display=''" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg> צומת / מרפק</button>
       <div id="junc-picker" style="display:none;margin:4px 0 0 0;background:var(--surface2);border-radius:8px;padding:7px 6px;border:1px solid var(--border)">
         <div style="font-size:10px;color:var(--text2);margin-bottom:5px">בחר סוג חיבור:</div>
@@ -17587,89 +17595,13 @@ body>*:not(.canvas-area){display:none!important;}
           <div id="jb-k-display" style="font-size:10px;color:var(--accent);text-align:left">K = 0.40 | R/D = 1.5</div>
         </div>
       </div>
-      <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')">🟠 פתח יציאה</button>
+      <button class="ptool" id="ptool-outlet" onclick="setPipeTool('outlet')" style="display:flex;align-items:center;gap:5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2.2"><polygon points="12,2 22,20 2,20"/></svg> פתח יציאה</button>
+      <button class="ptool" id="ptool-pipe" onclick="setPipeTool('pipe')" style="display:flex;align-items:center;gap:5px"><svg width="16" height="8" viewBox="0 0 32 8"><line x1="0" y1="4" x2="32" y2="4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> צינור</button>
       <div class="ptool-sep"></div>
-      <div class="ptool-lbl">חיבורים</div>
-      <button class="ptool" id="ptool-pipe" onclick="setPipeTool('pipe')">━ צינור</button>
-      <div class="ptool-sep"></div>
-      <button class="ptool" id="ptool-delete" onclick="setPipeTool('delete')" style="color:#ef4444">🗑 מחיקה</button>
-      <div class="ptool-sep"></div>
-      <div class="ptool-lbl">יחידות לחץ</div>
-      <div class="p-inp-row">
-        <select class="p-inp" id="p-unit" onchange="pSetPressUnit(this.value)">
-          <option value="kpa">kPa</option>
-          <option value="bar">bar</option>
-          <option value="barg">bar (gauge)</option>
-          <option value="bara">bar (abs)</option>
-          <option value="psig">PSI gauge</option>
-          <option value="psia">PSI (abs)</option>
-        </select>
-      </div>
-      <div class="ptool-lbl">יחידות ספיקה</div>
-      <div class="p-inp-row">
-        <select class="p-inp" id="q-unit" onchange="pSetFlowUnit(this.value)">
-          <option value="ls">L/s</option>
-          <option value="mh">m³/h</option>
-          <option value="lh">L/hr</option>
-          <option value="gpm">GPM</option>
-          <option value="ms">m³/s</option>
-        </select>
-      </div>
-      <div class="ptool-sep"></div>
-      <div class="ptool-lbl">נוזל</div>
-      <div class="p-inp-row">
-        <div class="p-inp-lbl">צפיפות ρ (kg/m³)</div>
-        <input class="p-inp" id="p-rho" type="number" value="1000" min="100" max="20000">
-      </div>
-      <div class="p-inp-row" style="gap:3px">
-        <div style="display:flex;gap:3px;align-items:center">
-          <button onclick="pViscMode='dynamic';pToggleVisc()" id="vbtn-dyn" style="flex:1;font-size:10px;padding:2px 4px;border-radius:5px;border:1px solid var(--accent);background:rgba(108,99,255,0.25);color:var(--accent);cursor:pointer">μ דינמית</button>
-          <button onclick="pViscMode='kinematic';pToggleVisc()" id="vbtn-kin" style="flex:1;font-size:10px;padding:2px 4px;border-radius:5px;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer">ν קינמטית</button>
-        </div>
-      </div>
-      <div class="p-inp-row" id="visc-dyn-row">
-        <div class="p-inp-lbl">צמיגות דינמית μ (Pa·s)</div>
-        <input class="p-inp" id="p-mu" type="number" value="0.001" step="0.0001" min="0.00001">
-      </div>
-      <div class="p-inp-row" id="visc-kin-row" style="display:none">
-        <div class="p-inp-lbl">צמיגות קינמטית ν</div>
-        <div style="display:flex;gap:3px">
-          <input class="p-inp" id="p-nu" type="number" value="1.0" step="0.1" min="0.001" style="flex:1">
-          <select class="p-inp" id="p-nu-unit" onchange="pNuUnit=this.value" style="width:50px;font-size:10px">
-            <option value="cst">cSt</option>
-            <option value="st">St</option>
-            <option value="m2s">m²/s</option>
-          </select>
-        </div>
-        <div style="font-size:9px;color:var(--text2);margin-top:2px">1 cSt = 1 mm²/s | מים@20°C ≈ 1 cSt</div>
-      </div>
-      <div class="ptool-sep"></div>
-      <button class="ptool" onclick="var p=document.getElementById('p-bg-panel');p.style.display=p.style.display==='none'?'block':'none'" style="display:flex;align-items:center;gap:7px">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor" stroke="none"/></svg>
-        רקע
-      </button>
-      <div id="p-bg-panel" style="display:none;background:var(--surface2);border-radius:8px;padding:8px;border:1px solid var(--border);margin-top:2px">
-        <div style="font-size:11px;color:var(--text2);margin-bottom:5px">סוג רקע:</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:8px">
-          <button onclick="pGridMode='none';pRender()" style="padding:5px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">חלק</button>
-          <button onclick="pGridMode='grid';pRender()" style="padding:5px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">רשת</button>
-          <button onclick="pGridMode='dots';pRender()" style="padding:5px;border-radius:6px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;font-size:11px">נקודות</button>
-        </div>
-        <div style="font-size:11px;color:var(--text2);margin-bottom:4px">גודל תא (px):</div>
-        <select class="p-inp" style="margin-bottom:7px" onchange="pGridSize=parseInt(this.value);pRender()">
-          <option value="20">20</option>
-          <option value="40" selected>40</option>
-          <option value="60">60</option>
-          <option value="80">80</option>
-          <option value="100">100</option>
-        </select>
-      </div>
       <div class="p-inp-row" style="display:flex;gap:6px;align-items:center;padding:4px 0">
         <input type="checkbox" id="cb-snap" checked onchange="pSnapGrid=this.checked" style="accent-color:var(--accent);width:15px;height:15px">
         <label for="cb-snap" style="font-size:13px;color:var(--text);cursor:pointer">הצמד לרשת</label>
       </div>
-      <div class="ptool-sep"></div>
-      <div class="ptool-lbl">חישוב אוטומטי</div>
       <div class="p-inp-row" style="display:flex;gap:4px;align-items:center">
         <input type="checkbox" id="cb-autocalc" checked onchange="pAutoCalc=this.checked" style="accent-color:var(--accent)">
         <label for="cb-autocalc" style="font-size:11px;color:var(--text);cursor:pointer">עדכן L בגרירה</label>
