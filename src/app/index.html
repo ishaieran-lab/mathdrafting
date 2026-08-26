@@ -16461,11 +16461,12 @@ var PIPE_FITTINGS={
 };
 // NODE_BEND: base K values at 90°; actual K computed by pNodeBendK(nd)
 var NODE_BEND={
-  none:  {label:'ללא / ישר',          K:0,    R:0},
-  miter: {label:'מרפק חד (Mitered)',   K:1.3,  R:0},
-  bend:  {label:'ברך (רדיוס)',         K:0.4,  R:1.5}, // R/D and angle are per-node
-  tee_b: {label:'T — הסתעפות',        K:1.0,  R:0},
-  tee_s: {label:'T — זרימה ישרה',     K:0.6,  R:0},
+  none:   {label:'ללא / ישר',          K:0,    R:0},
+  miter:  {label:'מרפק חד (Mitered)',   K:1.3,  R:0},
+  bend:   {label:'ברך (רדיוס)',         K:0.4,  R:1.5},
+  tee_b:  {label:'Y / הסתעפות',        K:1.0,  R:0},
+  tee_s:  {label:'T — זרימה ישרה',     K:0.6,  R:0},
+  u_bend: {label:'U-bend (180°)',       K:2.2,  R:0},
 };
 // Compute K for a junction node (considers angle + R/D)
 function pNodeBendK(nd){
@@ -16475,6 +16476,7 @@ function pNodeBendK(nd){
   if(bt==='none') return 0;
   if(bt==='tee_b') return 1.0;
   if(bt==='tee_s') return 0.6;
+  if(bt==='u_bend') return 2.2;
   if(bt==='miter') return 1.3*(angle/90); // scales linearly with angle
   if(bt==='bend'){
     var k90=rd>=3?0.2:rd>=2?0.3:0.4; // K at 90° for each R/D
@@ -16589,6 +16591,38 @@ function pToggleVisc(){
   bk.style.background=isDyn?'none':'rgba(108,99,255,0.25)';bk.style.borderColor=isDyn?'var(--border)':'var(--accent)';bk.style.color=isDyn?'var(--text2)':'var(--accent)';
 }
 
+// ===== PIPE ICONS =====
+var pPipeImgs={};
+function pLoadPipeImgs(){
+  var map={
+    miter:'../assets/icons/pipes/90.jpg',
+    bend:'../assets/icons/pipes/90 f.jpg',
+    tee_b:'../assets/icons/pipes/1-2.jpg',
+    tee_s:'../assets/icons/pipes/1-2.jpg',
+    u_bend:'../assets/icons/pipes/u.jpg'
+  };
+  Object.keys(map).forEach(function(k){
+    if(pPipeImgs[k]) return;
+    var img=new Image();
+    img.onload=function(){
+      var oc=document.createElement('canvas');
+      oc.width=img.width;oc.height=img.height;
+      var cx=oc.getContext('2d');
+      cx.drawImage(img,0,0);
+      var d=cx.getImageData(0,0,oc.width,oc.height);
+      // Remove light background (checkered grey/white)
+      for(var i=0;i<d.data.length;i+=4){
+        var r=d.data[i],g=d.data[i+1],b=d.data[i+2];
+        if(r>140&&g>140&&b>140) d.data[i+3]=0;
+      }
+      cx.putImageData(d,0,0);
+      pPipeImgs[k]=oc;
+      pRender();
+    };
+    img.src=map[k];
+  });
+}
+
 // ===== PIPE ZOOM =====
 var pZoom=1,pZoomOX=0,pZoomOY=0;
 function pZoomChange(delta){
@@ -16686,6 +16720,7 @@ function openPipeOverlay(){
   document.removeEventListener('keydown',_pKeyDown);
   document.addEventListener('keydown',_pKeyDown);
   pSetupDragHandles();
+  pLoadPipeImgs();
   pResize();
 }
 function pWheel(e){
@@ -17031,105 +17066,31 @@ function pRender(){
         var oth=pS.nodes.find(function(nn){return nn.id===(pp.n1id===nd.id?pp.n2id:pp.n1id);});
         if(oth) dirs2.push(Math.atan2(oth.y-ny,oth.x-nx));
       });
-      if(bt==='miter'||bt==='bend'){
-        // === SCHEMATIC ELBOW — clean L-shaped pipe cross-section ===
-        var bendRad2=(nd.bendAngle||90)*Math.PI/180;
-        var iRot=nd.iconRotation||0;
-        var ed1=dirs2.length>=1?dirs2[0]:(Math.PI+iRot);
-        var ed2=dirs2.length>=2?dirs2[1]:ed1-bendRad2;
-        // Normalise span
-        var span=ed2-ed1;
-        while(span<=-Math.PI)span+=Math.PI*2;while(span>Math.PI)span-=Math.PI*2;
-        // Arm length and pipe half-width
-        var aLen=R+4, hw2=7;
-        // Inner perpendicular = toward concave side (tighter side of bend)
-        // For canvas (y-down): rotate d by -90° = (sin(d), -cos(d)) points "right of d"
-        // For a clockwise visual turn (span>0), "inside" = right of arm1 = (sin(d1), -cos(d1))
-        var iSign=span>0?1:-1;
-        function iPerp(d){return{x:iSign*Math.sin(d),y:-iSign*Math.cos(d)};}
-        function oPerp(d){return{x:-iSign*Math.sin(d),y:iSign*Math.cos(d)};}
-        var ip1=iPerp(ed1),op1=oPerp(ed1);
-        var ip2=iPerp(ed2),op2=oPerp(ed2);
-        // Line intersection helper
-        function lineXY(px,py,pdx,pdy,qx,qy,qdx,qdy){
-          var cr=pdx*qdy-pdy*qdx;if(Math.abs(cr)<1e-8)return{x:px+pdx*aLen,y:py+pdy*aLen};
-          var t=((qx-px)*qdy-(qy-py)*qdx)/cr;
-          return{x:px+pdx*t,y:py+pdy*t};
-        }
-        var d1dx=Math.cos(ed1),d1dy=Math.sin(ed1);
-        var d2dx=Math.cos(ed2),d2dy=Math.sin(ed2);
-        // Inner wall base points (at node)
-        var iw1x=nx+ip1.x*hw2,iw1y=ny+ip1.y*hw2;
-        var iw2x=nx+ip2.x*hw2,iw2y=ny+ip2.y*hw2;
-        // Outer wall base points (at node)
-        var ow1x=nx+op1.x*hw2,ow1y=ny+op1.y*hw2;
-        var ow2x=nx+op2.x*hw2,ow2y=ny+op2.y*hw2;
-        // Corner intersections
-        var IC=lineXY(iw1x,iw1y,d1dx,d1dy,iw2x,iw2y,d2dx,d2dy); // inner corner
-        var OC=lineXY(ow1x,ow1y,d1dx,d1dy,ow2x,ow2y,d2dx,d2dy); // outer corner
-        // Arm tip points
-        var A={x:nx+d1dx*aLen+ip1.x*hw2,y:ny+d1dy*aLen+ip1.y*hw2}; // arm1 inner tip
-        var B={x:nx+d1dx*aLen+op1.x*hw2,y:ny+d1dy*aLen+op1.y*hw2}; // arm1 outer tip
-        var C2={x:nx+d2dx*aLen+ip2.x*hw2,y:ny+d2dy*aLen+ip2.y*hw2}; // arm2 inner tip
-        var D2={x:nx+d2dx*aLen+op2.x*hw2,y:ny+d2dy*aLen+op2.y*hw2}; // arm2 outer tip
-        // === Draw filled pipe body ===
-        var bodyColor=dark?'rgba(99,102,241,0.25)':'rgba(99,102,241,0.15)';
-        var wallColor=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');
-        pCtx.lineCap='round';pCtx.lineJoin='round';
-        pCtx.beginPath();
-        pCtx.moveTo(A.x,A.y);
-        pCtx.lineTo(IC.x,IC.y); // inner wall arm1 → inner corner
-        pCtx.lineTo(C2.x,C2.y); // inner wall arm2
-        pCtx.lineTo(D2.x,D2.y); // arm2 end cap
-        if(bt==='bend'){
-          // Radius bend: curved outer corner with quadratic bezier
-          pCtx.lineTo(OC.x,OC.y);
-          // Control point for rounding — pull it toward the outer corner
-          pCtx.moveTo(D2.x,D2.y);
-          pCtx.lineTo(OC.x,OC.y);
-          pCtx.moveTo(OC.x,OC.y);
-          pCtx.lineTo(B.x,B.y);
+      // === DRAW JUNCTION USING PIPE ICON IMAGE ===
+      var imgKey=bt; // miter, bend, tee_b, tee_s, u_bend
+      var img=pPipeImgs[imgKey];
+      // Compute rotation:
+      // miter/bend canonical: arm1 points LEFT (π), arm2 points DOWN (π/2)
+      // tee/y canonical: single arm points UP (-π/2)
+      var iRot2=nd.iconRotation||0;
+      var rotBase=(bt==='tee_b'||bt==='tee_s')?(-Math.PI/2):Math.PI;
+      var rotAng=dirs2.length>=1?(dirs2[0]-rotBase):iRot2;
+      var sz=R*3.6; // icon size in pixels
+      if(bt==='miter'||bt==='bend'||bt==='tee_b'||bt==='tee_s'||bt==='u_bend'){
+        pCtx.save();
+        pCtx.translate(nx,ny);
+        pCtx.rotate(rotAng);
+        if(img){
+          pCtx.drawImage(img,-sz/2,-sz/2,sz,sz);
         } else {
-          pCtx.lineTo(OC.x,OC.y); // outer corner (sharp miter)
-          pCtx.lineTo(B.x,B.y);
+          // Fallback while image loads: simple crosshair
+          pCtx.strokeStyle=dark?'#818cf8':'#4338ca';pCtx.lineWidth=2;
+          pCtx.beginPath();pCtx.arc(0,0,R,0,Math.PI*2);pCtx.stroke();
         }
-        pCtx.lineTo(A.x,A.y);
-        pCtx.fillStyle=bodyColor;pCtx.fill();
-        // === Redraw as stroke path for clean walls ===
-        pCtx.strokeStyle=wallColor;pCtx.lineWidth=sel?3:2.5;
-        // Outer wall (A→inner corner→C2) and end caps
-        pCtx.beginPath();
-        pCtx.moveTo(A.x,A.y);pCtx.lineTo(IC.x,IC.y);pCtx.lineTo(C2.x,C2.y);
-        pCtx.stroke();
-        // Outer wall (B→outer corner→D2)
-        pCtx.beginPath();
-        if(bt==='bend'){
-          pCtx.moveTo(B.x,B.y);pCtx.quadraticCurveTo(OC.x,OC.y,D2.x,D2.y);
-        } else {
-          pCtx.moveTo(B.x,B.y);pCtx.lineTo(OC.x,OC.y);pCtx.lineTo(D2.x,D2.y);
-        }
-        pCtx.stroke();
-        // End caps (perpendicular closing lines at arm tips)
-        pCtx.beginPath();pCtx.moveTo(A.x,A.y);pCtx.lineTo(B.x,B.y);pCtx.stroke(); // arm1 cap
-        pCtx.beginPath();pCtx.moveTo(C2.x,C2.y);pCtx.lineTo(D2.x,D2.y);pCtx.stroke(); // arm2 cap
-        // Selection / hover indicator
-        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+6,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
-        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,R+8,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
-      } else if(bt==='tee_b'||bt==='tee_s'){
-        // T fitting: 3-arm schematic (horizontal + one branch down)
-        var tw=7,tL=R+4;
-        var wallCol2=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');
-        pCtx.strokeStyle=wallCol2;pCtx.lineWidth=2.5;pCtx.lineCap='round';
-        // Main run (horizontal)
-        pCtx.beginPath();pCtx.moveTo(nx-tL,ny-tw);pCtx.lineTo(nx+tL,ny-tw);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx-tL,ny+tw);pCtx.lineTo(nx+tL,ny+tw);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx-tL,ny-tw);pCtx.lineTo(nx-tL,ny+tw);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx+tL,ny-tw);pCtx.lineTo(nx+tL,ny+tw);pCtx.stroke();
-        // Branch (downward)
-        pCtx.beginPath();pCtx.moveTo(nx-tw,ny+tw);pCtx.lineTo(nx-tw,ny+tL);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx+tw,ny+tw);pCtx.lineTo(nx+tw,ny+tL);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx-tw,ny+tL);pCtx.lineTo(nx+tw,ny+tL);pCtx.stroke();
-        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+6,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        pCtx.restore();
+        // Selection ring
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,sz/2+4,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,sz/2+6,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
       } else {
         // Plain junction: small cross-hair in a circle
         pCtx.beginPath();pCtx.arc(nx,ny,R,0,Math.PI*2);
@@ -17668,53 +17629,26 @@ body>*:not(.canvas-area){display:none!important;}
       <button class="ptool" id="ptool-junc" onclick="setPipeTool('junc');document.getElementById('junc-picker').style.display=''" style="display:flex;align-items:center;gap:5px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.2" stroke-linecap="round"><polyline points="5,5 5,18 18,18"/></svg> צומת / מרפק</button>
       <div id="junc-picker" style="display:none;margin:4px 0 0 0;background:var(--surface2);border-radius:8px;padding:7px 6px;border:1px solid var(--border)">
         <div style="font-size:10px;color:var(--text2);margin-bottom:5px">בחר סוג חיבור:</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
           <!-- Sharp miter -->
-          <button onclick="pJuncPreset.bendType='miter';pJuncHighlight('miter');document.getElementById('junc-bend-sub').style.display='none'" id="jb-miter" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-              <rect width="38" height="38" rx="5" fill="var(--surface)"/>
-              <!-- pipe walls vertical -->
-              <line x1="12" y1="7" x2="12" y2="25" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
-              <line x1="18" y1="7" x2="18" y2="25" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
-              <!-- pipe walls horizontal -->
-              <line x1="12" y1="25" x2="31" y2="25" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
-              <line x1="12" y1="31" x2="31" y2="31" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
-              <!-- elbow cap -->
-              <circle cx="12" cy="25" r="4" fill="#6366f1"/>
-            </svg>
-            <span style="font-size:9px">90° חד</span>
+          <button onclick="pJuncPreset.bendType='miter';pJuncHighlight('miter');document.getElementById('junc-bend-sub').style.display='none'" id="jb-miter" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:6px;border:2px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text)">
+            <img src="../assets/icons/pipes/90.jpg" style="width:44px;height:44px;object-fit:contain;mix-blend-mode:multiply">
+            <span style="font-size:10px">90° חד</span>
           </button>
           <!-- Radius bend -->
-          <button onclick="pJuncPreset.bendType='bend';pJuncHighlight('bend');document.getElementById('junc-bend-sub').style.display=''" id="jb-bend" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-              <rect width="38" height="38" rx="5" fill="var(--surface)"/>
-              <!-- vertical pipe walls -->
-              <line x1="12" y1="7" x2="12" y2="20" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
-              <line x1="18" y1="7" x2="18" y2="17" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
-              <!-- curved elbow outer wall -->
-              <path d="M12 20 Q12 31 23 31" stroke="#6366f1" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-              <!-- curved elbow inner wall -->
-              <path d="M18 17 Q18 25 26 25" stroke="#a5b4fc" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-              <!-- horizontal pipe walls -->
-              <line x1="23" y1="31" x2="31" y2="31" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
-              <line x1="26" y1="25" x2="31" y2="25" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-            <span style="font-size:9px">ברך</span>
+          <button onclick="pJuncPreset.bendType='bend';pJuncHighlight('bend');document.getElementById('junc-bend-sub').style.display=''" id="jb-bend" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:6px;border:2px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text)">
+            <img src="../assets/icons/pipes/90 f.jpg" style="width:44px;height:44px;object-fit:contain;mix-blend-mode:multiply">
+            <span style="font-size:10px">ברך</span>
           </button>
-          <!-- T fitting -->
-          <button onclick="pJuncPreset.bendType='tee_b';pJuncHighlight('tee_b');document.getElementById('junc-bend-sub').style.display='none'" id="jb-tee_b" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px;border-radius:6px;border:2px solid var(--border);background:none;cursor:pointer;color:var(--text)">
-            <svg width="38" height="38" viewBox="0 0 38 38" fill="none">
-              <rect width="38" height="38" rx="5" fill="var(--surface)"/>
-              <!-- horizontal pipe -->
-              <line x1="5" y1="16" x2="33" y2="16" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
-              <line x1="5" y1="22" x2="33" y2="22" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
-              <!-- branch down -->
-              <line x1="16" y1="22" x2="16" y2="33" stroke="#6366f1" stroke-width="3.5" stroke-linecap="round"/>
-              <line x1="22" y1="22" x2="22" y2="33" stroke="#a5b4fc" stroke-width="1.5" stroke-linecap="round"/>
-              <!-- cap at branch top -->
-              <rect x="14" y="21" width="10" height="4" rx="1" fill="#6366f1"/>
-            </svg>
-            <span style="font-size:9px">T / הסתעפות</span>
+          <!-- T / Y fitting -->
+          <button onclick="pJuncPreset.bendType='tee_b';pJuncHighlight('tee_b');document.getElementById('junc-bend-sub').style.display='none'" id="jb-tee_b" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:6px;border:2px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text)">
+            <img src="../assets/icons/pipes/1-2.jpg" style="width:44px;height:44px;object-fit:contain;mix-blend-mode:multiply">
+            <span style="font-size:10px">Y / הסתעפות</span>
+          </button>
+          <!-- U-bend -->
+          <button onclick="pJuncPreset.bendType='u_bend';pJuncHighlight('u_bend');document.getElementById('junc-bend-sub').style.display='none'" id="jb-u_bend" style="display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px;border-radius:6px;border:2px solid var(--border);background:var(--surface);cursor:pointer;color:var(--text)">
+            <img src="../assets/icons/pipes/u.jpg" style="width:44px;height:44px;object-fit:contain;mix-blend-mode:multiply">
+            <span style="font-size:10px">U-bend</span>
           </button>
         </div>
         <!-- Bend sub-panel: angle + R/D -->
