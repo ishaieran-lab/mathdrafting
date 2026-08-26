@@ -16864,90 +16864,112 @@ function pRender(){
         if(oth) dirs2.push(Math.atan2(oth.y-ny,oth.x-nx));
       });
       if(bt==='miter'||bt==='bend'){
-        // === REALISTIC ELBOW FITTING ===
-        // Resolve drawing directions
+        // === SCHEMATIC ELBOW — clean L-shaped pipe cross-section ===
         var bendRad2=(nd.bendAngle||90)*Math.PI/180;
-        var ed1=dirs2.length>=1?dirs2[0]:Math.PI; // default: pipe goes left
-        var ed2=dirs2.length>=2?dirs2[1]:ed1-bendRad2; // default: second pipe at bend angle
-        // Normalise arc span to shortest path
+        var ed1=dirs2.length>=1?dirs2[0]:Math.PI;
+        var ed2=dirs2.length>=2?dirs2[1]:ed1-bendRad2;
+        // Normalise span
         var span=ed2-ed1;
         while(span<=-Math.PI)span+=Math.PI*2;while(span>Math.PI)span-=Math.PI*2;
-        var isCCW=span<0;
-        var oR=R,iR=R*0.38; // outer / inner radius of donut sector
-        var arcMid=ed1+span/2;
-        // Gradient: perpendicular to arc midpoint = highlight/shadow
-        var gpx=Math.cos(arcMid+Math.PI/2)*oR,gpy=Math.sin(arcMid+Math.PI/2)*oR;
-        var grd=pCtx.createLinearGradient(nx-gpx,ny-gpy,nx+gpx,ny+gpy);
-        if(dark){grd.addColorStop(0,'#a5b4fc');grd.addColorStop(0.45,'#6366f1');grd.addColorStop(1,'#312e81');}
-        else{grd.addColorStop(0,'#e0e7ff');grd.addColorStop(0.45,'#818cf8');grd.addColorStop(1,'#4338ca');}
-        // --- Donut sector fill ---
+        // Arm length and pipe half-width
+        var aLen=R+4, hw2=7;
+        // Inner perpendicular = toward concave side (tighter side of bend)
+        // For canvas (y-down): rotate d by -90° = (sin(d), -cos(d)) points "right of d"
+        // For a clockwise visual turn (span>0), "inside" = right of arm1 = (sin(d1), -cos(d1))
+        var iSign=span>0?1:-1;
+        function iPerp(d){return{x:iSign*Math.sin(d),y:-iSign*Math.cos(d)};}
+        function oPerp(d){return{x:-iSign*Math.sin(d),y:iSign*Math.cos(d)};}
+        var ip1=iPerp(ed1),op1=oPerp(ed1);
+        var ip2=iPerp(ed2),op2=oPerp(ed2);
+        // Line intersection helper
+        function lineXY(px,py,pdx,pdy,qx,qy,qdx,qdy){
+          var cr=pdx*qdy-pdy*qdx;if(Math.abs(cr)<1e-8)return{x:px+pdx*aLen,y:py+pdy*aLen};
+          var t=((qx-px)*qdy-(qy-py)*qdx)/cr;
+          return{x:px+pdx*t,y:py+pdy*t};
+        }
+        var d1dx=Math.cos(ed1),d1dy=Math.sin(ed1);
+        var d2dx=Math.cos(ed2),d2dy=Math.sin(ed2);
+        // Inner wall base points (at node)
+        var iw1x=nx+ip1.x*hw2,iw1y=ny+ip1.y*hw2;
+        var iw2x=nx+ip2.x*hw2,iw2y=ny+ip2.y*hw2;
+        // Outer wall base points (at node)
+        var ow1x=nx+op1.x*hw2,ow1y=ny+op1.y*hw2;
+        var ow2x=nx+op2.x*hw2,ow2y=ny+op2.y*hw2;
+        // Corner intersections
+        var IC=lineXY(iw1x,iw1y,d1dx,d1dy,iw2x,iw2y,d2dx,d2dy); // inner corner
+        var OC=lineXY(ow1x,ow1y,d1dx,d1dy,ow2x,ow2y,d2dx,d2dy); // outer corner
+        // Arm tip points
+        var A={x:nx+d1dx*aLen+ip1.x*hw2,y:ny+d1dy*aLen+ip1.y*hw2}; // arm1 inner tip
+        var B={x:nx+d1dx*aLen+op1.x*hw2,y:ny+d1dy*aLen+op1.y*hw2}; // arm1 outer tip
+        var C2={x:nx+d2dx*aLen+ip2.x*hw2,y:ny+d2dy*aLen+ip2.y*hw2}; // arm2 inner tip
+        var D2={x:nx+d2dx*aLen+op2.x*hw2,y:ny+d2dy*aLen+op2.y*hw2}; // arm2 outer tip
+        // === Draw filled pipe body ===
+        var bodyColor=dark?'rgba(99,102,241,0.25)':'rgba(99,102,241,0.15)';
+        var wallColor=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');
+        pCtx.lineCap='round';pCtx.lineJoin='round';
         pCtx.beginPath();
-        pCtx.arc(nx,ny,oR,ed1,ed2,isCCW);
-        pCtx.arc(nx,ny,iR,ed2,ed1,!isCCW);
-        pCtx.closePath();
-        pCtx.fillStyle=grd;pCtx.fill();
-        // Outer wall highlight
-        pCtx.beginPath();pCtx.arc(nx,ny,oR,ed1,ed2,isCCW);
-        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#c7d2fe':'#312e81');pCtx.lineWidth=sel?3:2;pCtx.stroke();
-        // Inner wall shadow
-        pCtx.beginPath();pCtx.arc(nx,ny,iR,ed1,ed2,isCCW);
-        pCtx.strokeStyle=dark?'rgba(30,27,75,0.8)':'rgba(196,181,253,0.6)';pCtx.lineWidth=1.5;pCtx.stroke();
-        // Radial side edges
-        [[ed1,false],[ed2,true]].forEach(function(pair){
-          var d=pair[0];
-          var ox=nx+Math.cos(d)*oR,oy=ny+Math.sin(d)*oR;
-          var ix=nx+Math.cos(d)*iR,iy=ny+Math.sin(d)*iR;
-          pCtx.beginPath();pCtx.moveTo(ox,oy);pCtx.lineTo(ix,iy);
-          pCtx.strokeStyle=dark?'#c7d2fe':'#312e81';pCtx.lineWidth=2;pCtx.stroke();
-        });
-        // End flanges (pipe collars)
-        var arcCR=(oR+iR)/2,hw=(oR-iR)/2;
-        [ed1,ed2].forEach(function(d){
-          var ex2=nx+Math.cos(d)*arcCR,ey2=ny+Math.sin(d)*arcCR;
-          var fnx=-Math.sin(d)*hw*1.35,fny=Math.cos(d)*hw*1.35;
-          pCtx.beginPath();pCtx.moveTo(ex2+fnx,ey2+fny);pCtx.lineTo(ex2-fnx,ey2-fny);
-          pCtx.strokeStyle=dark?'#e0e7ff':'#1e1b4b';pCtx.lineWidth=3.5;pCtx.lineCap='round';pCtx.stroke();
-          pCtx.beginPath();pCtx.arc(ex2,ey2,2.5,0,Math.PI*2);
-          pCtx.fillStyle=dark?'#e0e7ff':'#1e1b4b';pCtx.fill();
-        });
-        // Miter: sharp corner dot
-        if(bt==='miter'){
-          pCtx.fillStyle=dark?'#e0e7ff':'#1e1b4b';
-          pCtx.beginPath();pCtx.arc(nx,ny,3.5,0,Math.PI*2);pCtx.fill();
+        pCtx.moveTo(A.x,A.y);
+        pCtx.lineTo(IC.x,IC.y); // inner wall arm1 → inner corner
+        pCtx.lineTo(C2.x,C2.y); // inner wall arm2
+        pCtx.lineTo(D2.x,D2.y); // arm2 end cap
+        if(bt==='bend'){
+          // Radius bend: curved outer corner with quadratic bezier
+          pCtx.lineTo(OC.x,OC.y);
+          // Control point for rounding — pull it toward the outer corner
+          pCtx.moveTo(D2.x,D2.y);
+          pCtx.lineTo(OC.x,OC.y);
+          pCtx.moveTo(OC.x,OC.y);
+          pCtx.lineTo(B.x,B.y);
+        } else {
+          pCtx.lineTo(OC.x,OC.y); // outer corner (sharp miter)
+          pCtx.lineTo(B.x,B.y);
         }
-        // Selection ring
-        if(sel){
-          pCtx.beginPath();pCtx.arc(nx,ny,oR+6,0,Math.PI*2);
-          pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);
+        pCtx.lineTo(A.x,A.y);
+        pCtx.fillStyle=bodyColor;pCtx.fill();
+        // === Redraw as stroke path for clean walls ===
+        pCtx.strokeStyle=wallColor;pCtx.lineWidth=sel?3:2.5;
+        // Outer wall (A→inner corner→C2) and end caps
+        pCtx.beginPath();
+        pCtx.moveTo(A.x,A.y);pCtx.lineTo(IC.x,IC.y);pCtx.lineTo(C2.x,C2.y);
+        pCtx.stroke();
+        // Outer wall (B→outer corner→D2)
+        pCtx.beginPath();
+        if(bt==='bend'){
+          pCtx.moveTo(B.x,B.y);pCtx.quadraticCurveTo(OC.x,OC.y,D2.x,D2.y);
+        } else {
+          pCtx.moveTo(B.x,B.y);pCtx.lineTo(OC.x,OC.y);pCtx.lineTo(D2.x,D2.y);
         }
-        // Hover ring
-        if(pS.pipeStart?.id===nd.id){
-          pCtx.beginPath();pCtx.arc(nx,ny,oR+8,0,Math.PI*2);
-          pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();
-        }
+        pCtx.stroke();
+        // End caps (perpendicular closing lines at arm tips)
+        pCtx.beginPath();pCtx.moveTo(A.x,A.y);pCtx.lineTo(B.x,B.y);pCtx.stroke(); // arm1 cap
+        pCtx.beginPath();pCtx.moveTo(C2.x,C2.y);pCtx.lineTo(D2.x,D2.y);pCtx.stroke(); // arm2 cap
+        // Selection / hover indicator
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+6,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,R+8,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
       } else if(bt==='tee_b'||bt==='tee_s'){
-        // T fitting: metallic disc with T symbol
-        var grdT=pCtx.createRadialGradient(nx-R*0.3,ny-R*0.3,R*0.05,nx,ny,R);
-        if(dark){grdT.addColorStop(0,'#818cf8');grdT.addColorStop(1,'#3730a3');}
-        else{grdT.addColorStop(0,'#a5b4fc');grdT.addColorStop(1,'#4f46e5');}
-        pCtx.beginPath();pCtx.arc(nx,ny,R,0,Math.PI*2);
-        pCtx.fillStyle=grdT;pCtx.fill();
-        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#c7d2fe':'#312e81');pCtx.lineWidth=2;pCtx.stroke();
-        pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=3;pCtx.lineCap='round';
-        pCtx.beginPath();pCtx.moveTo(nx-R*0.6,ny);pCtx.lineTo(nx+R*0.6,ny);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx,ny);pCtx.lineTo(nx,ny+R*0.6);pCtx.stroke();
-        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        // T fitting: 3-arm schematic (horizontal + one branch down)
+        var tw=7,tL=R+4;
+        var wallCol2=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');
+        pCtx.strokeStyle=wallCol2;pCtx.lineWidth=2.5;pCtx.lineCap='round';
+        // Main run (horizontal)
+        pCtx.beginPath();pCtx.moveTo(nx-tL,ny-tw);pCtx.lineTo(nx+tL,ny-tw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx-tL,ny+tw);pCtx.lineTo(nx+tL,ny+tw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx-tL,ny-tw);pCtx.lineTo(nx-tL,ny+tw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx+tL,ny-tw);pCtx.lineTo(nx+tL,ny+tw);pCtx.stroke();
+        // Branch (downward)
+        pCtx.beginPath();pCtx.moveTo(nx-tw,ny+tw);pCtx.lineTo(nx-tw,ny+tL);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx+tw,ny+tw);pCtx.lineTo(nx+tw,ny+tL);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx-tw,ny+tL);pCtx.lineTo(nx+tw,ny+tL);pCtx.stroke();
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+6,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
       } else {
-        // Plain junction
-        var grdN=pCtx.createRadialGradient(nx-R*0.3,ny-R*0.3,R*0.05,nx,ny,R);
-        if(dark){grdN.addColorStop(0,'#818cf8');grdN.addColorStop(1,'#3730a3');}
-        else{grdN.addColorStop(0,'#a5b4fc');grdN.addColorStop(1,'#4f46e5');}
+        // Plain junction: small cross-hair in a circle
         pCtx.beginPath();pCtx.arc(nx,ny,R,0,Math.PI*2);
-        pCtx.fillStyle=grdN;pCtx.fill();
-        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#c7d2fe':'#312e81');pCtx.lineWidth=2;pCtx.stroke();
-        pCtx.fillStyle='white';pCtx.font='bold 10px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
-        pCtx.fillText('J',nx,ny);
-        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        pCtx.fillStyle=dark?'rgba(99,102,241,0.2)':'rgba(99,102,241,0.12)';pCtx.fill();
+        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');pCtx.lineWidth=2;pCtx.stroke();
+        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');pCtx.lineWidth=2;pCtx.lineCap='round';
+        pCtx.beginPath();pCtx.moveTo(nx-R*0.6,ny);pCtx.lineTo(nx+R*0.6,ny);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(nx,ny-R*0.6);pCtx.lineTo(nx,ny+R*0.6);pCtx.stroke();
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);}
       }
     } else {
       // Outlet: hexagon shape
