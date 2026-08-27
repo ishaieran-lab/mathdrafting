@@ -4547,7 +4547,7 @@ function redraw() {
     ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([3,2]);ctx.stroke();
     ctx.restore();
   }
-  if(pipeMode) pDrawPipeLayer();
+  if(pipeMode||pS.nodes.length||pS.pipes.length) pDrawPipeLayer();
   _scheduleSave();
 }
 
@@ -17130,81 +17130,154 @@ function pDrawPipeLayer(){
       fill=`rgb(${r2},60,${b2})`;stroke='#1e293b';
     }
     const R=sel?18:14;
-    // Generic sel/pipeStart rings — skipped for elbow junctions (they draw their own)
-    var isElbow=nd.type==='junc'&&(nd.bendType==='miter'||nd.bendType==='bend');
+    // Generic sel/pipeStart rings — skipped for fitting junctions (they draw their own)
+    var isElbow=nd.type==='junc'&&nd.bendType&&nd.bendType!=='none';
     if(!isElbow){
       if(sel){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2.5;pCtx.stroke();}
       if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nd.x,nd.y,R+7,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=3;pCtx.stroke();}
     }
     if(nd.type==='source'){
-      // Pump: outer circle
+      // P&ID centrifugal pump symbol: circle + triangle
       pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
       pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-      // Inner ring
-      pCtx.strokeStyle='rgba(255,255,255,0.5)';pCtx.lineWidth=1;
-      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.65,0,Math.PI*2);pCtx.stroke();
-      // Rotor blades
-      pCtx.strokeStyle='white';pCtx.lineWidth=2;
-      for(var bi=0;bi<3;bi++){var ba=bi*Math.PI*2/3-Math.PI/6;
-        pCtx.beginPath();pCtx.moveTo(nd.x+Math.cos(ba)*R*0.18,nd.y+Math.sin(ba)*R*0.18);
-        pCtx.lineTo(nd.x+Math.cos(ba)*R*0.62,nd.y+Math.sin(ba)*R*0.62);pCtx.stroke();}
-      pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.2,0,Math.PI*2);pCtx.fill();
+      pCtx.lineJoin='round';pCtx.strokeStyle='rgba(255,255,255,0.9)';pCtx.lineWidth=1.8;
+      pCtx.beginPath();
+      pCtx.moveTo(nd.x+R*0.6,nd.y);
+      pCtx.lineTo(nd.x-R*0.52,nd.y-R*0.52);
+      pCtx.lineTo(nd.x-R*0.52,nd.y+R*0.52);
+      pCtx.closePath();
+      pCtx.fillStyle='rgba(255,255,255,0.28)';pCtx.fill();pCtx.stroke();
+      pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.18,0,Math.PI*2);pCtx.fill();
     } else if(nd.type==='junc'){
       var bt=nd.bendType||'none';
       var nx=nd.x,ny=nd.y;
-      // Find actual pipe directions from node
+      var hw=4,arm=22; // half pipe-wall width, arm length from center
+      var jColor=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');
+      var jInner=sel?'rgba(245,158,11,0.2)':(dark?'rgba(129,140,248,0.22)':'rgba(67,56,202,0.15)');
       var connPipes2=pS.pipes.filter(function(pp){return pp.n1id===nd.id||pp.n2id===nd.id;});
       var dirs2=[];
       connPipes2.forEach(function(pp){
         var oth=pS.nodes.find(function(nn){return nn.id===(pp.n1id===nd.id?pp.n2id:pp.n1id);});
         if(oth) dirs2.push(Math.atan2(oth.y-ny,oth.x-nx));
       });
-      // === DRAW JUNCTION USING PIPE ICON IMAGE ===
-      var imgKey=bt; // miter, bend, tee_b, tee_s, u_bend
-      var img=pPipeImgs[imgKey];
-      // Compute rotation:
-      // miter/bend canonical: arm1 points LEFT (π), arm2 points DOWN (π/2)
-      // tee/y canonical: single arm points UP (-π/2)
       var iRot2=nd.iconRotation||0;
-      var rotBase=(bt==='tee_b'||bt==='tee_s')?(-Math.PI/2):Math.PI;
-      var rotAng=dirs2.length>=1?(dirs2[0]-rotBase):iRot2;
-      var sz=R*3.6; // icon size in pixels
-      if(bt==='miter'||bt==='bend'||bt==='tee_b'||bt==='tee_s'||bt==='u_bend'){
-        pCtx.save();
-        pCtx.translate(nx,ny);
-        pCtx.rotate(rotAng);
-        if(img){
-          pCtx.drawImage(img,-sz/2,-sz/2,sz,sz);
+      if(bt==='miter'||bt==='bend'){
+        // Elbow: canonical arm1=LEFT(π), arm2=DOWN(+y)
+        var rotAng=dirs2.length>=1?(dirs2[0]-Math.PI):iRot2;
+        pCtx.save();pCtx.translate(nx,ny);pCtx.rotate(rotAng);
+        if(bt==='miter'){
+          // Sharp corner L-shape
+          pCtx.beginPath();
+          pCtx.moveTo(-arm-hw,-hw);pCtx.lineTo(hw,-hw);pCtx.lineTo(hw,arm+hw);
+          pCtx.lineTo(-hw,arm+hw);pCtx.lineTo(-hw,hw);pCtx.lineTo(-arm-hw,hw);
+          pCtx.closePath();pCtx.fillStyle=jInner;pCtx.fill();
+          pCtx.strokeStyle=jColor;pCtx.lineWidth=1.8;pCtx.lineCap='square';
+          pCtx.beginPath();pCtx.moveTo(-arm-hw,-hw);pCtx.lineTo(hw,-hw);pCtx.lineTo(hw,arm+hw);pCtx.stroke();
+          pCtx.beginPath();pCtx.moveTo(-arm-hw,hw);pCtx.lineTo(-hw,hw);pCtx.lineTo(-hw,arm+hw);pCtx.stroke();
         } else {
-          // Fallback while image loads: simple crosshair
-          pCtx.strokeStyle=dark?'#818cf8':'#4338ca';pCtx.lineWidth=2;
-          pCtx.beginPath();pCtx.arc(0,0,R,0,Math.PI*2);pCtx.stroke();
+          // Smooth bend using quadratic bezier
+          var bR=hw*3.5;
+          pCtx.beginPath();
+          pCtx.moveTo(-arm-hw,-hw);pCtx.lineTo(-bR,-hw);
+          pCtx.quadraticCurveTo(hw,-hw,hw,bR);
+          pCtx.lineTo(hw,arm+hw);pCtx.lineTo(-hw,arm+hw);pCtx.lineTo(-hw,bR);
+          pCtx.quadraticCurveTo(-hw,hw,-bR,hw);
+          pCtx.lineTo(-arm-hw,hw);pCtx.closePath();
+          pCtx.fillStyle=jInner;pCtx.fill();
+          pCtx.strokeStyle=jColor;pCtx.lineWidth=1.8;pCtx.lineCap='round';
+          pCtx.beginPath();pCtx.moveTo(-arm-hw,-hw);pCtx.lineTo(-bR,-hw);pCtx.quadraticCurveTo(hw,-hw,hw,bR);pCtx.lineTo(hw,arm+hw);pCtx.stroke();
+          pCtx.beginPath();pCtx.moveTo(-arm-hw,hw);pCtx.lineTo(-bR,hw);pCtx.quadraticCurveTo(-hw,hw,-hw,bR);pCtx.lineTo(-hw,arm+hw);pCtx.stroke();
         }
+        // Flanges at arm ends
+        pCtx.strokeStyle=jColor;pCtx.lineWidth=2.2;pCtx.lineCap='round';
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,-hw*1.6);pCtx.lineTo(-arm-hw,hw*1.6);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-arm,-hw*1.4);pCtx.lineTo(-arm,hw*1.4);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-hw*1.6,arm+hw);pCtx.lineTo(hw*1.6,arm+hw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-hw*1.4,arm);pCtx.lineTo(hw*1.4,arm);pCtx.stroke();
         pCtx.restore();
-        // Selection ring
-        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,sz/2+4,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
-        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,sz/2+6,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
+        var selR=arm+hw+6;
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,selR,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,selR+2,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
+      } else if(bt==='tee_b'||bt==='tee_s'){
+        // T-junction: canonical branch=UP(-y), through-pipe=left/right
+        var rotAng=dirs2.length>=1?(dirs2[0]+Math.PI/2):iRot2;
+        pCtx.save();pCtx.translate(nx,ny);pCtx.rotate(rotAng);
+        pCtx.fillStyle=jInner;
+        pCtx.fillRect(-arm-hw,-hw,arm*2+hw*2,hw*2);  // through pipe body
+        pCtx.fillRect(-hw,-arm-hw,hw*2,arm+hw*2);     // branch body
+        pCtx.strokeStyle=jColor;pCtx.lineWidth=1.8;pCtx.lineCap='square';
+        // Through pipe top (gap where branch enters)
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,-hw);pCtx.lineTo(-hw,-hw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(hw,-hw);pCtx.lineTo(arm+hw,-hw);pCtx.stroke();
+        // Through pipe bottom
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,hw);pCtx.lineTo(arm+hw,hw);pCtx.stroke();
+        // Branch walls
+        pCtx.beginPath();pCtx.moveTo(-hw,-hw);pCtx.lineTo(-hw,-arm-hw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(hw,-hw);pCtx.lineTo(hw,-arm-hw);pCtx.stroke();
+        // Flanges
+        pCtx.strokeStyle=jColor;pCtx.lineWidth=2.2;pCtx.lineCap='round';
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,-hw*1.6);pCtx.lineTo(-arm-hw,hw*1.6);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-arm,-hw*1.4);pCtx.lineTo(-arm,hw*1.4);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(arm+hw,-hw*1.6);pCtx.lineTo(arm+hw,hw*1.6);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(arm,-hw*1.4);pCtx.lineTo(arm,hw*1.4);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-hw*1.6,-arm-hw);pCtx.lineTo(hw*1.6,-arm-hw);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-hw*1.4,-arm);pCtx.lineTo(hw*1.4,-arm);pCtx.stroke();
+        pCtx.restore();
+        var selR=arm+hw+6;
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,selR,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,selR+2,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
+      } else if(bt==='u_bend'){
+        // U-bend: canonical both arms=LEFT(π), semicircle on right
+        var rotAng=dirs2.length>=1?(dirs2[0]-Math.PI):iRot2;
+        pCtx.save();pCtx.translate(nx,ny);pCtx.rotate(rotAng);
+        var sep=hw*3; // distance from center to each arm centerline
+        // Fill donut-like U shape
+        pCtx.beginPath();
+        pCtx.moveTo(-arm-hw,-(sep+hw));pCtx.lineTo(0,-(sep+hw));
+        pCtx.arc(0,0,sep+hw,-Math.PI/2,Math.PI/2,false);
+        pCtx.lineTo(-arm-hw,sep+hw);pCtx.lineTo(-arm-hw,sep-hw);
+        pCtx.lineTo(0,sep-hw);
+        pCtx.arc(0,0,sep-hw,Math.PI/2,-Math.PI/2,true);
+        pCtx.lineTo(-arm-hw,-(sep-hw));pCtx.closePath();
+        pCtx.fillStyle=jInner;pCtx.fill();
+        // Outer walls
+        pCtx.strokeStyle=jColor;pCtx.lineWidth=1.8;pCtx.lineCap='round';
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,-(sep+hw));pCtx.lineTo(0,-(sep+hw));pCtx.arc(0,0,sep+hw,-Math.PI/2,Math.PI/2,false);pCtx.lineTo(-arm-hw,sep+hw);pCtx.stroke();
+        // Inner walls
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,-(sep-hw));pCtx.lineTo(0,-(sep-hw));pCtx.arc(0,0,sep-hw,-Math.PI/2,Math.PI/2,false);pCtx.lineTo(-arm-hw,sep-hw);pCtx.stroke();
+        // Flanges
+        pCtx.strokeStyle=jColor;pCtx.lineWidth=2.2;pCtx.lineCap='round';
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,-(sep+hw*1.6));pCtx.lineTo(-arm-hw,-(sep-hw*1.6));pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-arm,-(sep+hw*1.4));pCtx.lineTo(-arm,-(sep-hw*1.4));pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-arm-hw,sep+hw*1.6);pCtx.lineTo(-arm-hw,sep-hw*1.6);pCtx.stroke();
+        pCtx.beginPath();pCtx.moveTo(-arm,sep+hw*1.4);pCtx.lineTo(-arm,sep-hw*1.4);pCtx.stroke();
+        pCtx.restore();
+        var selR=sep+hw+10;
+        if(sel){pCtx.beginPath();pCtx.arc(nx,ny,selR,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([5,3]);pCtx.stroke();pCtx.setLineDash([]);}
+        if(pS.pipeStart?.id===nd.id){pCtx.beginPath();pCtx.arc(nx,ny,selR+2,0,Math.PI*2);pCtx.strokeStyle='#a78bfa';pCtx.lineWidth=2.5;pCtx.stroke();}
       } else {
-        // Plain junction: small cross-hair in a circle
-        pCtx.beginPath();pCtx.arc(nx,ny,R,0,Math.PI*2);
-        pCtx.fillStyle=dark?'rgba(99,102,241,0.2)':'rgba(99,102,241,0.12)';pCtx.fill();
-        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');pCtx.lineWidth=2;pCtx.stroke();
-        pCtx.strokeStyle=sel?'#f59e0b':(dark?'#818cf8':'#4338ca');pCtx.lineWidth=2;pCtx.lineCap='round';
-        pCtx.beginPath();pCtx.moveTo(nx-R*0.6,ny);pCtx.lineTo(nx+R*0.6,ny);pCtx.stroke();
-        pCtx.beginPath();pCtx.moveTo(nx,ny-R*0.6);pCtx.lineTo(nx,ny+R*0.6);pCtx.stroke();
+        // Plain junction ('none'): filled dot at pipe intersection
+        pCtx.beginPath();pCtx.arc(nx,ny,R*0.55,0,Math.PI*2);
+        pCtx.fillStyle=jColor;pCtx.fill();
         if(sel){pCtx.beginPath();pCtx.arc(nx,ny,R+5,0,Math.PI*2);pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=2;pCtx.setLineDash([4,3]);pCtx.stroke();pCtx.setLineDash([]);}
       }
     } else {
-      // Outlet: hexagon shape
-      pCtx.beginPath();
-      for(var hi=0;hi<6;hi++){var ha=hi*Math.PI/3-Math.PI/6;pCtx.lineTo(nd.x+Math.cos(ha)*R,nd.y+Math.sin(ha)*R);}
-      pCtx.closePath();
+      // Outlet: circle with 4 inward radial lines (flow demand)
+      pCtx.beginPath();pCtx.arc(nd.x,nd.y,R,0,Math.PI*2);
       pCtx.fillStyle=fill;pCtx.fill();pCtx.strokeStyle=stroke;pCtx.lineWidth=2.5;pCtx.stroke();
-      pCtx.fillStyle='white';pCtx.font='bold 11px monospace';pCtx.textAlign='center';pCtx.textBaseline='middle';
-      pCtx.fillText('O',nd.x,nd.y);
+      pCtx.strokeStyle='white';pCtx.lineWidth=1.8;pCtx.lineCap='round';
+      for(var qi=0;qi<4;qi++){
+        var qa=qi*Math.PI/2;
+        pCtx.beginPath();
+        pCtx.moveTo(nd.x+Math.cos(qa)*R*0.72,nd.y+Math.sin(qa)*R*0.72);
+        pCtx.lineTo(nd.x+Math.cos(qa)*R*0.28,nd.y+Math.sin(qa)*R*0.28);
+        pCtx.stroke();
+      }
+      pCtx.fillStyle='white';pCtx.beginPath();pCtx.arc(nd.x,nd.y,R*0.22,0,Math.PI*2);pCtx.fill();
     }
     pCtx.fillStyle=dark?'#e2e8f0':'#0f172a';pCtx.font='bold 12px Assistant,sans-serif';pCtx.textBaseline='top';
-    pCtx.fillText(nd.label,nd.x,nd.y+R+3);
+    var lblOffY=(nd.type==='junc'&&nd.bendType&&nd.bendType!=='none')?29:R+3;
+    pCtx.fillText(nd.label,nd.x,nd.y+lblOffY);
     if(res&&res.nP[nd.id]!==undefined){
       var pDisp=pFromPA(res.nP[nd.id]).toFixed(pUnitDecimals());
       pCtx.fillStyle='#fbbf24';pCtx.font='bold 11px Assistant,sans-serif';pCtx.textBaseline='bottom';
@@ -17214,7 +17287,7 @@ function pDrawPipeLayer(){
     if(sel&&nd.type==='junc'){
       var connCntR=pS.pipes.filter(function(pp){return pp.n1id===nd.id||pp.n2id===nd.id;}).length;
       if(connCntR===0){
-        var rhDist=R+18;
+        var rhDist=(nd.bendType&&nd.bendType!=='none')?38:R+18;
         var rhx2=nd.x,rhy2=nd.y-rhDist;
         pCtx.strokeStyle='#f59e0b';pCtx.lineWidth=1.5;pCtx.setLineDash([3,3]);
         pCtx.beginPath();pCtx.moveTo(nd.x,nd.y);pCtx.lineTo(rhx2,rhy2);pCtx.stroke();
