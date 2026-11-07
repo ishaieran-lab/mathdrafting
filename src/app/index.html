@@ -13817,6 +13817,41 @@ async function pasteFromMenu(){
   pasteClipboard();
 }
 
+// ===== CANVAS RIGHT-CLICK MENU (Paste) =====
+(function(){
+  const menu=document.createElement('div');
+  menu.id='cv-ctx-menu';
+  menu.style.cssText='position:fixed;z-index:99999;display:none;min-width:130px;padding:4px;'+
+    'background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:8px;'+
+    'box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:14px;user-select:none;';
+  const item=document.createElement('div');
+  item.style.cssText='padding:7px 14px;border-radius:5px;cursor:pointer;display:flex;justify-content:space-between;gap:18px;';
+  item.onmouseenter=()=>item.style.background='var(--surface2)';
+  item.onmouseleave=()=>item.style.background='';
+  item.onclick=()=>{hide();pasteFromMenu();};
+  menu.appendChild(item);
+  const hide=()=>{menu.style.display='none';};
+  const labels={he:'הדבק',en:'Paste',de:'Einfügen'};
+  document.addEventListener('DOMContentLoaded',()=>document.body.appendChild(menu));
+  if(document.body)document.body.appendChild(menu);
+  document.addEventListener('contextmenu',e=>{
+    const c=document.getElementById('cv');
+    if(!c||e.target!==c){hide();return;}
+    e.preventDefault();
+    const lang=(typeof currentLang!=='undefined'&&labels[currentLang])?currentLang:'he';
+    item.innerHTML='<span>'+labels[lang]+'</span><span style="opacity:.55;font-size:12px;">Ctrl+V</span>';
+    menu.dir=lang==='he'?'rtl':'ltr';
+    menu.style.display='block';
+    const r=menu.getBoundingClientRect();
+    menu.style.left=Math.min(e.clientX,window.innerWidth-r.width-4)+'px';
+    menu.style.top=Math.min(e.clientY,window.innerHeight-r.height-4)+'px';
+  });
+  document.addEventListener('mousedown',e=>{if(!menu.contains(e.target))hide();},true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')hide();});
+  window.addEventListener('scroll',hide,true);
+  window.addEventListener('blur',hide);
+})();
+
 function pasteClipboard(){
   if(clipboard.length===0){showToast('אין מה להדביק — העתק אלמנט קודם','error',1800);return;}
   saveHistory();
