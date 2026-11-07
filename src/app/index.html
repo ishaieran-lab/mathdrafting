@@ -1773,7 +1773,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
         <span data-lang-key="copyItem">העתק</span>
         <span class="edit-shortcut">Ctrl+C</span>
       </button>
-      <button class="edit-item" onclick="pasteClipboard();closeMainMenu()">
+      <button class="edit-item" onclick="pasteFromMenu();closeMainMenu()">
         <span class="menu-icon-wrap" style="background:transparent;">
           <img src="../assets/icons/menu/paste.png" width="28" height="28" style="object-fit:contain;">
         </span>
@@ -13756,8 +13756,7 @@ document.addEventListener('keydown',e=>{
   }
   // Ctrl+C — copy
   if((e.ctrlKey||e.metaKey)&&(e.key==='c'||e.code==='KeyC')){copySelected();e.preventDefault();}
-  // Ctrl+V — paste
-  if((e.ctrlKey||e.metaKey)&&(e.key==='v'||e.code==='KeyV')){pasteClipboard();e.preventDefault();}
+  // Ctrl+V — paste: handled by the 'paste' event (supports images from system clipboard)
   // Ctrl+D — duplicate
   if((e.ctrlKey||e.metaKey)&&(e.key==='d'||e.code==='KeyD')){duplicateSelected();e.preventDefault();}
 });
@@ -13775,6 +13774,47 @@ function copySelected(){
     if(el.img)clone.img=el.img;
     return clone;
   }).filter(Boolean);
+  // Replace system clipboard content so an older copied image won't override this internal copy on paste
+  try{navigator.clipboard&&navigator.clipboard.writeText&&navigator.clipboard.writeText('MathDrafting').catch(()=>{});}catch(_){}
+}
+
+// ===== PASTE IMAGE FROM SYSTEM CLIPBOARD =====
+function _clipImageFile(dt){
+  if(!dt)return null;
+  const items=dt.items?Array.from(dt.items):[];
+  for(const it of items){
+    if(it.kind==='file'&&it.type.startsWith('image/')){const f=it.getAsFile();if(f)return f;}
+  }
+  const files=dt.files?Array.from(dt.files):[];
+  return files.find(f=>f.type&&f.type.startsWith('image/'))||null;
+}
+document.addEventListener('paste',function(e){
+  const t=e.target;
+  const tag=t&&t.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||(t&&t.isContentEditable))return;
+  if(document.querySelector('math-field:focus'))return;
+  const file=_clipImageFile(e.clipboardData);
+  e.preventDefault();
+  if(file){_loadImage(file);showToast('🖼 התמונה הודבקה','success',1400);return;}
+  pasteClipboard();
+});
+// Menu "paste" button: try system clipboard image first, then internal elements
+async function pasteFromMenu(){
+  try{
+    if(navigator.clipboard&&navigator.clipboard.read){
+      const items=await navigator.clipboard.read();
+      for(const it of items){
+        const type=it.types.find(tp=>tp.startsWith('image/'));
+        if(type){
+          const blob=await it.getType(type);
+          _loadImage(new File([blob],'pasted',{type}));
+          showToast('🖼 התמונה הודבקה','success',1400);
+          return;
+        }
+      }
+    }
+  }catch(_){}
+  pasteClipboard();
 }
 
 function pasteClipboard(){

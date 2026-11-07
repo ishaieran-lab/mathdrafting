@@ -2,6 +2,10 @@
 
 All notable changes to daf-avoda are documented here.
 
+## [v91] - 2026-11-07
+### Added
+- Paste images from the system clipboard (Ctrl+V or menu "Paste") — the image is placed at the center of the canvas. Internal element copy/paste still works.
+
 ## [v11] - 2026-04-10
 ### Initial project setup
 - Organized project into professional folder structure
