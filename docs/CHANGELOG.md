@@ -2,6 +2,12 @@
 
 All notable changes to daf-avoda are documented here.
 
+## [v92] - 2026-11-12
+### Changed
+- Equations: single Word-like editor (MathLive). Equation ribbon open + click on canvas opens an editor with a cursor; ribbon buttons (fraction, power, root, sum, symbols...) insert at the cursor; typing shortcuts (/ ^ sqrt) also work. Enter/click outside saves one aligned element; double-click to edit again.
+- MathLive upgraded 0.96 -> 0.101 (0.96 did not accept keyboard input).
+- Old piece-based equations (eqfrac/eqmono) still load and edit as before.
+
 ## [v91] - 2026-11-07
 ### Added
 - Paste images from the system clipboard (Ctrl+V, menu "Paste", or canvas right-click "Paste")

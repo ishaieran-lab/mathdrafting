@@ -9,7 +9,7 @@
 <title>MathDrafting.com — Worksheet Builder</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%236c63ff'/><text x='50%' y='22' text-anchor='middle' font-size='18' font-family='serif' fill='white'>ד</text></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js"></script>
-<script src="https://unpkg.com/mathlive@0.96.0/dist/mathlive.min.js"></script>
+<script src="https://unpkg.com/mathlive@0.101.0/dist/mathlive.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&family=Rubik:wght@400;700&family=Frank+Ruhl+Libre:wght@400;700&family=Assistant:wght@400;700&family=Noto+Sans+Hebrew:wght@400;700&family=David+Libre:wght@400;700&family=Secular+One&family=Varela+Round&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -863,8 +863,9 @@ body.light-theme .modal{background:rgba(255,255,255,0.97);border-color:rgba(108,
 .eq-fn{border-bottom:1px solid currentColor;padding:0 2px;}
 .eq-fd{padding:0 2px;}
 /* ===== MATHLIVE OVERLAY ===== */
-#mq-overlay{display:none;position:fixed;z-index:2000;background:white;border:2.5px solid #6c63ff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 32px rgba(108,99,255,0.25),0 2px 8px rgba(0,0,0,0.15);align-items:center;gap:10px;cursor:text;min-width:60px;}
+#mq-overlay{display:none;direction:ltr;position:fixed;z-index:2000;background:white;border:2.5px solid #6c63ff;border-radius:10px;padding:10px 14px;box-shadow:0 8px 32px rgba(108,99,255,0.25),0 2px 8px rgba(0,0,0,0.15);align-items:center;gap:10px;cursor:text;min-width:60px;}
 #mf-main{font-size:28px;min-width:40px;border:none;outline:none;background:transparent;display:block;--hue:260;--caret-color:#6c63ff;}
+#mf-main::part(menu-toggle){display:none;}
 #mq-confirm-btn{background:#6c63ff;color:white;border:none;border-radius:7px;padding:5px 12px;cursor:pointer;font-size:18px;flex-shrink:0;transition:background 0.12s;line-height:1;}
 #mq-confirm-btn:hover{background:#5a52d5;}
 #mq-cancel-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;flex-shrink:0;padding:4px;border-radius:5px;transition:color 0.12s;}
@@ -2160,7 +2161,7 @@ body.light-theme #props-panel .no-sel{color:#555 !important;}
 
 <!-- MATHLIVE OVERLAY (inline equation editor) -->
 <div id="mq-overlay" onmousedown="event.stopPropagation()">
-  <math-field id="mf-main" virtual-keyboard-mode="off"></math-field>
+  <math-field id="mf-main" math-virtual-keyboard-policy="manual"></math-field>
 </div>
 <div class="mq-placement-hint" id="mq-hint">לחץ על הקנבס להוספה</div>
 
@@ -4895,11 +4896,13 @@ function drawEl(el){
       }
       break;
     case 'latex':
+      if(el._mfEditing)break; // hidden while being edited in the equation editor
       if(el._draft)ctx.globalAlpha=0.55;
       if(el.img instanceof HTMLImageElement)ctx.drawImage(el.img,el.x,el.y,el.w,el.h);
       else{
-        ctx.font='13px Heebo';ctx.fillStyle='#888';ctx.textBaseline='top';ctx.fillText('['+el.src+']',el.x,el.y);el.w=200;el.h=36;
-        if(el.src&&!el._reRendering&&window.MathJax){el._reRendering=true;renderLatex(el.src,img=>{delete el._reRendering;if(img){el.img=img;el.w=Math.max(img.width,80);el.h=Math.max(img.height,36);}redraw();});}
+        ctx.font='13px Heebo';ctx.fillStyle='#888';ctx.textBaseline='top';ctx.fillText('['+el.src+']',el.x,el.y);if(!el.mf){el.w=200;el.h=36;}
+        if(el.mf&&el.src&&!el._reRendering&&window.MathJax){el._reRendering=true;renderLatex('\\displaystyle '+el.src,img=>{delete el._reRendering;if(img)el.img=img;redraw();});}
+        else if(el.src&&!el._reRendering&&window.MathJax){el._reRendering=true;renderLatex(el.src,img=>{delete el._reRendering;if(img){el.img=img;el.w=Math.max(img.width,80);el.h=Math.max(img.height,36);}redraw();});}
       }
       if(el._draft)ctx.globalAlpha=1;
       break;
@@ -6874,7 +6877,16 @@ cv.addEventListener('mousedown',e=>{
       if(placed)activateEqBox(placed,'n');
       return;
     }
+    _mfEditEl=null;
+    e.preventDefault(); // keep focus in the editor (not the canvas)
     openMFAt(mx,my,cmd);return;
+  }
+  // Equation ribbon open + click on empty canvas → open the equation editor there
+  if(_mfClosedByClick){_mfClosedByClick=false;}
+  else if(tool==='select'&&_eqRibbonOpen()&&!_eqFracActive&&!_eqMonoActive&&!hitTest(mx,my)){
+    _mfEditEl=null;
+    e.preventDefault();
+    openMFAt(mx,my);return;
   }
 
   // If an eqmono is active — click inside keeps active, click outside finishes
@@ -7936,20 +7948,14 @@ cv.addEventListener('dblclick',e=>{
     if(hit&&hit.type==='eqmono'){
       activateEqMono(hit, hit.template==='pow'?'base':'val');return;
     }
-    // Double-click latex — reopen as inline eqfrac editor with cursor at rightmost (post) field
+    // Double-click latex — reopen in the equation editor (MathLive) for editing
     if(hit&&hit.type==='latex'){
-      const src=hit.src||'';
-      const m=src.match(/^(.*?)\\d?frac\{([^}]*)\}\{([^}]*)\}(.*)$/s);
-      if(m){
-        const[,pre,nVal,dVal,post]=m;
-        const idx=els.indexOf(hit);
-        if(idx!==-1)els.splice(idx,1);
-        selId=null;
-        const newEl={type:'eqfrac',x:hit.x,y:hit.y,w:hit.w,h:hit.h,pre,nVal,dVal,post,color:'#111',fill:'none',sw:1};
-        addEl(newEl);
-        const placed=els.find(e=>e.id===selId);
-        if(placed)activateEqBox(placed,'post');
-      }
+      _mfEditEl=hit;
+      hit._mfEditing=true;
+      const mf=document.getElementById('mf-main');
+      mf.value=hit.src||'';
+      openMFAt(hit.x,hit.y);
+      redraw();
       return;
     }
     // Double-click stat charts / table — open editor
@@ -9862,7 +9868,7 @@ function drawEqEditCursor(){
 // ===== KEYBOARD SHORTCUTS =====
 document.addEventListener('keydown',function(e){
   const tag=document.activeElement.tagName;
-  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') return;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||tag==='MATH-FIELD') return;
   if(e.ctrlKey&&(e.key==='z'||e.code==='KeyZ')&&!e.shiftKey){e.preventDefault();undo();return;}
   if(e.ctrlKey&&((e.key==='y'||e.code==='KeyY')||(e.shiftKey&&(e.key==='Z'||e.code==='KeyZ')))){e.preventDefault();redo();return;}
   // Escape: close modals / menu, then exit freehand
@@ -11084,7 +11090,7 @@ document.addEventListener('keydown',function eqFracKeyHandler(e){
 // ===== EQUATION RIBBON + MATHLIVE =====
 const EQ_CMDS={
   frac:'\\frac{#?}{#?}', sqrt:'\\sqrt{#?}', nsqrt:'\\sqrt[#?]{#?}',
-  pow:'^{#?}', sub:'_{#?}', abs:'\\left|#?\\right|',
+  pow:'#@^{#?}', sub:'#@_{#?}', abs:'\\left|#?\\right|', txt:'\\text{#?}',
   fracpar:'\\left(\\frac{#?}{#?}\\right)', overline:'\\overline{#?}', vec:'\\vec{#?}',
   binom:'\\binom{#?}{#?}', matrix22:'\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}',
   int:'\\int', defint:'\\int_{#?}^{#?}', sum:'\\sum_{#?}^{#?}', prod:'\\prod_{#?}^{#?}',
@@ -11122,21 +11128,27 @@ const LATEX_TO_UC={
   '\\to':'→','\\emptyset':'∅','\\triangle':'△',
 };
 let _mfEditEl=null,_mfCanvasX=100,_mfCanvasY=100,_mfPendingCmd=null,_eqFracJustConverted=false;
+let _mfClosedByClick=false; // set when a canvas click just closed the editor (so it won't reopen immediately)
 
 function isMFActive(){const ov=document.getElementById('mq-overlay');return ov&&ov.style.display==='flex';}
+function _eqRibbonOpen(){const r=document.getElementById('eq-ribbon');return !!(r&&r.classList.contains('open'));}
 
 function openMFAt(canvasX,canvasY,initialCmd){
   const rect=cv.getBoundingClientRect();
-  const sx=rect.left+canvasX*(rect.width/cv.width);
+  const scale=rect.width/cv.width;
+  const sx=rect.left+canvasX*scale;
   const sy=rect.top+canvasY*(rect.height/cv.height);
   _mfCanvasX=canvasX;_mfCanvasY=canvasY;
   const ov=document.getElementById('mq-overlay');
-  ov.style.left=sx+'px';ov.style.top=sy+'px';ov.style.display='flex';
+  // offset by the overlay's padding+border so the typed formula sits where the final one will be drawn
+  ov.style.left=(sx-16)+'px';ov.style.top=(sy-12)+'px';ov.style.display='flex';
   const mf=document.getElementById('mf-main');
-  if(initialCmd){mf.value=initialCmd;}
-  else if(!_mfEditEl){mf.value='';}
+  mf.style.fontSize=Math.max(16,Math.round(26*scale))+'px';
+  if(!_mfEditEl)mf.value='';
+  if(initialCmd)mfInsert(initialCmd);
   mf.focus();
   setTimeout(()=>{mf.focus();},30);
+  setTimeout(()=>{if(isMFActive())mf.focus();},150); // after mouseup/click handlers that may refocus the canvas
   // Wire Enter/Escape once
   if(!mf._mfWired){
     mf._mfWired=true;
@@ -11153,17 +11165,36 @@ function confirmMF(){
   const mf=document.getElementById('mf-main');
   const latex=mf.value;
   ov.style.display='none';
-  if(!latex.trim()){_mfEditEl=null;return;}
   if(_mfEditEl){
     const el=_mfEditEl;_mfEditEl=null;
-    renderLatex(latex,img=>{el.src=latex;if(img){el.img=img;el.w=Math.max(img.width,80);el.h=Math.max(img.height,36);}redraw();});
-  } else {
-    renderLatex(latex,img=>addEl({type:'latex',x:_mfCanvasX,y:_mfCanvasY,w:img?Math.max(img.width,80):200,h:img?Math.max(img.height,36):50,color:'#000',fill:'none',sw:1,src:latex,img}));
+    delete el._mfEditing;
+    if(latex===el.src){redraw();return;}
+    saveHistory();
+    if(!latex.trim()){ // emptied → remove the equation
+      const i=els.indexOf(el);if(i!==-1)els.splice(i,1);
+      if(selId===el.id)selId=null;
+      updProps();redraw();return;
+    }
+    el.src=latex;
+    _mfRender(latex,(img,w,h)=>{if(img){el.img=img;el.w=w;el.h=h;el.mf=true;}redraw();});
+    return;
   }
+  if(!latex.trim())return;
+  const x=_mfCanvasX,y=_mfCanvasY;
+  _mfRender(latex,(img,w,h)=>addEl({type:'latex',mf:true,x,y,w:img?w:200,h:img?h:50,color:'#000',fill:'none',sw:1,src:latex,img}));
+}
+// Render an editor equation at the same size as typed (display style, scaled up from MathJax's default)
+const _MF_SCALE=1.6;
+function _mfRender(latex,cb){
+  renderLatex('\\displaystyle '+latex,img=>{
+    if(!img){cb(null,0,0);return;}
+    cb(img,Math.round(img.width*_MF_SCALE),Math.round(img.height*_MF_SCALE));
+  });
 }
 
 function closeMF(){
   const ov=document.getElementById('mq-overlay');if(ov)ov.style.display='none';
+  if(_mfEditEl){delete _mfEditEl._mfEditing;redraw();}
   _mfEditEl=null;_mfPendingCmd=null;cv.style.cursor='';
   document.getElementById('mq-hint').style.display='none';
 }
@@ -11188,6 +11219,7 @@ function toggleEqRibbon(){
   else r.classList.add('open');
 }
 function closeEqRibbon(){
+  if(isMFActive())confirmMF();
   closeMF();
   document.getElementById('eq-ribbon').classList.remove('open');
 }
@@ -11273,6 +11305,7 @@ function eqRibbonInsertReady(key){
   const latex = templates[key];
   if(!latex) return;
   closeEqGallery();
+  if(true){_eqToEditor(latex);return;}
   renderLatex(latex, img => addEl({type:'latex', x:100, y:100, w:img?Math.max(img.width,80):200, h:img?Math.max(img.height,36):50, color:'#000', fill:'none', sw:1, src:latex, img}));
 }
 
@@ -11389,8 +11422,22 @@ function _placeEqMono(key){
   activateEqMono(placed,field);
 }
 
-function eqRibbonBtn(key){
-  // If MathLive is active, always insert into it
+// Insert a LaTeX template into the equation editor; if it's closed, wait for a canvas click to open it there
+function _eqToEditor(cmd){
+  if(!cmd)return;
+  if(isMFActive()){mfInsert(cmd);return;}
+  if(_eqFracActive)deactivateEqBox(false);
+  if(_eqMonoActive)deactivateEqMono();
+  _mfPendingCmd=cmd;
+  cv.style.cursor='crosshair';
+  _showPlacementHint();
+}
+function eqRibbonBtn(key,arg){
+  // New behaviour: every ribbon button inserts into the single equation editor (MathLive)
+  let _cmd=EQ_CMDS[key]||'';
+  if(key==='nsqrt'&&arg)_cmd='\\sqrt['+arg+']{#?}';
+  if(_cmd){_eqToEditor(_cmd);return;}
+  // (legacy path below kept for reference / old elements)
   if(isMFActive()){mfInsert(EQ_CMDS[key]||'');return;}
   // Structural elements always create a new canvas element
   if(key==='frac'){
@@ -11476,6 +11523,7 @@ function eqRibbonBtn(key){
   }
 }
 function eqRibbonInsert(latex){
+  if(isMFActive()||!(_eqFracActive||_eqMonoActive)){_eqToEditor(latex);return;}
   const uc=LATEX_TO_UC[latex]||latex;
   if(_eqFracActive){_eqFracInsertText(uc);return;}
   if(_eqMonoActive){_eqMonoActive.el.val=(_eqMonoActive.el.val||'')+uc;redraw();return;}
@@ -11497,7 +11545,11 @@ document.addEventListener('mousedown',e=>{
   if(!isMFActive())return;
   const ov=document.getElementById('mq-overlay');
   const rb=document.getElementById('eq-ribbon');
-  if(!ov.contains(e.target)&&(!rb||!rb.contains(e.target))){confirmMF();}
+  const gp=document.getElementById('eq-gallery-panel');
+  if(!ov.contains(e.target)&&(!rb||!rb.contains(e.target))&&(!gp||!gp.contains(e.target))){
+    if(e.target===cv){_mfClosedByClick=true;setTimeout(()=>{_mfClosedByClick=false;},0);}
+    confirmMF();
+  }
 },true);
 function insertEqTmpl(latex,selStart,selEnd){
   const inp=document.getElementById('latex-in');
@@ -13706,7 +13758,7 @@ function _cmdHighlight(){
 // ============================================================
 // ===== KEYBOARD =====
 document.addEventListener('keydown',e=>{
-  const inInput=e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT';
+  const inInput=e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT'||e.target.tagName==='MATH-FIELD'||isMFActive();
   // ⌘K command palette
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openCmdPalette();return;}
   // כשהמוקד בשדה קלט — לא מתערבים (מאפשרים copy/paste רגיל של טקסט)
